@@ -6,17 +6,18 @@ from __future__ import annotations
 from copy import copy, deepcopy
 from collections.abc import Collection
 
-from pabutools.utils import Numeric
+from pbtols.utils import Numeric
 
-from pabutools.election import AbstractApprovalProfile
-from pabutools.election.satisfaction.satisfactionmeasure import GroupSatisfactionMeasure
-from pabutools.election.ballot.ballot import AbstractBallot
-from pabutools.election.instance import Instance, Project
-from pabutools.election.profile import AbstractProfile
-from pabutools.election.satisfaction import SatisfactionMeasure
-from pabutools.tiebreaking import lexico_tie_breaking
-from pabutools.fractions import frac
-from pabutools.tiebreaking import TieBreakingRule
+from pbtols.election import AbstractApprovalProfile
+from pbtols.election.satisfaction.satisfactionmeasure import GroupSatisfactionMeasure
+from pbtols.election.ballot.ballot import AbstractBallot
+from pbtols.election.instance import Instance, Project
+from pbtols.election.profile import AbstractProfile
+from pbtols.election.satisfaction import SatisfactionMeasure
+from pbtols.tiebreaking import lexico_tie_breaking
+from pbtols.fractions import frac
+from pbtols.tiebreaking import TieBreakingRule
+import csv
 
 
 class MESVoter:
@@ -274,7 +275,6 @@ def naive_mes(
                 voters[i].budget, min_afford * voters[i].sat.sat_project(selected)
             )
 
-
 def mes_inner_algo(
     instance: Instance,
     profile: AbstractProfile,
@@ -284,6 +284,7 @@ def mes_inner_algo(
     current_alloc: list[Project],
     all_allocs: list[list[Project]],
     resoluteness: bool,
+    effective_vote_counts: dict(),
     verbose: bool = False,
 ) -> None:
     """
@@ -324,13 +325,13 @@ def mes_inner_algo(
     if verbose:
         print("========================")
     for project in sorted(projects, key=lambda p: p.affordability):
-        if verbose:
+        if verbose and False:
             print(f"\tConsidering: {project}")
         if (
             sum(voters[i].total_budget() for i in project.supporter_indices)
             < project.cost
         ):  # unaffordable, can delete
-            if verbose:
+            if verbose and False:
                 print(
                     f"\t\t Removed for lack of budget: "
                     f"{float(sum(voters[i].total_budget() for i in project.supporter_indices))} < {float(project.cost)}"
@@ -340,7 +341,7 @@ def mes_inner_algo(
         if (
             project.affordability > best_afford
         ):  # best possible afford for this round isn't good enough
-            if verbose:
+            if verbose and False:
                 print(
                     f"\t\t Skipped as affordability is too high: {float(project.affordability)} > {float(best_afford)}"
                 )
@@ -361,14 +362,24 @@ def mes_inner_algo(
             if afford_factor * project.supporters_sat(supporter) <= supporter.budget:
                 # found the best afford_factor for this project
                 project.affordability = afford_factor
+                eff_vote_count = frac(
+                        denominator, project.cost - current_contribution
+                    )
+                    # Get the effective vote count for that project this iteration
+                effective_vote_counts[project.name] = eff_vote_count
                 if verbose:
                     eff_vote_count = frac(
                         denominator, project.cost - current_contribution
                     )
+                    # Get the effective vote count for that project this iteration
+                    effective_vote_counts[project] = eff_vote_count
                     print(
                         f"\t\tFactor: {float(afford_factor)} = ({float(project.cost)} - {float(current_contribution)})/{float(denominator)}"
                     )
                     print(f"\t\tEff: {float(eff_vote_count)}")
+                
+                # print("Project Selected:", project)
+                # print("Effective Vote Count: ", eff_vote_count)
                 if afford_factor < best_afford:
                     best_afford = afford_factor
                     tied_projects = [project]
@@ -377,6 +388,9 @@ def mes_inner_algo(
                 break
             current_contribution += supporter.total_budget()
             denominator -= supporter.multiplicity * project.supporters_sat(supporter)
+    print("Effective vote count dictionary")
+    print(effective_vote_counts)
+    # END FOR
     if verbose:
         print(f"{tied_projects}")
     if not tied_projects:
@@ -394,10 +408,16 @@ def mes_inner_algo(
         for selected_project in tied_projects:
             if resoluteness:
                 new_alloc = current_alloc
+                if len(new_alloc)  > 0:
+                    print("New Project Allocation: ", new_alloc[-1])
+                    print("Effective Vote Count: ", effective_vote_counts[new_alloc[-1]])
                 new_projects = projects
                 new_voters = voters
             else:
                 new_alloc = copy(current_alloc)
+                if len(new_alloc)  > 0:
+                    print("New Project Allocation: ", new_alloc[-1])
+                    print("Effective Vote Count: ", effective_vote_counts[new_alloc[-1]])
                 new_projects = deepcopy(projects)
                 new_voters = deepcopy(voters)
             new_alloc.append(selected_project.project)
@@ -421,6 +441,7 @@ def mes_inner_algo(
                 new_alloc,
                 all_allocs,
                 resoluteness,
+                effective_vote_counts,
                 verbose=verbose,
             )
 
@@ -472,6 +493,8 @@ def method_of_equal_shares_scheme(
             The selected projects if resolute (`resoluteness` = True), or the set of selected projects if irresolute
             (`resoluteness = False`).
     """
+    project_selection_order = []
+
     if verbose:
         print(f"Initial budget per voter is: {initial_budget_per_voter}")
     voters = []
@@ -523,6 +546,7 @@ def method_of_equal_shares_scheme(
             copy(initial_budget_allocation),
             all_budget_allocations,
             resoluteness,
+            dict(),
             verbose,
         )
         if resoluteness:
@@ -552,6 +576,44 @@ def method_of_equal_shares_scheme(
         for p in projects:
             p.affordability = p.initial_affordability
 
+
+def get_project_counts(profile):
+    # Creating a dictionary to count the occurrences
+    project_votes = {}
+
+    # Function to update the project_votes dictionary
+    def update_votes(project_list):
+        for project_id in project_list:
+            if project_id in project_votes:
+                project_votes[project_id] += 1
+            else:
+                project_votes[project_id] = 1
+
+    for prof in profile:
+        update_votes(list(prof))
+
+    return project_votes
+
+def get_pairwise_project_votes(profile):
+    # Initialize a dictionary to store pairwise interactions
+    pairwise_interactions = {}
+
+    # Function to update pairwise interactions
+    def update_interactions(vote_list):
+        for i in range(len(vote_list)):
+            for j in range(i + 1, len(vote_list)):
+                # Create a sorted tuple to represent the interaction
+                interaction = tuple((vote_list[i], vote_list[j]))
+                if interaction in pairwise_interactions:
+                    pairwise_interactions[interaction] += 1
+                else:
+                    pairwise_interactions[interaction] = 1
+
+    # Process each vote list
+    for vote in profile:
+        update_interactions(list(vote))
+
+    return pairwise_interactions
 
 def method_of_equal_shares(
     instance: Instance,
@@ -623,6 +685,16 @@ def method_of_equal_shares(
 
     if binary_sat is None:
         binary_sat = isinstance(profile, AbstractApprovalProfile)
+    
+    # initially just create a dictionary with all of the projects and how many people voted for each.
+    project_votes = get_project_counts(profile)
+    pairwise_interactions = get_pairwise_project_votes(profile)
+
+    print("Dictionary of Total Project Vote Counts:")
+    print(project_votes)
+
+    print("Dictionary of Pairwise Vote Interactions")
+    print(pairwise_interactions)
 
     return method_of_equal_shares_scheme(
         instance,
