@@ -167,3 +167,7 @@ cython_debug/
 .idea/
 
 analysis/Pabulib
+
+# Additional Development
+binary_budget/**
+test.ipynb

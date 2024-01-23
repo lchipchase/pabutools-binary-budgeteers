@@ -387,7 +387,6 @@ def mes_inner_algo(
                     )
                     print(f"\t\tEff: {float(eff_vote_count)}")
                 
-                
                 if storing:
                     _ = float(afford_factor)
                     _ = float(project.cost)
@@ -402,10 +401,7 @@ def mes_inner_algo(
                     print("Eff")
                     print(float(eff_vote_count))
                     print(len(effective_vote_counts))
-                    # Get the effective vote count for that project this iteration
 
-                # print("Project Selected:", project)
-                # print("Effective Vote Count: ", eff_vote_count)
                 if afford_factor < best_afford:
                     best_afford = afford_factor
                     tied_projects = [project]
@@ -414,9 +410,7 @@ def mes_inner_algo(
                 break
             current_contribution += supporter.total_budget()
             denominator -= supporter.multiplicity * project.supporters_sat(supporter)
-    # print("Effective vote count dictionary")
-    # print(effective_vote_counts)
-    # END FOR
+
     if verbose:
         print(f"{tied_projects}")
     if not tied_projects:
@@ -434,16 +428,16 @@ def mes_inner_algo(
         for selected_project in tied_projects:
             if resoluteness:
                 new_alloc = current_alloc
-                if len(new_alloc)  > 0 and storing and False:
+                if len(new_alloc)  > 0 and storing:
                     print("New Project Allocation: ", new_alloc[-1])
-                    print("Effective Vote Count: ", effective_vote_counts[new_alloc[-1]])
+                    # print("Effective Vote Count: ", effective_vote_counts[new_alloc[-1]])
                 new_projects = projects
                 new_voters = voters
             else:
                 new_alloc = copy(current_alloc)
-                if len(new_alloc)  > 0 and storing and False:
+                if len(new_alloc)  > 0 and storing:
                     print("New Project Allocation: ", new_alloc[-1])
-                    print("Effective Vote Count: ", effective_vote_counts[new_alloc[-1]])
+                    # print("Effective Vote Count: ", effective_vote_counts[new_alloc[-1]])
                 new_projects = deepcopy(projects)
                 new_voters = deepcopy(voters)
             new_alloc.append(selected_project.project)
