@@ -2,6 +2,7 @@ import jinja2
 
 env = jinja2.Environment(loader=jinja2.FileSystemLoader('./'))
 
+# TODO: File only runs when in visualisation directory - need to make path relative to make it run from anywhere.
 template = env.get_template('mes_template.html')
 
 election_name = "Random PB Election"
@@ -11,7 +12,6 @@ number_of_unelected_projects = 3
 budget = 1000
 spent = 1000
 
-# TODO Rearrange so ID is at front
 projects = [
     {"id": "ProjectA", "name": "Project A", "description": "Adding a new hostpital ward.", "totalvotes": 70, "elected": True},
     {"id": "ProjectB", "name": "Project B", "description": "Building a new school.", "totalvotes": 60, "elected": True},
@@ -20,14 +20,19 @@ projects = [
     {"id": "ProjectE", "name": "Project E", "description": "Building a new swimming pool.", "totalvotes": 5, "elected": True}
 ]
 
-# What project is selected in each round of MES. Ordered in terms of what project was selected first
+# What project is selected in each round of MES. Ordered in terms of what project was selected first.
 rounds = [ 
     {
         "name": "Project A", 
         "id": "ProjectA",
+        "bar_chart_items": [
+            ["A", "B", "C", "D", "E"],
+            [70, 60, 15, 30, 5]
+        ],
         "pie_chart_items": [ 
             # Carousel has 3 pie charts per slide, so each list in this list 
-            # should have a max of 3 pie charts (to avoid having complex divide by 3 and dealing with remainder logic in HTML) 
+            # should have a max of 3 pie charts (to avoid having complex divide by 3 and dealing with remainder logic in HTML)
+            # TODO are the items in this list correct (first two items have same name)? 
             ["ProjAvsBData", "ProjAvsBData", "ProjAvsCData"], # TODO: Replace strings with dictionary with pie chart data
             ["ProjAvsDData"]
         ],
@@ -44,7 +49,12 @@ rounds = [
     {
         "name": "Project B", 
         "id": "ProjectB",
+        "bar_chart_items": [
+            ["B", "C", "D", "E"],
+            [50, 14, 20, 4]
+        ],
         "pie_chart_items": [
+            # TODO are the items in this list correct (first two items have same name, "B vs B data" doesn't make sense, etc.)? 
             ["ProjBvsBData", "ProjBvsBData", "ProjBvsCData"],
         ],
         "chord_diagram_items": 
@@ -59,7 +69,12 @@ rounds = [
     {
         "name": "Project C", 
         "id": "ProjectC",
+        "bar_chart_items": [
+            ["C", "D", "E"],
+            [14, 2, 3]
+        ],
         "pie_chart_items": [
+            # TODO are the items in this list correct (first two items have same name)? 
             ["ProjCvsBData", "ProjCvsBData", "ProjCvsCData"],
             ["ProjCvsDData", "ProjCvsEData", "ProjCvsFData"],
         ],

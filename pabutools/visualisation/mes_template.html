@@ -403,14 +403,14 @@
                <script>
             //   ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
                zingchart.render({
-                  id: '{{round.id}}BarChart',
+                  id: '{{ round.id }}BarChart',
                   data: {
                   "type": "hbar",
                   "title": {
-                     "text": "Effective Vote Count (Winner: Project TODO)"
+                     "text": "Effective Vote Count (Winner: {{ round.name }})"
                   },
                   "scale-x": {
-                     "labels": ["A", "B", "C", "D", "E"],
+                     "labels": {{ round.bar_chart_items[0] }}, // Label that identifies each project in the round
                      "title": {
                         "text": "Project"
                      },
@@ -426,7 +426,7 @@
                      }
                   },
                   "series": [{
-                     "values": [70, 60, 15, 30, 5], // Current votes values
+                     "values": {{ round.bar_chart_items[1] }}, // Current votes values
                   }, ],
                   "plot": {
                      "animation": {
