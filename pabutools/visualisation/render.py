@@ -26,7 +26,9 @@ rounds = [
         "name": "Project A", 
         "id": "ProjectA",
         "bar_chart_items": [
+            # Labels for each bar
             ["A", "B", "C", "D", "E"],
+            # Effective votes for each project
             [70, 60, 15, 30, 5]
         ],
         "pie_chart_items": [ 
@@ -44,7 +46,17 @@ rounds = [
                 "projC": "C", "ProjCtoA": 3, "ProjCtoB": 1, "ProjCtoC": 2, "ProjCtoD": 4, "ProjCtoE": 1,
                 "projD": "D", "ProjDtoA": 5, "ProjDtoB": 3, "ProjDtoC": 3, "ProjDtoD": 5, "ProjDtoE": 10,
                 "projE": "E", "ProjEtoA": 1, "ProjEtoB": 1, "ProjEtoC": 1, "ProjEtoD": 1, "ProjEtoE": 1
-            }
+            },
+        "after_bar_chart_items": [
+            # Winner of next round
+            "Project B",
+            # Labels for each bar
+            ["B", "C", "D", "E"],
+            # Effective votes for each project next round
+            [50, 14, 20, 4],
+            # Effective votes lost this round
+            [10, 1, 10, 1]
+        ]
     },
     {
         "name": "Project B", 
@@ -64,7 +76,13 @@ rounds = [
                 "projC": "C", "ProjCtoA": 3, "ProjCtoB": 1, "ProjCtoC": 2, "ProjCtoD": 4, "ProjCtoE": 1,
                 "projD": "D", "ProjDtoA": 5, "ProjDtoB": 3, "ProjDtoC": 3, "ProjDtoD": 5, "ProjDtoE": 10,
                 "projE": "E", "ProjEtoA": 1, "ProjEtoB": 1, "ProjEtoC": 1, "ProjEtoD": 1, "ProjEtoE": 1
-            }
+            },
+        "after_bar_chart_items": [
+            "Project C",
+            ["C", "D", "E"],
+            [14, 2, 3],
+            [0, 18, 1]
+        ]
     },
     {
         "name": "Project C", 
@@ -85,7 +103,13 @@ rounds = [
                 "projC": "C", "ProjCtoA": 3, "ProjCtoB": 1, "ProjCtoC": 2, "ProjCtoD": 4, "ProjCtoE": 1,
                 "projD": "D", "ProjDtoA": 5, "ProjDtoB": 3, "ProjDtoC": 3, "ProjDtoD": 5, "ProjDtoE": 10,
                 "projE": "E", "ProjEtoA": 1, "ProjEtoB": 1, "ProjEtoC": 1, "ProjEtoD": 1, "ProjEtoE": 1
-            }
+            },
+        "after_bar_chart_items": [
+            "Project E",
+            ["D", "E"],
+            [2, 3],
+            [0, 0]
+        ]
     },
 ]
 

@@ -448,7 +448,7 @@
             "type": "hbar",
             "stacked": true,
             "title": {
-                "text": "Reduced Effective Vote Count (Next Winner: _)",
+                "text": "Reduced Effective Vote Count (Next Winner: {{ round.after_bar_chart_items[0] }})",
                 "adjust-layout": true,
             },
             "legend": {
@@ -479,7 +479,7 @@
                 }
             },
             "scale-x": {
-                "labels": ["B", "C", "D", "E"], // Updated to reflect the categories in the chart
+                "labels": {{ round.after_bar_chart_items[1] }}, // Label that identifies each project in the round
                 "title": {
                     "text": "Projects"
                 }
@@ -490,11 +490,11 @@
                 }
             },
             "series": [{
-                "values": [21, 14, 27, 4], // Current votes values
+                "values": {{ round.after_bar_chart_items[2] }}, // Effective votes for next round
                 "background-color": "#0070C0",
                 "text": "Current Votes"
             }, {
-                "values": [10, 1, 3, 1], // Previous votes values
+                "values": {{ round.after_bar_chart_items[3] }}, // Effective votes lost this round
                 "background-color": "#FF0000",
                 "text": "Previous Votes"
             }]
