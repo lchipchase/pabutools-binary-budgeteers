@@ -1,8 +1,7 @@
 import jinja2
+import os
 
-env = jinja2.Environment(loader=jinja2.FileSystemLoader('./'))
-
-# TODO: File only runs when in visualisation directory - need to make path relative to make it run from anywhere.
+env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(os.path.abspath(__file__))))
 template = env.get_template('mes_template.html')
 
 election_name = "Random PB Election"
@@ -25,12 +24,13 @@ rounds = [
     {
         "name": "Project A", 
         "id": "ProjectA",
-        "bar_chart_items": [
-            # Labels for each bar
-            ["A", "B", "C", "D", "E"],
-            # Effective votes for each project
-            [70, 60, 15, 30, 5]
-        ],
+        "effective_vote_count": {
+            "A": 70,
+            "B": 60,
+            "C": 15,
+            "D": 30,
+            "E": 5
+        },
         "pie_chart_items": [ 
             # Carousel has 3 pie charts per slide, so each list in this list 
             # should have a max of 3 pie charts (to avoid having complex divide by 3 and dealing with remainder logic in HTML)
@@ -46,25 +46,23 @@ rounds = [
                 "projC": "C", "ProjCtoA": 3, "ProjCtoB": 1, "ProjCtoC": 2, "ProjCtoD": 4, "ProjCtoE": 1,
                 "projD": "D", "ProjDtoA": 5, "ProjDtoB": 3, "ProjDtoC": 3, "ProjDtoD": 5, "ProjDtoE": 10,
                 "projE": "E", "ProjEtoA": 1, "ProjEtoB": 1, "ProjEtoC": 1, "ProjEtoD": 1, "ProjEtoE": 1
-            },
-        "after_bar_chart_items": [
-            # Winner of next round
-            "Project B",
-            # Labels for each bar
-            ["B", "C", "D", "E"],
-            # Effective votes for each project next round
-            [50, 14, 20, 4],
-            # Effective votes lost this round
-            [10, 1, 10, 1]
-        ]
+        },
+        "effective_vote_count_reduction": {
+            "B": 10,
+            "C": 1,
+            "D": 10,
+            "E": 1
+        }
     },
     {
         "name": "Project B", 
         "id": "ProjectB",
-        "bar_chart_items": [
-            ["B", "C", "D", "E"],
-            [50, 14, 20, 4]
-        ],
+        "effective_vote_count": {
+            "B": 50,
+            "C": 14,
+            "D": 20,
+            "E": 4
+        },
         "pie_chart_items": [
             # TODO are the items in this list correct (first two items have same name, "B vs B data" doesn't make sense, etc.)? 
             ["ProjBvsBData", "ProjBvsBData", "ProjBvsCData"],
@@ -77,20 +75,20 @@ rounds = [
                 "projD": "D", "ProjDtoA": 5, "ProjDtoB": 3, "ProjDtoC": 3, "ProjDtoD": 5, "ProjDtoE": 10,
                 "projE": "E", "ProjEtoA": 1, "ProjEtoB": 1, "ProjEtoC": 1, "ProjEtoD": 1, "ProjEtoE": 1
             },
-        "after_bar_chart_items": [
-            "Project C",
-            ["C", "D", "E"],
-            [14, 2, 3],
-            [0, 18, 1]
-        ]
+        "effective_vote_count_reduction": {
+            "C": 0,
+            "D": 18,
+            "E": 1
+        }
     },
     {
         "name": "Project C", 
         "id": "ProjectC",
-        "bar_chart_items": [
-            ["C", "D", "E"],
-            [14, 2, 3]
-        ],
+        "effective_vote_count": {
+            "C": 14,
+            "D": 2,
+            "E": 3
+        },
         "pie_chart_items": [
             # TODO are the items in this list correct (first two items have same name)? 
             ["ProjCvsBData", "ProjCvsBData", "ProjCvsCData"],
@@ -104,12 +102,10 @@ rounds = [
                 "projD": "D", "ProjDtoA": 5, "ProjDtoB": 3, "ProjDtoC": 3, "ProjDtoD": 5, "ProjDtoE": 10,
                 "projE": "E", "ProjEtoA": 1, "ProjEtoB": 1, "ProjEtoC": 1, "ProjEtoD": 1, "ProjEtoE": 1
             },
-        "after_bar_chart_items": [
-            "Project E",
-            ["D", "E"],
-            [2, 3],
-            [0, 0]
-        ]
+        "effective_vote_count_reduction": {
+            "D": 0,
+            "E": 0
+        }
     },
 ]
 

@@ -410,7 +410,8 @@
                      "text": "Effective Vote Count (Winner: {{ round.name }})"
                   },
                   "scale-x": {
-                     "labels": {{ round.bar_chart_items[0] }}, // Label that identifies each project in the round
+                    
+                     "labels": {{ round.effective_vote_count.keys() | list }}, // Label that identifies each project in the round
                      "title": {
                         "text": "Project"
                      },
@@ -426,7 +427,7 @@
                      }
                   },
                   "series": [{
-                     "values": {{ round.bar_chart_items[1] }}, // Current votes values
+                     "values": {{ round.effective_vote_count.values() | list }}, // Current votes values
                   }, ],
                   "plot": {
                      "animation": {
@@ -448,7 +449,7 @@
             "type": "hbar",
             "stacked": true,
             "title": {
-                "text": "Reduced Effective Vote Count (Next Winner: {{ round.after_bar_chart_items[0] }})",
+                "text": "Reduced Effective Vote Count {% if loop.index in range(rounds|length) %} (Next Winner: {{ rounds[loop.index].name }}) {% endif %}",
                 "adjust-layout": true,
             },
             "legend": {
@@ -479,7 +480,7 @@
                 }
             },
             "scale-x": {
-                "labels": {{ round.after_bar_chart_items[1] }}, // Label that identifies each project in the round
+                "labels": {{ round.effective_vote_count_reduction.keys() | list }}, // Label that identifies each project in the round
                 "title": {
                     "text": "Projects"
                 }
@@ -490,11 +491,15 @@
                 }
             },
             "series": [{
-                "values": {{ round.after_bar_chart_items[2] }}, // Effective votes for next round
+                "values":[ 
+                    {% for key in round.effective_vote_count_reduction.keys() %}
+                        {{ round.effective_vote_count[key]}},
+                    {% endfor %}
+                 ], // Effective votes for next round
                 "background-color": "#0070C0",
                 "text": "Current Votes"
             }, {
-                "values": {{ round.after_bar_chart_items[3] }}, // Effective votes lost this round
+                "values": {{ round.effective_vote_count_reduction.values() | list }}, // Effective votes lost this round
                 "background-color": "#FF0000",
                 "text": "Previous Votes"
             }]
