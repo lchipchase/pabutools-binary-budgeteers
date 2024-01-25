@@ -285,6 +285,8 @@ def mes_inner_algo(
     all_allocs: list[list[Project]],
     resoluteness: bool,
     effective_vote_counts: dict(),
+    projects_dropped: dict(),
+    projects_selected: dict(),
     verbose: bool = False,
     storing: bool = False,
 ) -> None:
@@ -340,6 +342,8 @@ def mes_inner_algo(
                 )
             if storing:
                 _ = float(sum(voters[i].total_budget() for i in project.supporter_indices)) < float(project.cost)
+                projects_dropped[project.name] = [len(projects_dropped), project.cost, sum(voters[i].total_budget() for i in project.supporter_indices), project.supporter_indices]
+                print("Dropped ", project.name)
             projects.remove(project)
             continue
         if storing:
@@ -353,6 +357,7 @@ def mes_inner_algo(
                 )
             if storing:
                 _ = float(project.affordability) > float(best_afford)
+                 
             break
         project.supporter_indices.sort(
             key=lambda i: voters[i].budget_over_sat_project(project)
@@ -430,6 +435,7 @@ def mes_inner_algo(
                 new_alloc = current_alloc
                 if len(new_alloc)  > 0 and storing:
                     print("New Project Allocation: ", new_alloc[-1])
+                    projects_selected[new_alloc[-1].name] = [len(projects_selected)]
                     # print("Effective Vote Count: ", effective_vote_counts[new_alloc[-1]])
                 new_projects = projects
                 new_voters = voters
@@ -448,6 +454,11 @@ def mes_inner_algo(
                 )
             if storing:
                 _ = best_afford * selected_project.supporters_sat(selected_project.supporter_indices[0])
+                if selected_project.name in projects_selected:
+                    projects_selected[selected_project.name] = projects_selected[selected_project.name] + [best_afford * selected_project.supporters_sat(selected_project.supporter_indices[0])]
+                else:
+                    projects_selected[selected_project.name] = [len(projects_selected), best_afford * selected_project.supporters_sat(selected_project.supporter_indices[0])]
+                print("Selected ", selected_project.name)
             
             for i in selected_project.supporter_indices:
                 supporter = new_voters[i]
@@ -465,6 +476,8 @@ def mes_inner_algo(
                 all_allocs,
                 resoluteness,
                 effective_vote_counts,
+                projects_dropped,
+                projects_selected,
                 verbose=verbose,
                 storing=storing,
             )
@@ -571,6 +584,8 @@ def method_of_equal_shares_scheme(
             copy(initial_budget_allocation),
             all_budget_allocations,
             resoluteness,
+            dict(),
+            dict(),
             dict(),
             verbose,
             storing,
