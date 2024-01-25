@@ -400,6 +400,7 @@
                   width: "100%",
                });
                </script>
+               <!-- Effective vote count bar chart -->
                <script>
             //   ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
                zingchart.render({
@@ -441,6 +442,7 @@
                   width: '100%'
             });
             </script>
+            <!-- Effective vote count reduction bar chart -->
             <script>
             // ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
             zingchart.render({
@@ -518,13 +520,14 @@
                      data.addColumn('string', 'From');
                      data.addColumn('string', 'To');
                      data.addColumn('number', 'Weight');
-                     // Adding dummy data
+                     
+                    // Adding data from render.py
+
                      data.addRows([
-                        ['A', 'B', 50],
-                        ['A', 'C', 35],
-                        ['A', 'D', 20],
-                        ['A', 'E', 2],
-                     ]);
+                        {% for key in round.sankey_diagram_items.keys() %}
+                            ['{{ round.label }}', '{{ key }}', {{ round.sankey_diagram_items[key]}}],
+                        {% endfor %}    
+                     ])
 
                      // Sets chart options.
                      var options = {

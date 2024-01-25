@@ -12,11 +12,11 @@ budget = 1000
 spent = 1000
 
 projects = [
-    {"id": "ProjectA", "name": "Project A", "description": "Adding a new hostpital ward.", "totalvotes": 70, "elected": True},
-    {"id": "ProjectB", "name": "Project B", "description": "Building a new school.", "totalvotes": 60, "elected": True},
-    {"id": "ProjectC", "name": "Project C", "description": "Building a new library.", "totalvotes": 15, "elected": True},
-    {"id": "ProjectD", "name": "Project D", "description": "Building a new park.", "totalvotes": 30, "elected": True},
-    {"id": "ProjectE", "name": "Project E", "description": "Building a new swimming pool.", "totalvotes": 5, "elected": True}
+    {"id": "ProjectA", "name": "Project A", "label": "A", "description": "Adding a new hostpital ward.", "totalvotes": 70, "elected": True},
+    {"id": "ProjectB", "name": "Project B", "label": "B", "description": "Building a new school.", "totalvotes": 60, "elected": True},
+    {"id": "ProjectC", "name": "Project C", "label": "C", "description": "Building a new library.", "totalvotes": 15, "elected": True},
+    {"id": "ProjectD", "name": "Project D", "label": "D", "description": "Building a new park.", "totalvotes": 30, "elected": True},
+    {"id": "ProjectE", "name": "Project E", "label": "E", "description": "Building a new swimming pool.", "totalvotes": 5, "elected": True}
 ]
 
 # What project is selected in each round of MES. Ordered in terms of what project was selected first.
@@ -24,6 +24,7 @@ rounds = [
     {
         "name": "Project A", 
         "id": "ProjectA",
+        "label": "A",
         "effective_vote_count": {
             "A": 70,
             "B": 60,
@@ -34,10 +35,13 @@ rounds = [
         "pie_chart_items": [ 
             # Carousel has 3 pie charts per slide, so each list in this list 
             # should have a max of 3 pie charts (to avoid having complex divide by 3 and dealing with remainder logic in HTML)
-            # TODO are the items in this list correct (first two items have same name)? 
+            # TODO are the items in this list correct (first two items have same name, missing ProjAvsE, etc.)? 
             ["ProjAvsBData", "ProjAvsBData", "ProjAvsCData"], # TODO: Replace strings with dictionary with pie chart data
             ["ProjAvsDData"]
         ],
+        "sankey_diagram_items": {
+            "B": 7, "C": 23, "D": 3, "E": 10,
+        },
         "chord_diagram_items":
             # How many voters who voted for a specific project also voted for all other projects
             {
@@ -57,6 +61,7 @@ rounds = [
     {
         "name": "Project B", 
         "id": "ProjectB",
+        "label": "B",
         "effective_vote_count": {
             "B": 50,
             "C": 14,
@@ -67,6 +72,9 @@ rounds = [
             # TODO are the items in this list correct (first two items have same name, "B vs B data" doesn't make sense, etc.)? 
             ["ProjBvsBData", "ProjBvsBData", "ProjBvsCData"],
         ],
+        "sankey_diagram_items": {
+            "C": 3, "D": 9, "E": 11
+        },
         "chord_diagram_items": 
             {
                 "projA": "A", "ProjAtoA": 10, "ProjAtoB": 7, "ProjAtoC": 23, "ProjAtoD": 3, "ProjAtoE": 10,
@@ -84,16 +92,20 @@ rounds = [
     {
         "name": "Project C", 
         "id": "ProjectC",
+        "label": "C",
         "effective_vote_count": {
             "C": 14,
             "D": 2,
             "E": 3
         },
         "pie_chart_items": [
-            # TODO are the items in this list correct (first two items have same name)? 
+            # TODO are the items in this list correct (first two items have same name, etc.)? 
             ["ProjCvsBData", "ProjCvsBData", "ProjCvsCData"],
             ["ProjCvsDData", "ProjCvsEData", "ProjCvsFData"],
         ],
+        "sankey_diagram_items": {
+            "D": 4, "E": 1
+        },
         "chord_diagram_items":
             {
                 "projA": "A", "ProjAtoA": 10, "ProjAtoB": 7, "ProjAtoC": 23, "ProjAtoD": 3, "ProjAtoE": 10,
@@ -119,4 +131,5 @@ rendered_output = template.render(
     budget=budget
 )
 
+# Change location where output.html is created (currently created in directory where file is ran).
 open("output.html", "w").write(rendered_output)
