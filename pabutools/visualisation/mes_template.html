@@ -88,6 +88,7 @@
                 </h1>
             </div>
         </div>
+
         <!-- Carousel for general graphs -->
         <div id="carouselExampleControls" class="carousel slide mb-3 border-black" data-ride="carousel" data-interval="false">
             <div class="carousel-inner">
@@ -131,8 +132,8 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
-        <!-- Round specific visualisations -->
 
+        <!-- Round specific visualisations -->
          {% for round in rounds %}
             <section id="{{round.id}}" class="{% if loop.index != 1 %}hidden-section{% endif %}">
                   <!-- Effective Vote Count -->
@@ -148,6 +149,7 @@
                      <div class="col-3"></div>
 
                   </div>
+
                   <!-- Sankey and Chord side by side -->
                   <div class="row" style="display: grid;">
                      <h5 style="text-align: center; font-weight: bold;">{{ round.name }} Voter Flows</h5>
@@ -166,10 +168,45 @@
                      </div>
                   </div>
                   <div class="spacer"></div>
-                  <!-- Pie Charts-->
+
+                  <!-- Pie Charts Carousels -->
                   <div id="secondCarousel" style="height: 500px;" class="carousel slide mb-3 border-black" data-ride="carousel" data-interval="false">
                      <div class="carousel-inner carousel-inner-pie" style="height: 500px;">
-                        <div class="carousel-item active">
+
+                        {% for triplet in round.pie_chart_items%}
+                            {% set carouselNum = loop.index %}
+                            {% set carouselClass = "carousel-item" %}
+
+                            {% if loop.first %}
+                                {% set carouselClass = "carousel-item active" %}
+                            {% endif %}
+
+                            <div class="{{ carouselClass }}">
+                                <div class="wrapper" style="height:300px">
+                                    <div class="d-block w-100">
+                                        <div class="row">
+
+                                            <!-- Single Pie Chart Carousel -->
+                                            {% for data in triplet%}
+                                                <!-- Individual Pie Chart -->
+                                                <div class="col-md-4 nested">
+                                                    <div>
+                                                        <div id='{{ round.id }}PieChart{{ carouselNum }}-{{ loop.index }}'></div>
+                                                    </div>
+                                                    <div class="spacer"></div>
+                                                    <div class="border-black ">
+                                                        This resulted in a ${{ data.reduction }} reduction in the average funds available to the B voter
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <!-- (OLD) dummy data for pie charts -->
+                        {# <div class="carousel-item active">
                               <div class="wrapper" style="height:300px">
                                  <div class="d-block w-100">
                                     <div class="row">
@@ -209,6 +246,7 @@
                                  </div>
                               </div>
                         </div>
+
                         <div class="carousel-item">
                               <div class="wrapper">
                                  <div class="d-block w-100" style="height:200px;">
@@ -244,6 +282,7 @@
                                  </div>
                               </div>
                         </div>
+
                         <div class="carousel-item">
                               <div class="wrapper">
                                  <div class="d-block w-100" style="height:200px;">
@@ -283,8 +322,9 @@
                                     </div>
                                  </div>
                               </div>
-                        </div>
+                        </div> #}
                      </div>
+
                      <a class="carousel-control-prev" href="#secondCarousel" role="button" data-slide="prev">
                         <span class="carousel-control-next-icon" aria-hidden="true">&lt;
                      </span>
@@ -296,7 +336,8 @@
                         <span class="sr-only">Next</span>
                      </a>
                   </div>
-                  <!-- Centred Div -->
+
+                  <!-- Reduced Effective Vote Count Graph (Centred Div) -->
                   <div class="row">
                      <div class="col-2">
                      </div>
@@ -309,7 +350,7 @@
             </section>
          {% endfor %}
         
-        
+        <!-- Dropdown UI -->
         <div class="row my-4 justify-content-center">
             <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="projectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -328,6 +369,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Dropdown functionality -->
     <script>
         function onClickDropdown(element) {
             var dropdownItems = document.querySelectorAll('.dropdown-item');
@@ -341,8 +384,9 @@
             document.getElementById(element.getAttribute("item")).style.display = 'block';
         }
     </script>
-        {% for round in rounds %}
-            <script>
+    {% for round in rounds %}
+        <!-- Chord chart -->
+        <script>
             //   ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
             zingchart.render({
                   id: '{{round.id}}ChordChart',
@@ -399,10 +443,10 @@
                   height: "60%",
                   width: "100%",
                });
-               </script>
-               <!-- Effective vote count bar chart -->
-               <script>
-            //   ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+        </script>
+        <!-- Effective vote count bar chart -->
+        <script>
+                //   ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
                zingchart.render({
                   id: '{{ round.id }}BarChart',
                   data: {
@@ -441,9 +485,9 @@
                   height: '100%',
                   width: '100%'
             });
-            </script>
-            <!-- Effective vote count reduction bar chart -->
-            <script>
+        </script>
+        <!-- Effective vote count reduction bar chart -->
+        <script>
             // ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
             zingchart.render({
             id: '{{round.id}}AfterRoundBarChart',
@@ -497,7 +541,7 @@
                     {% for key in round.effective_vote_count_reduction.keys() %}
                         {{ round.effective_vote_count[key]}},
                     {% endfor %}
-                 ], // Effective votes for next round
+                ], // Effective votes for next round
                 "background-color": "#0070C0",
                 "text": "Current Votes"
             }, {
@@ -510,42 +554,96 @@
             width: '100%'
         });
         </script>
+
+        <!-- Sankey diagram -->
         <script>
-               // Render Sankey Diagrams
-               google.charts.load('current', {
+            // Render Sankey Diagrams
+            google.charts.load('current', {
             'packages': ['sankey']
         });
-               google.charts.setOnLoadCallback(() => {
-                     var data = new google.visualization.DataTable();
-                     data.addColumn('string', 'From');
-                     data.addColumn('string', 'To');
-                     data.addColumn('number', 'Weight');
-                     
+            google.charts.setOnLoadCallback(() => {
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'From');
+                    data.addColumn('string', 'To');
+                    data.addColumn('number', 'Weight');
+                    
                     // Adding data from render.py
 
-                     data.addRows([
+                    data.addRows([
                         {% for key in round.sankey_diagram_items.keys() %}
                             ['{{ round.label }}', '{{ key }}', {{ round.sankey_diagram_items[key]}}],
                         {% endfor %}    
-                     ])
+                    ])
 
-                     // Sets chart options.
-                     var options = {
+                    // Sets chart options.
+                    var options = {
                         title: 'Project Vote Sankey Diagram',
                         width: 445,
                         height: 280,
                         sankey: {}
-                     };
+                    };
 
-                     // Instantiates and draws our chart, passing in some options.
-                     var chart = new google.visualization.Sankey(document.getElementById('{{round.id}}SankeyChart'));
-                     chart.draw(data, options);
-               });
-            </script>
-         {% endfor %}
-    </script>
+                    // Instantiates and draws our chart, passing in some options.
+                    var chart = new google.visualization.Sankey(document.getElementById('{{round.id}}SankeyChart'));
+                    chart.draw(data, options);
+            });
+        </script>
+        <!-- List of Pie Chart Carousels -->
+        {% for dataList in round.pie_chart_items%}
+            {% set carouselNum = loop.index %}
 
-    <!-- Pie Chart (Carousels) -->
+            <!-- Pie Chart Carousel -->
+            {% for data in dataList%}
+                <!-- Pie Chart -->
+                <script>
+                    //   ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+                    var myConfig = {
+                        "type": "pie",
+                        "title": {
+                            "text": "{{ data.project}} Voters"
+                        },
+                        "legend": {
+                            "toggle-action": "remove",
+                            "toggle-action": "remove",
+                            "layout": "x2", // Arrange the legend items horizontally
+                            "align": "center", // Align the legend items in the center
+                            "vertical-align": "bottom",
+                        },
+                        "plot": {
+                            "valueBox": {
+                                "visible": true, // Make value labels visible
+                                "type": 'all', // Show all value text including percentages and absolute values
+                                "placement": 'in', // Position the valueBox outside of the slice
+                                "text": "%v", // Display the absolute value
+                                "fontSize": 10 // Adjust font size as needed
+                            },
+                            "animation": {
+                                "effect": "ANIMATION_EXPAND_VERTICAL",
+                                "sequence": "ANIMATION_BY_PLOT",
+                                "speed": 500
+                            }
+                        },
+                        "series": [{
+                            "values": [{{ data.roundVoters }}],
+                            "text": "{{ round.name }} Voters",
+                        }, {
+                            "values": [{{ data.nonRoundVoters }}],
+                            "text": "Non {{ round.name }} Voters",
+                        }]
+                    };
+
+                    zingchart.render({
+                        id: '{{ round.id }}PieChart{{ carouselNum }}-{{ loop.index }}',
+                        data: myConfig,
+                        height: 300,
+                        width: "100%"
+                    });
+                </script>
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+
+    {# <!-- Pie Chart (Carousels) (OLD) -->
     <script>
         //   ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
         var myConfig = {
@@ -575,7 +673,7 @@
                 }
             },
             "series": [{
-                "values": [70],
+                "values": [65],
                 "text": "A Voters",
             }, {
                 "values": [30],
@@ -676,10 +774,10 @@
             height: 300,
             width: "100%"
         });
-    </script>
+    </script> #}
 
 
-    <!-- Pie Chart (Carousels) -->
+    {# <!-- Pie Chart (Carousels) (OLD) -->
     <script>
         //   ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
         var myConfig = {
@@ -810,6 +908,6 @@
             height: 300,
             width: "100%"
         });
-    </script>
+    </script> #}
 </body>
 </html>

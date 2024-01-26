@@ -32,12 +32,21 @@ rounds = [
             "D": 30,
             "E": 5
         },
+        # BUG: Multiple visual bugs involving the pie charts:
+            # Pie chart visuals break after the first round (probably the same issue that is affecting the chord diagrams).
+            # Pie charts in carousels with less than 3 items expand to fill space in the wrapper, while textboxes don't.
+            # Pie charts currently display weirdly when any voter values are 0 (see output.html for an example).
+        # BUG: Any reductions that are integers are displayed incorrectly (e.g. "1.0" instead of "1.00").
+
         "pie_chart_items": [ 
             # Carousel has 3 pie charts per slide, so each list in this list 
             # should have a max of 3 pie charts (to avoid having complex divide by 3 and dealing with remainder logic in HTML)
-            # TODO are the items in this list correct (first two items have same name, missing ProjAvsE, etc.)? 
-            ["ProjAvsBData", "ProjAvsBData", "ProjAvsCData"], # TODO: Replace strings with dictionary with pie chart data
-            ["ProjAvsDData"]
+            [
+                {"project": "Project B", "roundVoters": 10, "nonRoundVoters": 60, "reduction": 12.32}, 
+                {"project": "Project C", "roundVoters": 0, "nonRoundVoters": 70, "reduction": 9.11}, 
+                {"project": "Project D", "roundVoters": 35, "nonRoundVoters": 35, "reduction": 3.23}
+            ],
+            [{"project": "Project E", "roundVoters": 40, "nonRoundVoters": 30, "reduction": 1.00}]
         ],
         "sankey_diagram_items": {
             "B": 7, "C": 23, "D": 3, "E": 10,
@@ -69,8 +78,11 @@ rounds = [
             "E": 4
         },
         "pie_chart_items": [
-            # TODO are the items in this list correct (first two items have same name, "B vs B data" doesn't make sense, etc.)? 
-            ["ProjBvsBData", "ProjBvsBData", "ProjBvsCData"],
+            [
+                {"project": "Project C", "roundVoters": 30, "nonRoundVoters": 20, "reduction": 12.32}, 
+                {"project": "Project D", "roundVoters": 6, "nonRoundVoters": 48, "reduction": 12.73}, 
+                {"project": "Project E", "roundVoters": 42, "nonRoundVoters": 8, "reduction": 12.35}
+            ]
         ],
         "sankey_diagram_items": {
             "C": 3, "D": 9, "E": 11
@@ -99,9 +111,10 @@ rounds = [
             "E": 3
         },
         "pie_chart_items": [
-            # TODO are the items in this list correct (first two items have same name, etc.)? 
-            ["ProjCvsBData", "ProjCvsBData", "ProjCvsCData"],
-            ["ProjCvsDData", "ProjCvsEData", "ProjCvsFData"],
+            [
+                {"project": "Project D", "roundVoters": 7, "nonRoundVoters": 7, "reduction": 1.25}, 
+                {"project": "Project E", "roundVoters": 4, "nonRoundVoters": 10, "reduction": 9.45}, 
+            ],
         ],
         "sankey_diagram_items": {
             "D": 4, "E": 1
