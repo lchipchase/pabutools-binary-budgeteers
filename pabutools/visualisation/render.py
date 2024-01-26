@@ -144,5 +144,5 @@ rendered_output = template.render(
     budget=budget
 )
 
-# Change location where output.html is created (currently created in directory where file is ran).
+# TODO: Change location where output.html is created (currently created in directory where file is ran).
 open("output.html", "w").write(rendered_output)
