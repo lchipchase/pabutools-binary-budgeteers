@@ -284,9 +284,7 @@ def mes_inner_algo(
     current_alloc: list[Project],
     all_allocs: list[list[Project]],
     resoluteness: bool,
-    effective_vote_counts: dict(),
-    projects_dropped: dict(),
-    projects_selected: dict(),
+    rounds: list[dict()],
     verbose: bool = False,
     storing: bool = False,
 ) -> None:
@@ -323,18 +321,67 @@ def mes_inner_algo(
             (`resoluteness = False`).
 
     """
+    # We want an array that is udpated each orund
+    # Each item in the array is a dictionary containing all relevant information about the thing
+    
+    # {
+    #     "name": Str()
+    #     "id": Str(),
+    #     "label": Str,
+    #     "effective_vote_count": {
+    #         "A": 70,
+    #         "B": 60,
+    #         "C": 15,
+    #         "D": 30,
+    #         "E": 5
+    #     },
+    #     # BUG: Multiple visual bugs involving the pie charts:
+    #         # Pie chart visuals break after the first round (probably the same issue that is affecting the chord diagrams).
+    #         # Pie charts in carousels with less than 3 items expand to fill space in the wrapper, while textboxes don't.
+    #         # Pie charts currently display weirdly when any voter values are 0 (see output.html for an example).
+    #     # BUG: Any reductions that are integers are displayed incorrectly (e.g. "1.0" instead of "1.00").
+
+    #     "pie_chart_items": [ 
+    #         # Carousel has 3 pie charts per slide, so each list in this list 
+    #         # should have a max of 3 pie charts (to avoid having complex divide by 3 and dealing with remainder logic in HTML)
+    #         [
+    #             {"project": "Project B", "roundVoters": 10, "nonRoundVoters": 60, "reduction": 12.32}, 
+    #             {"project": "Project C", "roundVoters": 0, "nonRoundVoters": 70, "reduction": 9.11}, 
+    #             {"project": "Project D", "roundVoters": 35, "nonRoundVoters": 35, "reduction": 3.23}
+    #         ],
+    #         [{"project": "Project E", "roundVoters": 40, "nonRoundVoters": 30, "reduction": 1.00}]
+    #     ],
+    #     "sankey_diagram_items": {
+    #         "B": 7, "C": 23, "D": 3, "E": 10,
+    #     },
+    #     "chord_diagram_items":
+    #         # How many voters who voted for a specific project also voted for all other projects
+    #         {
+    #             "projA": "A", "ProjAtoA": 10, "ProjAtoB": 7, "ProjAtoC": 23, "ProjAtoD": 3, "ProjAtoE": 10,
+    #             "projB": "B", "ProjBtoA": 7, "ProjBtoB": 21, "ProjBtoC": 3, "ProjBtoD": 9, "ProjBtoE": 11,
+    #             "projC": "C", "ProjCtoA": 3, "ProjCtoB": 1, "ProjCtoC": 2, "ProjCtoD": 4, "ProjCtoE": 1,
+    #             "projD": "D", "ProjDtoA": 5, "ProjDtoB": 3, "ProjDtoC": 3, "ProjDtoD": 5, "ProjDtoE": 10,
+    #             "projE": "E", "ProjEtoA": 1, "ProjEtoB": 1, "ProjEtoC": 1, "ProjEtoD": 1, "ProjEtoE": 1
+    #     },
+    #     "effective_vote_count_reduction": 
+    #     }
+    # }
+
+    # Define a dictionary for the current round
+    current_round_dictionary = {}
+    effective_vote_counts = {}
     _ = None
     tied_projects = []
     best_afford = float("inf")
     if verbose:
         print("========================")
-    if storing:
-        print("====================================================")
     for project in sorted(projects, key=lambda p: p.affordability):
         print("Looping through - project: ", project.name)
         # This is the original
         if verbose:
             print(f"\tConsidering: {project}")
+
+        # If the sum of the supporters budgets is less than the project cost, then skip
         if (
             sum(voters[i].total_budget() for i in project.supporter_indices)
             < project.cost
@@ -346,14 +393,11 @@ def mes_inner_algo(
                 )
             if storing:
                 _ = float(sum(voters[i].total_budget() for i in project.supporter_indices)) < float(project.cost)
-                projects_dropped[project.name] = [len(projects_dropped), project.cost, sum(voters[i].total_budget() for i in project.supporter_indices), project.supporter_indices]
-                print("Dropped ", project.name)
             projects.remove(project)
             continue
         
-        # This is the adapted version (for us outputting)
-        if storing:
-            _
+        # If the affordability of the project is greater than the best afford, then skip
+        # Hence why it will loop once more over
         if (
             project.affordability > best_afford
         ):  # best possible afford for this round isn't good enough
@@ -362,34 +406,51 @@ def mes_inner_algo(
                     f"\t\t Skipped as affordability is too high: {float(project.affordability)} > {float(best_afford)}"
                 )
             if storing:
-                print("Skipping project: ", project.name)
                 _ = float(project.affordability) > float(best_afford)
-                 
+            # Break the looop since the affordability was too high, and remain wherw we currently were    
             break
+
+        # Sort the supporters of the project by their budget over the satisfaction of the project
         project.supporter_indices.sort(
             key=lambda i: voters[i].budget_over_sat_project(project)
         )
+
+        # Initially current_contribution is 0
         current_contribution = 0
+
+        # Denominator is the total project satisfaction
         denominator = project.total_sat
+
+        # For each of the voters for the project (supporter_indices is the list of voters)
         for i in project.supporter_indices:
+
+            # For the current voter
             supporter = voters[i]
+
+            # Update the affordability factor of the project
             afford_factor = frac(project.cost - current_contribution, denominator)
+
+            # Print the affordability factor for each of the voters
             if verbose:
                 print(
                     f"\t\t\t {project.cost} - {current_contribution} / {denominator} = {afford_factor} * "
                     f"{project.supporters_sat(supporter)} ?? {supporter.budget}"
                 )
-            # Just testing this stuff
+
+            # Relevant
             if storing:
                 _ = project.cost - current_contribution
                 _ = denominator
                 _ = project.supporters_sat(supporter)
                 _ = supporter.budget
             
+            # If the afford factor is less than the budget of the voter
             if afford_factor * project.supporters_sat(supporter) <= supporter.budget:
+
                 # found the best afford_factor for this project
                 project.affordability = afford_factor
                 
+                # Print the affordability factor
                 if verbose:
                     eff_vote_count = frac(
                         denominator, project.cost - current_contribution
@@ -407,17 +468,23 @@ def mes_inner_algo(
                     eff_vote_count = frac(
                         denominator, project.cost - current_contribution
                     )
-                    _ = float(eff_vote_count)
+                    # Store the effective vote count
+                    # Note that it will only update the effective vote count if necessary
                     effective_vote_counts[project.name] = float(eff_vote_count)
-                    effective_vote_counts[project] = float(eff_vote_count)
-                    print("Project: ", project.name, "Has effective vote count: ", float(eff_vote_count))
 
+                # If the afford factor is less than the best, then updated the tied projects to be a singleton list with the project in
                 if afford_factor < best_afford:
                     best_afford = afford_factor
                     tied_projects = [project]
+                
+                # Else if it is the same, then append the project to the tied projects list
                 elif afford_factor == best_afford:
                     tied_projects.append(project)
+
                 break
+
+            # Now, updated the current contribution and demoninator using the supporters budget and the
+            # total satisfaction of the project
             current_contribution += supporter.total_budget()
             denominator -= supporter.multiplicity * project.supporters_sat(supporter)
 
@@ -437,23 +504,11 @@ def mes_inner_algo(
                 tied_projects = tied_projects[:1]
         for selected_project in tied_projects:
             if resoluteness:
-                new_alloc = current_alloc
-
-                # This is for our output
-                if len(new_alloc)  > 0 and storing and False:
-                    print("New Project Allocation: ", new_alloc[-1])
-                    projects_selected[new_alloc[-1].name] = [len(projects_selected)]
-                
+                new_alloc = current_alloc              
                 new_projects = projects
                 new_voters = voters
             else:
                 new_alloc = copy(current_alloc)
-
-                # This is for our output
-                if len(new_alloc)  > 0 and storing and False:
-                    print("New Project Allocation: ", new_alloc[-1])
-                    projects_selected[new_alloc[-1].name] = [len(projects_selected)]
-                
                 new_projects = deepcopy(projects)
                 new_voters = deepcopy(voters)
             new_alloc.append(selected_project.project)
@@ -465,14 +520,12 @@ def mes_inner_algo(
             if storing:
                 _ = best_afford * selected_project.supporters_sat(selected_project.supporter_indices[0])
 
-                # This is for our output
-                if selected_project.name in projects_selected:
-                    projects_selected[selected_project.name] = projects_selected[selected_project.name] + [best_afford * selected_project.supporters_sat(selected_project.supporter_indices[0])]
-                else:
-                    projects_selected[selected_project.name] = [len(projects_selected), best_afford * selected_project.supporters_sat(selected_project.supporter_indices[0])]
-                
-                print("Project Selected For This Round ", selected_project.name)
+                # Store the current project selected for the round
+                current_round_dictionary["name"] = selected_project.name
+                current_round_dictionary["id"] = selected_project.name
+                current_round_dictionary["label"] = selected_project.name # Temprarily the same for now
             
+            # This is the supporter indices, therefore this updates the budgets of all hte voters
             for i in selected_project.supporter_indices:
                 supporter = new_voters[i]
                 supporter.budget -= min(
@@ -480,6 +533,14 @@ def mes_inner_algo(
                     best_afford * selected_project.supporters_sat(supporter),
                 )
             print("=======================================")
+
+            # Add the effective vote counts for the round
+            current_round_dictionary["effective_vote_count"] = effective_vote_counts
+            # Finally append the current round dictionary to the rounds list
+            rounds.append(current_round_dictionary)
+
+            print(rounds)
+            
             # Each round is when this recursive call happens
             mes_inner_algo(
                 instance,
@@ -490,9 +551,7 @@ def mes_inner_algo(
                 new_alloc,
                 all_allocs,
                 resoluteness,
-                effective_vote_counts,
-                projects_dropped,
-                projects_selected,
+                rounds,
                 verbose=verbose,
                 storing=storing,
             )
@@ -546,8 +605,6 @@ def method_of_equal_shares_scheme(
             The selected projects if resolute (`resoluteness` = True), or the set of selected projects if irresolute
             (`resoluteness = False`).
     """
-    project_selection_order = []
-
     if verbose:
         print(f"Initial budget per voter is: {initial_budget_per_voter}")
     voters = []
@@ -599,9 +656,7 @@ def method_of_equal_shares_scheme(
             copy(initial_budget_allocation),
             all_budget_allocations,
             resoluteness,
-            dict(),
-            dict(),
-            dict(),
+            [],
             verbose,
             storing,
         )
