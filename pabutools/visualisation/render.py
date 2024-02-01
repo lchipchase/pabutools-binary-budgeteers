@@ -12,7 +12,7 @@ budget = 1000
 spent = 1000
 
 projects = [
-    {"id": "A", "name": "Project A", "description": "Adding a new hostpital ward.", "totalvotes": 70, "elected": True},
+    {"id": "A", "name": "Project A", "description": "Adding a new hospital ward.", "totalvotes": 70, "elected": True},
     {"id": "B", "name": "Project B", "description": "Building a new school.", "totalvotes": 60, "elected": True},
     {"id": "C", "name": "Project C", "description": "Building a new library.", "totalvotes": 15, "elected": True},
     {"id": "D", "name": "Project D", "description": "Building a new park.", "totalvotes": 30, "elected": True},
