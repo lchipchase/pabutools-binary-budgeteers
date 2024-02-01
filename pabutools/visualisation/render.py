@@ -131,5 +131,5 @@ rendered_output = template.render(
     budget=budget
 )
 
-# TODO: Change location where output.html is created (currently created in directory where file is ran).
-open("output.html", "w").write(rendered_output)
+file_path = os.path.abspath(os.path.dirname("render.py"))
+open(file_path + "/output.html", "w").write(rendered_output)
