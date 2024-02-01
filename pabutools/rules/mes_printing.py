@@ -328,7 +328,11 @@ def mes_inner_algo(
     best_afford = float("inf")
     if verbose:
         print("========================")
+    if storing:
+        print("====================================================")
     for project in sorted(projects, key=lambda p: p.affordability):
+        print("Looping through - project: ", project.name)
+        # This is the original
         if verbose:
             print(f"\tConsidering: {project}")
         if (
@@ -346,6 +350,8 @@ def mes_inner_algo(
                 print("Dropped ", project.name)
             projects.remove(project)
             continue
+        
+        # This is the adapted version (for us outputting)
         if storing:
             _
         if (
@@ -356,6 +362,7 @@ def mes_inner_algo(
                     f"\t\t Skipped as affordability is too high: {float(project.affordability)} > {float(best_afford)}"
                 )
             if storing:
+                print("Skipping project: ", project.name)
                 _ = float(project.affordability) > float(best_afford)
                  
             break
@@ -403,9 +410,7 @@ def mes_inner_algo(
                     _ = float(eff_vote_count)
                     effective_vote_counts[project.name] = float(eff_vote_count)
                     effective_vote_counts[project] = float(eff_vote_count)
-                    print("Eff")
-                    print(float(eff_vote_count))
-                    print(len(effective_vote_counts))
+                    print("Project: ", project.name, "Has effective vote count: ", float(eff_vote_count))
 
                 if afford_factor < best_afford:
                     best_afford = afford_factor
@@ -433,17 +438,22 @@ def mes_inner_algo(
         for selected_project in tied_projects:
             if resoluteness:
                 new_alloc = current_alloc
-                if len(new_alloc)  > 0 and storing:
+
+                # This is for our output
+                if len(new_alloc)  > 0 and storing and False:
                     print("New Project Allocation: ", new_alloc[-1])
                     projects_selected[new_alloc[-1].name] = [len(projects_selected)]
-                    # print("Effective Vote Count: ", effective_vote_counts[new_alloc[-1]])
+                
                 new_projects = projects
                 new_voters = voters
             else:
                 new_alloc = copy(current_alloc)
-                if len(new_alloc)  > 0 and storing:
+
+                # This is for our output
+                if len(new_alloc)  > 0 and storing and False:
                     print("New Project Allocation: ", new_alloc[-1])
-                    # print("Effective Vote Count: ", effective_vote_counts[new_alloc[-1]])
+                    projects_selected[new_alloc[-1].name] = [len(projects_selected)]
+                
                 new_projects = deepcopy(projects)
                 new_voters = deepcopy(voters)
             new_alloc.append(selected_project.project)
@@ -454,11 +464,14 @@ def mes_inner_algo(
                 )
             if storing:
                 _ = best_afford * selected_project.supporters_sat(selected_project.supporter_indices[0])
+
+                # This is for our output
                 if selected_project.name in projects_selected:
                     projects_selected[selected_project.name] = projects_selected[selected_project.name] + [best_afford * selected_project.supporters_sat(selected_project.supporter_indices[0])]
                 else:
                     projects_selected[selected_project.name] = [len(projects_selected), best_afford * selected_project.supporters_sat(selected_project.supporter_indices[0])]
-                print("Selected ", selected_project.name)
+                
+                print("Project Selected For This Round ", selected_project.name)
             
             for i in selected_project.supporter_indices:
                 supporter = new_voters[i]
@@ -466,6 +479,8 @@ def mes_inner_algo(
                     supporter.budget,
                     best_afford * selected_project.supporters_sat(supporter),
                 )
+            print("=======================================")
+            # Each round is when this recursive call happens
             mes_inner_algo(
                 instance,
                 profile,
