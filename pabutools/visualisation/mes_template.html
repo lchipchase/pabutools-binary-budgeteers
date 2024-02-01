@@ -403,42 +403,24 @@
                      "plotarea": {
                         "margin": "dynamic"
                      },
-                     "series": [{
-                        "values": [{{ round.chord_diagram_items.ProjDtoA }},
-                                   {{ round.chord_diagram_items.ProjDtoB }},
-                                   {{ round.chord_diagram_items.ProjDtoC }},
-                                   {{ round.chord_diagram_items.ProjDtoD }},
-                                   {{ round.chord_diagram_items.ProjDtoE }}],
-                        "text": "{{ round.chord_diagram_items.projD }}"
-                     }, {
-                        "values": [{{ round.chord_diagram_items.ProjAtoA }},
-                                   {{ round.chord_diagram_items.ProjAtoB }},
-                                   {{ round.chord_diagram_items.ProjAtoC }},
-                                   {{ round.chord_diagram_items.ProjAtoD }},
-                                   {{ round.chord_diagram_items.ProjAtoE }}],
-                        "text": "{{ round.chord_diagram_items.projA }}"
-                     }, {
-                        "values": [{{ round.chord_diagram_items.ProjBtoA }},
-                                   {{ round.chord_diagram_items.ProjBtoB }},
-                                   {{ round.chord_diagram_items.ProjBtoC }},
-                                   {{ round.chord_diagram_items.ProjBtoD }},
-                                   {{ round.chord_diagram_items.ProjBtoE }}],
-                        "text": "{{ round.chord_diagram_items.projB }}"
-                     }, {
-                        "values": [{{ round.chord_diagram_items.ProjCtoA }},
-                                   {{ round.chord_diagram_items.ProjCtoB }},
-                                   {{ round.chord_diagram_items.ProjCtoC }},
-                                   {{ round.chord_diagram_items.ProjCtoD }},
-                                   {{ round.chord_diagram_items.ProjCtoE }}],
-                        "text": "{{ round.chord_diagram_items.projC }}"
-                     }, {
-                        "values": [{{ round.chord_diagram_items.ProjEtoA }},
-                                   {{ round.chord_diagram_items.ProjEtoB }},
-                                   {{ round.chord_diagram_items.ProjEtoC }},
-                                   {{ round.chord_diagram_items.ProjEtoD }},
-                                   {{ round.chord_diagram_items.ProjEtoE }}],
-                        "text": "{{ round.chord_diagram_items.projE }}"
-                     }]
+                     "series": [
+                        // {"values": [{{ round.chord_diagram_items.ProjDtoA }},
+                        //           {{ round.chord_diagram_items.ProjDtoB }},
+                        //           {{ round.chord_diagram_items.ProjDtoC }},
+                        //           {{ round.chord_diagram_items.ProjDtoD }},
+                        //           {{ round.chord_diagram_items.ProjDtoE }}],
+                        //"text": "{{ round.chord_diagram_items.projD }}"
+                     //},
+                     {% for projFrom in round.chord_diagram_items %}
+                        {"values":[
+                        {% for projTo in round.chord_diagram_items[projFrom] %}
+                            {{ round.chord_diagram_items[projFrom][projTo] }},
+                        {% endfor %}
+                        ],
+                        "text": "{{ projFrom }}"
+                        },
+                     {% endfor %}
+                      ]
                   },
                   height: "60%",
                   width: "100%",
