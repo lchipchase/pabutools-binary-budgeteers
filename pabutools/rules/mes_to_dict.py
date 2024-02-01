@@ -301,6 +301,25 @@ def calculate_effective_vote_count_reduction(previous_effective_vote_counts, cur
             effective_vote_count_reduction[project] = effective_vote_count - current_effective_vote_counts[project]
     return effective_vote_count_reduction
  
+def update_round_dictionary(rounds, selected_project, project_votes, pairwise_project_votes, voters, projects, verbose):
+    current_round_dictionary = {}
+    updated_effective_vote_count = update_effective_vote_count(voters, projects)
+    current_round_dictionary["name"] = selected_project.project.name
+    current_round_dictionary["id"] = selected_project.project.name
+    current_round_dictionary["label"] = selected_project.project.name
+    current_round_dictionary["effective_vote_count"] = updated_effective_vote_count
+    current_round_dictionary["sankey_diagram_items"] = calculate_sankey_diagram(pairwise_project_votes, selected_project.project.name)
+    if len(rounds) > 0:
+        current_round_dictionary["effective_vote_count_reduction"] = calculate_effective_vote_count_reduction(rounds[-1]["effective_vote_count"], updated_effective_vote_count)
+    else:
+        current_round_dictionary["effective_vote_count_reduction"] = calculate_effective_vote_count_reduction(project_votes, updated_effective_vote_count)
+    
+    rounds.append(current_round_dictionary)
+
+    print(rounds)
+    
+    return rounds
+
 def mes_inner_algo(
     instance: Instance,
     profile: AbstractProfile,
@@ -349,18 +368,12 @@ def mes_inner_algo(
             (`resoluteness = False`).
 
     """
-
-    current_round_dictionary = {}
-
     tied_projects = []
     best_afford = float("inf")
     if verbose:
-        print()
         print("========================")
-
     for project in sorted(projects, key=lambda p: p.affordability):
         if verbose:
-            project.to_string()
             print(f"\tConsidering: {project}")
         if (
             sum(voters[i].total_budget() for i in project.supporter_indices)
@@ -386,16 +399,14 @@ def mes_inner_algo(
         )
         current_contribution = 0
         denominator = project.total_sat
-        
-        if verbose:
-            print("This is where the long part is:")
-            print("project.supporter_indices: ", project.supporter_indices)
         for i in project.supporter_indices:
             supporter = voters[i]
             afford_factor = frac(project.cost - current_contribution, denominator)
             if verbose:
-                print(f"\t\t\tAfford Factor:  ({project.cost} - {current_contribution}) / {denominator} = {afford_factor}")
-                print(f"\t\t\t {project.supporters_sat(supporter)} ?? {supporter.budget}")
+                print(
+                    f"\t\t\t {project.cost} - {current_contribution} / {denominator} = {afford_factor} * "
+                    f"{project.supporters_sat(supporter)} ?? {supporter.budget}"
+                )
             if afford_factor * project.supporters_sat(supporter) <= supporter.budget:
                 # found the best afford_factor for this project
                 project.affordability = afford_factor
@@ -450,26 +461,9 @@ def mes_inner_algo(
                     supporter.budget,
                     best_afford * selected_project.supporters_sat(supporter),
                 )
-
-            # HAVE: name, id, label, effective_vote_count,  sankey_diagram_items
-            # NEED: pie_chart_items, chord_diagram_items, effective_vote_count_reduction
-            if storing:
-                updated_effective_vote_count = update_effective_vote_count(voters, projects)
-                current_round_dictionary["name"] = selected_project.project.name
-                current_round_dictionary["id"] = selected_project.project.name
-                current_round_dictionary["label"] = selected_project.project.name
-                current_round_dictionary["effective_vote_count"] = updated_effective_vote_count
-                current_round_dictionary["sankey_diagram_items"] = calculate_sankey_diagram(pairwise_project_votes, selected_project.project.name)
-                if len(rounds) > 0:
-                    current_round_dictionary["effective_vote_count_reduction"] = calculate_effective_vote_count_reduction(rounds[-1]["effective_vote_count"], updated_effective_vote_count)
-                else:
-                    current_round_dictionary["effective_vote_count_reduction"] = calculate_effective_vote_count_reduction(project_votes, updated_effective_vote_count)
-                # print(current_round_dictionary["effective_vote_count_reduction"])
-                rounds.append(current_round_dictionary)
-
-                if verbose and False:
-                    print(rounds)
             
+            if storing:
+                update_round_dictionary(rounds, selected_project, project_votes, pairwise_project_votes, voters, projects, verbose)
             
             mes_inner_algo(
                 instance,
@@ -577,34 +571,30 @@ def method_of_equal_shares_scheme(
     # This is for our storing
     project_votes = {}
     pairwise_project_votes = {}
+    pairwise_dict = {}
     rounds = []
 
-    id_to_index_dict = {}
-    projectsList = list(instance)
-    for i in range(len(projectsList)):
-        id_to_index_dict[projectsList[i]] = i
         
-
-
-        
-
     # If storing, then we get the project and pairwise project votes
     if storing:
+        id_to_index_dict = {}
+        projectsList = list(instance)
+        for i in range(len(projectsList)):
+            id_to_index_dict[projectsList[i]] = i
+
         project_votes = get_project_counts(profile)
         pairwise_project_votes = get_pairwise_project_votes(profile)
-        print(pairwise_project_votes)
-    pairwise_project_matrix = get_pairwise_matrix(profile, id_to_index_dict)
+        pairwise_project_matrix = get_pairwise_matrix(profile, id_to_index_dict)
 
-    pairwiseDict = {}
-    for project in projectsList:
-        pairwiseDict["proj" +str(project)] = str(project)
-        for count in pairwise_project_matrix[id_to_index_dict[project]]:
-            for projectPair in projectsList:
-                pairCount = pairwise_project_matrix[id_to_index_dict[project]][id_to_index_dict[projectPair]]
-                myString = "proj"+str(project)+"to"+str(projectPair)
-                pairwiseDict[myString] = pairCount
-
-    print(pairwiseDict)
+        for project in projectsList:
+            pairwise_dict["proj" +str(project)] = str(project)
+            for count in pairwise_project_matrix[id_to_index_dict[project]]:
+                for projectPair in projectsList:
+                    pairCount = pairwise_project_matrix[id_to_index_dict[project]][id_to_index_dict[projectPair]]
+                    myString = "proj"+str(project)+"to"+str(projectPair)
+                    pairwise_dict[myString] = pairCount
+        
+        print(pairwise_dict)
 
     previous_outcome: list[Project] | list[list[Project]] = initial_budget_allocation
 
