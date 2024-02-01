@@ -12,11 +12,11 @@ budget = 1000
 spent = 1000
 
 projects = [
-    {"id": "A", "name": "Project A", "label": "A", "description": "Adding a new hostpital ward.", "totalvotes": 70, "elected": True},
-    {"id": "B", "name": "Project B", "label": "B", "description": "Building a new school.", "totalvotes": 60, "elected": True},
-    {"id": "C", "name": "Project C", "label": "C", "description": "Building a new library.", "totalvotes": 15, "elected": True},
-    {"id": "D", "name": "Project D", "label": "D", "description": "Building a new park.", "totalvotes": 30, "elected": True},
-    {"id": "E", "name": "Project E", "label": "E", "description": "Building a new swimming pool.", "totalvotes": 5, "elected": True}
+    {"id": "A", "name": "Project A", "description": "Adding a new hostpital ward.", "totalvotes": 70, "elected": True},
+    {"id": "B", "name": "Project B", "description": "Building a new school.", "totalvotes": 60, "elected": True},
+    {"id": "C", "name": "Project C", "description": "Building a new library.", "totalvotes": 15, "elected": True},
+    {"id": "D", "name": "Project D", "description": "Building a new park.", "totalvotes": 30, "elected": True},
+    {"id": "E", "name": "Project E", "description": "Building a new swimming pool.", "totalvotes": 5, "elected": True}
 ]
 
 # What project is selected in each round of MES. Ordered in terms of what project was selected first.
@@ -24,7 +24,6 @@ rounds = [
     {
         "name": "Project A", 
         "id": "A",
-        "label": "A",
         "effective_vote_count": {
             "A": 70,
             "B": 60,
@@ -69,7 +68,6 @@ rounds = [
     {
         "name": "Project B", 
         "id": "B",
-        "label": "B",
         "effective_vote_count": {
             "B": 50,
             "C": 14,
@@ -102,7 +100,6 @@ rounds = [
     {
         "name": "Project C", 
         "id": "C",
-        "label": "C",
         "effective_vote_count": {
             "C": 14,
             "D": 2,

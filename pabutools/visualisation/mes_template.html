@@ -571,7 +571,7 @@
 
                     data.addRows([
                         {% for key in round.sankey_diagram_items.keys() %}
-                            ['{{ round.label }}', '{{ key }}', {{ round.sankey_diagram_items[key]}}],
+                            ['{{ round.id }}', '{{ key }}', {{ round.sankey_diagram_items[key]}}],
                         {% endfor %}    
                     ])
 
