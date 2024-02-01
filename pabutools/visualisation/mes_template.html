@@ -404,17 +404,10 @@
                         "margin": "dynamic"
                      },
                      "series": [
-                        // {"values": [{{ round.chord_diagram_items.ProjDtoA }},
-                        //           {{ round.chord_diagram_items.ProjDtoB }},
-                        //           {{ round.chord_diagram_items.ProjDtoC }},
-                        //           {{ round.chord_diagram_items.ProjDtoD }},
-                        //           {{ round.chord_diagram_items.ProjDtoE }}],
-                        //"text": "{{ round.chord_diagram_items.projD }}"
-                     //},
-                     {% for projFrom in round.chord_diagram_items %}
+                     {% for projFrom in round.voter_flow %}
                         {"values":[
-                        {% for projTo in round.chord_diagram_items[projFrom] %}
-                            {{ round.chord_diagram_items[projFrom][projTo] }},
+                        {% for projTo in round.voter_flow[projFrom] %}
+                            {{ round.voter_flow[projFrom][projTo] }},
                         {% endfor %}
                         ],
                         "text": "{{ projFrom }}"
@@ -552,8 +545,10 @@
                     // Adding data from render.py
 
                     data.addRows([
-                        {% for key in round.sankey_diagram_items.keys() %}
-                            ['{{ round.id }}', '{{ key }}', {{ round.sankey_diagram_items[key]}}],
+                        {% for key in round.voter_flow[round.id].keys() %}
+                            {% if key != round.id%}
+                                ['{{ round.id }}', '{{ key }}', {{ round.voter_flow[round.id][key]}}],
+                            {% endif %}
                         {% endfor %}    
                     ])
 

@@ -45,12 +45,11 @@ rounds = [
                 {"project": "Project C", "roundVoters": 0, "nonRoundVoters": 70, "reduction": 9.11}, 
                 {"project": "Project D", "roundVoters": 35, "nonRoundVoters": 35, "reduction": 3.23}
             ],
-            [{"project": "Project E", "roundVoters": 40, "nonRoundVoters": 30, "reduction": 1.00}]
+            [
+				{"project": "Project E", "roundVoters": 40, "nonRoundVoters": 30, "reduction": 1.00}
+			]
         ],
-        "sankey_diagram_items": {
-            "B": 7, "C": 23, "D": 3, "E": 10,
-        },
-        "chord_diagram_items": {
+        "voter_flow": {
 			# How many voters who voted for a specific project also voted for all other projects
 			"A":{"A": 10, "B": 7, "C": 23, "D": 3, "E": 10},
 			"B":{"A": 7, "B": 21, "C": 3, "D": 9, "E": 11},
@@ -81,10 +80,7 @@ rounds = [
                 {"project": "Project E", "roundVoters": 42, "nonRoundVoters": 8, "reduction": 12.35}
             ]
         ],
-        "sankey_diagram_items": {
-            "C": 3, "D": 9, "E": 11
-        },
-        "chord_diagram_items": {
+        "voter_flow": {
 			"A":{"A": 10, "B": 7, "C": 23, "D": 3, "E": 10},
 			"B":{"A": 7, "B": 21, "C": 3, "D": 9, "E": 11},
 			"C":{"A": 3, "B": 1, "C": 2, "D": 4, "E": 1},
@@ -111,10 +107,7 @@ rounds = [
                 {"project": "Project E", "roundVoters": 4, "nonRoundVoters": 10, "reduction": 9.45}, 
             ],
         ],
-        "sankey_diagram_items": {
-            "D": 4, "E": 1
-        },
-        "chord_diagram_items": {
+        "voter_flow": {
 			"A":{"A": 10, "B": 7, "C": 23, "D": 3, "E": 10},
 			"B":{"A": 7, "B": 21, "C": 3, "D": 9, "E": 11},
 			"C":{"A": 3, "B": 1, "C": 2, "D": 4, "E": 1},
