@@ -287,14 +287,19 @@ def naive_mes(
 
 
 def calculate_sankey_diagram(pairwise_project_votes, selected_project):
-    # For project A, I want to get every voter that voted for A, and then see what other projects they voted for
     sankey_diagram_items = {}
     for (projecta, projectb), votes in pairwise_project_votes.items():
         if projecta == selected_project and projectb != selected_project:
             sankey_diagram_items[projectb] = votes
     return sankey_diagram_items
 
-
+def calculate_effective_vote_count_reduction(previous_effective_vote_counts, current_effective_vote_counts):
+    effective_vote_count_reduction = {}
+    for project, effective_vote_count in previous_effective_vote_counts.items():
+        if project in current_effective_vote_counts:
+            effective_vote_count_reduction[project] = effective_vote_count - current_effective_vote_counts[project]
+    return effective_vote_count_reduction
+ 
 def mes_inner_algo(
     instance: Instance,
     profile: AbstractProfile,
@@ -448,11 +453,17 @@ def mes_inner_algo(
             # HAVE: name, id, label, effective_vote_count,  sankey_diagram_items
             # NEED: pie_chart_items, chord_diagram_items, effective_vote_count_reduction
             if storing:
+                updated_effective_vote_count = update_effective_vote_count(voters, projects)
                 current_round_dictionary["name"] = selected_project.project.name
                 current_round_dictionary["id"] = selected_project.project.name
                 current_round_dictionary["label"] = selected_project.project.name
-                current_round_dictionary["effective_vote_count"] = update_effective_vote_count(voters, projects)
+                current_round_dictionary["effective_vote_count"] = updated_effective_vote_count
                 current_round_dictionary["sankey_diagram_items"] = calculate_sankey_diagram(pairwise_project_votes, selected_project.project.name)
+                if len(rounds) > 0:
+                    current_round_dictionary["effective_vote_count_reduction"] = calculate_effective_vote_count_reduction(rounds[-1]["effective_vote_count"], updated_effective_vote_count)
+                else:
+                    current_round_dictionary["effective_vote_count_reduction"] = calculate_effective_vote_count_reduction(project_votes, updated_effective_vote_count)
+                print(current_round_dictionary["effective_vote_count_reduction"])
                 rounds.append(current_round_dictionary)
 
                 if verbose and False:
