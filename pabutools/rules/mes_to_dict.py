@@ -286,6 +286,15 @@ def naive_mes(
             )
 
 
+def calculate_sankey_diagram(pairwise_project_votes, selected_project):
+    # For project A, I want to get every voter that voted for A, and then see what other projects they voted for
+    sankey_diagram_items = {}
+    for (projecta, projectb), votes in pairwise_project_votes.items():
+        if projecta == selected_project and projectb != selected_project:
+            sankey_diagram_items[projectb] = votes
+    return sankey_diagram_items
+
+
 def mes_inner_algo(
     instance: Instance,
     profile: AbstractProfile,
@@ -436,15 +445,17 @@ def mes_inner_algo(
                     best_afford * selected_project.supporters_sat(supporter),
                 )
 
-            # HAVE: name, id, label, effective_vote_count,
-            # NEED: pie_chart_items, sankey_diagram_items, chord_diagram_items, effective_vote_count_reduction
+            # HAVE: name, id, label, effective_vote_count,  sankey_diagram_items
+            # NEED: pie_chart_items, chord_diagram_items, effective_vote_count_reduction
             if storing:
                 current_round_dictionary["name"] = selected_project.project.name
                 current_round_dictionary["id"] = selected_project.project.name
                 current_round_dictionary["label"] = selected_project.project.name
                 current_round_dictionary["effective_vote_count"] = update_effective_vote_count(voters, projects)
+                current_round_dictionary["sankey_diagram_items"] = calculate_sankey_diagram(pairwise_project_votes, selected_project.project.name)
                 rounds.append(current_round_dictionary)
-                if verbose:
+
+                if verbose and False:
                     print(rounds)
             
             
