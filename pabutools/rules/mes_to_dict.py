@@ -17,6 +17,7 @@ from pabutools.election.satisfaction import SatisfactionMeasure
 from pabutools.tiebreaking import lexico_tie_breaking
 from pabutools.fractions import frac
 from pabutools.tiebreaking import TieBreakingRule
+from pandas import DataFrame
 
 
 class MESVoter:
@@ -463,7 +464,7 @@ def mes_inner_algo(
                     current_round_dictionary["effective_vote_count_reduction"] = calculate_effective_vote_count_reduction(rounds[-1]["effective_vote_count"], updated_effective_vote_count)
                 else:
                     current_round_dictionary["effective_vote_count_reduction"] = calculate_effective_vote_count_reduction(project_votes, updated_effective_vote_count)
-                print(current_round_dictionary["effective_vote_count_reduction"])
+                # print(current_round_dictionary["effective_vote_count_reduction"])
                 rounds.append(current_round_dictionary)
 
                 if verbose and False:
@@ -578,10 +579,32 @@ def method_of_equal_shares_scheme(
     pairwise_project_votes = {}
     rounds = []
 
+    id_to_index_dict = {}
+    projectsList = list(instance)
+    for i in range(len(projectsList)):
+        id_to_index_dict[projectsList[i]] = i
+        
+
+
+        
+
     # If storing, then we get the project and pairwise project votes
     if storing:
         project_votes = get_project_counts(profile)
         pairwise_project_votes = get_pairwise_project_votes(profile)
+        print(pairwise_project_votes)
+    pairwise_project_matrix = get_pairwise_matrix(profile, id_to_index_dict)
+
+    pairwiseDict = {}
+    for project in projectsList:
+        pairwiseDict["proj" +str(project)] = str(project)
+        for count in pairwise_project_matrix[id_to_index_dict[project]]:
+            for projectPair in projectsList:
+                pairCount = pairwise_project_matrix[id_to_index_dict[project]][id_to_index_dict[projectPair]]
+                myString = "proj"+str(project)+"to"+str(projectPair)
+                pairwiseDict[myString] = pairCount
+
+    print(pairwiseDict)
 
     previous_outcome: list[Project] | list[list[Project]] = initial_budget_allocation
 
@@ -662,6 +685,24 @@ def get_pairwise_project_votes(profile):
                     pairwise_interactions[interaction] += 1
                 else:
                     pairwise_interactions[interaction] = 1
+
+    # Process each vote list
+    for vote in profile:
+        update_interactions(list(vote))
+
+    return pairwise_interactions
+
+def get_pairwise_matrix(profile, id_to_index_dict):
+    # Initialize a dictionary to store pairwise interactions
+    pairwise_interactions = pairwise_interactions = [[0 for _ in range(len(id_to_index_dict))] for _ in range(len(id_to_index_dict))]
+
+    print(id_to_index_dict)
+    # Function to update pairwise interactions
+    def update_interactions(vote_list):
+        for i in range(len(vote_list)):
+            for j in range(i + 1, len(vote_list)):
+                    pairwise_interactions[id_to_index_dict[vote_list[i]]][id_to_index_dict[vote_list[j]]] += 1
+                    pairwise_interactions[id_to_index_dict[vote_list[j]]][id_to_index_dict[vote_list[i]]] += 1
 
     # Process each vote list
     for vote in profile:
