@@ -12,19 +12,18 @@ budget = 1000
 spent = 1000
 
 projects = [
-    {"id": "ProjectA", "name": "Project A", "label": "A", "description": "Adding a new hostpital ward.", "totalvotes": 70, "elected": True},
-    {"id": "ProjectB", "name": "Project B", "label": "B", "description": "Building a new school.", "totalvotes": 60, "elected": True},
-    {"id": "ProjectC", "name": "Project C", "label": "C", "description": "Building a new library.", "totalvotes": 15, "elected": True},
-    {"id": "ProjectD", "name": "Project D", "label": "D", "description": "Building a new park.", "totalvotes": 30, "elected": True},
-    {"id": "ProjectE", "name": "Project E", "label": "E", "description": "Building a new swimming pool.", "totalvotes": 5, "elected": True}
+    {"id": "A", "name": "Project A", "description": "Adding a new hospital ward.", "totalvotes": 70, "elected": True},
+    {"id": "B", "name": "Project B", "description": "Building a new school.", "totalvotes": 60, "elected": True},
+    {"id": "C", "name": "Project C", "description": "Building a new library.", "totalvotes": 15, "elected": True},
+    {"id": "D", "name": "Project D", "description": "Building a new park.", "totalvotes": 30, "elected": True},
+    {"id": "E", "name": "Project E", "description": "Building a new swimming pool.", "totalvotes": 5, "elected": True}
 ]
 
 # What project is selected in each round of MES. Ordered in terms of what project was selected first.
 rounds = [ 
     {
         "name": "Project A", 
-        "id": "ProjectA",
-        "label": "A",
+        "id": "A",
         "effective_vote_count": {
             "A": 70,
             "B": 60,
@@ -46,19 +45,17 @@ rounds = [
                 {"project": "Project C", "roundVoters": 0, "nonRoundVoters": 70, "reduction": 9.11}, 
                 {"project": "Project D", "roundVoters": 35, "nonRoundVoters": 35, "reduction": 3.23}
             ],
-            [{"project": "Project E", "roundVoters": 40, "nonRoundVoters": 30, "reduction": 1.00}]
+            [
+				{"project": "Project E", "roundVoters": 40, "nonRoundVoters": 30, "reduction": 1.00}
+			]
         ],
-        "sankey_diagram_items": {
-            "B": 7, "C": 23, "D": 3, "E": 10,
-        },
-        "chord_diagram_items":
-            # How many voters who voted for a specific project also voted for all other projects
-            {
-                "projA": "A", "ProjAtoA": 10, "ProjAtoB": 7, "ProjAtoC": 23, "ProjAtoD": 3, "ProjAtoE": 10,
-                "projB": "B", "ProjBtoA": 7, "ProjBtoB": 21, "ProjBtoC": 3, "ProjBtoD": 9, "ProjBtoE": 11,
-                "projC": "C", "ProjCtoA": 3, "ProjCtoB": 1, "ProjCtoC": 2, "ProjCtoD": 4, "ProjCtoE": 1,
-                "projD": "D", "ProjDtoA": 5, "ProjDtoB": 3, "ProjDtoC": 3, "ProjDtoD": 5, "ProjDtoE": 10,
-                "projE": "E", "ProjEtoA": 1, "ProjEtoB": 1, "ProjEtoC": 1, "ProjEtoD": 1, "ProjEtoE": 1
+        "voter_flow": {
+			# How many voters who voted for a specific project also voted for all other projects
+			"A":{"A": 10, "B": 7, "C": 23, "D": 3, "E": 10},
+			"B":{"A": 7, "B": 21, "C": 3, "D": 9, "E": 11},
+			"C":{"A": 3, "B": 1, "C": 2, "D": 4, "E": 1},
+			"D":{"A": 5, "B": 3, "C": 3, "D": 5, "E": 10},
+			"E":{"A": 1, "B": 1, "C": 1, "D": 1, "E": 1},
         },
         "effective_vote_count_reduction": {
             "B": 10,
@@ -69,8 +66,7 @@ rounds = [
     },
     {
         "name": "Project B", 
-        "id": "ProjectB",
-        "label": "B",
+        "id": "B",
         "effective_vote_count": {
             "B": 50,
             "C": 14,
@@ -84,17 +80,13 @@ rounds = [
                 {"project": "Project E", "roundVoters": 42, "nonRoundVoters": 8, "reduction": 12.35}
             ]
         ],
-        "sankey_diagram_items": {
-            "C": 3, "D": 9, "E": 11
+        "voter_flow": {
+			"A":{"A": 10, "B": 7, "C": 23, "D": 3, "E": 10},
+			"B":{"A": 7, "B": 21, "C": 3, "D": 9, "E": 11},
+			"C":{"A": 3, "B": 1, "C": 2, "D": 4, "E": 1},
+			"D":{"A": 5, "B": 3, "C": 3, "D": 5, "E": 10},
+			"E":{"A": 1, "B": 1, "C": 1, "D": 1, "E": 1},
         },
-        "chord_diagram_items": 
-            {
-                "projA": "A", "ProjAtoA": 10, "ProjAtoB": 7, "ProjAtoC": 23, "ProjAtoD": 3, "ProjAtoE": 10,
-                "projB": "B", "ProjBtoA": 7, "ProjBtoB": 21, "ProjBtoC": 3, "ProjBtoD": 9, "ProjBtoE": 11,
-                "projC": "C", "ProjCtoA": 3, "ProjCtoB": 1, "ProjCtoC": 2, "ProjCtoD": 4, "ProjCtoE": 1,
-                "projD": "D", "ProjDtoA": 5, "ProjDtoB": 3, "ProjDtoC": 3, "ProjDtoD": 5, "ProjDtoE": 10,
-                "projE": "E", "ProjEtoA": 1, "ProjEtoB": 1, "ProjEtoC": 1, "ProjEtoD": 1, "ProjEtoE": 1
-            },
         "effective_vote_count_reduction": {
             "C": 0,
             "D": 18,
@@ -103,8 +95,7 @@ rounds = [
     },
     {
         "name": "Project C", 
-        "id": "ProjectC",
-        "label": "C",
+        "id": "C",
         "effective_vote_count": {
             "C": 14,
             "D": 2,
@@ -116,17 +107,13 @@ rounds = [
                 {"project": "Project E", "roundVoters": 4, "nonRoundVoters": 10, "reduction": 9.45}, 
             ],
         ],
-        "sankey_diagram_items": {
-            "D": 4, "E": 1
+        "voter_flow": {
+			"A":{"A": 10, "B": 7, "C": 23, "D": 3, "E": 10},
+			"B":{"A": 7, "B": 21, "C": 3, "D": 9, "E": 11},
+			"C":{"A": 3, "B": 1, "C": 2, "D": 4, "E": 1},
+			"D":{"A": 5, "B": 3, "C": 3, "D": 5, "E": 10},
+			"E":{"A": 1, "B": 1, "C": 1, "D": 1, "E": 1},
         },
-        "chord_diagram_items":
-            {
-                "projA": "A", "ProjAtoA": 10, "ProjAtoB": 7, "ProjAtoC": 23, "ProjAtoD": 3, "ProjAtoE": 10,
-                "projB": "B", "ProjBtoA": 7, "ProjBtoB": 21, "ProjBtoC": 3, "ProjBtoD": 9, "ProjBtoE": 11,
-                "projC": "C", "ProjCtoA": 3, "ProjCtoB": 1, "ProjCtoC": 2, "ProjCtoD": 4, "ProjCtoE": 1,
-                "projD": "D", "ProjDtoA": 5, "ProjDtoB": 3, "ProjDtoC": 3, "ProjDtoD": 5, "ProjDtoE": 10,
-                "projE": "E", "ProjEtoA": 1, "ProjEtoB": 1, "ProjEtoC": 1, "ProjEtoD": 1, "ProjEtoE": 1
-            },
         "effective_vote_count_reduction": {
             "D": 0,
             "E": 0
@@ -144,5 +131,5 @@ rendered_output = template.render(
     budget=budget
 )
 
-# TODO: Change location where output.html is created (currently created in directory where file is ran).
-open("output.html", "w").write(rendered_output)
+file_path = os.path.abspath(os.path.dirname("render.py"))
+open(file_path + "/output.html", "w").write(rendered_output)
