@@ -1,6 +1,6 @@
 from __future__ import annotations
 #pabutools version: 0.12
-from pabutools.model import Election, Candidate
+from model import Election, Candidate
 import random
 import math
 import pdb
