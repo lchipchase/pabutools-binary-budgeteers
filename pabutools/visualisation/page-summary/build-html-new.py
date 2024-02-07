@@ -101,12 +101,14 @@ def make_chart(project):
     html = []
     html.append("<div class='chart-container'>")
     html.append("<div class='cost-locator-container'>")
-    tooltip = f"koszt projektu: {display_int(project.cost)} zł"
+    tooltip = f"koszt projektu: {display_int(project.cost)} zł" # Text displayed while mouse is over top number
+    # Text above the displayed example table row
     detailed_text_desc1 += f"""<h2> Wyjaśnienie diagramu dla przykładowego projektu (Projekt {project.name}) </h2>
 
                           <p>Koszt projektu {project.name} wynosił {display_int(project.cost)} zł (koszt ten jest oznaczony jako górna strzałka na diagramie). Projekt ten otrzymał {total_points[project]} głosów.
                           Ponieważ na każdego wyborcę przypada {int(endowment)} zł, zwolennikom projektu początkowo przysługuje kwota {display_int(int(money_behind_candidate[0]))} zł
                           (kwota ta jest oznaczona jako dolna strzałka na diagramie).</p>"""
+    # Text below the displayed example table row (but before bulle points)
     detailed_text_desc2 += """<p>Kwota początkowo przysługująca tym wyborcom została częściowo przeznaczona na wcześniej wybrane projekty, na które ci wyborcy również zagłosowali: <ul> """
     detailed_text_desc3 = []
     html.append(f"<div class='cost-locator' style='left: calc({percent(project.cost)} - 9px);' data-tippy-content='{tooltip}'><b>&darr; {display_int(project.cost)}</b></div>")
@@ -143,10 +145,15 @@ def make_chart(project):
     js_events_unhighlight += "])'"
     html.append(f"<div class='bar {'bar-light'}' {js_events_highlight} {js_events_unhighlight} style='width: {percent(total_paid)};' data-tippy-content='{tooltip_data}'; allowHTML: true></div>")
 
+    # List of bullet points for example
     for row in detailed_text_desc3:
         detailed_text_desc2 += row
+
+    # Text after bullet points in example
     detailed_text_desc2 += f"""</ul> <p> Całkowita kwota wykorzystana na wcześniej wybrane projekty jest zaznaczona jako różowy pasek na diagramie. Po najechaniu myszką pojawiają się informacje o najbardziej popularnych z tych projektów.</p>
                             <p> Ostatecznie wyborcom pozostało {display_int(int(final_money_behind))} zł. Kwota ta oznaczona jest jako niebieski pasek. Kwota ta jest mniejsza niż koszt projektu, dlatego projekt nie został wybrany."""
+    
+    # Add explanations for example to template
     if project.name == project_id_for_explanation:
         template = template.replace(
             "!SAMPLE_EXPLANATION1!",
@@ -219,6 +226,7 @@ template = template.replace(
     "Wyniki Budżetu Obywatelskiego w Świeciu w 2024"
     )
 
+# Description at top of page
 description = f"""<p>W wyborach użyto <a href="https://equalshares.net/pl/">metody równych udziałów</a>. Dostępny budżet wynosił {display_int(initial_budget)} zł, a {display_int(len(e.voters))} mieszkańców oddało poprawny głos. Na każdego głosującego <b>przypadała zatem kwota około {display_int(int(initial_endowment))} zł</b>.
     Ze względu na naturę metody (<a href="https://equalshares.net/pl/implementation/completion">zainteresowanych odsyłamy do szczegółowego opisu</a>) kwota ta wzrosła <b>do {int(endowment)} zł</b>.
     Innymi słowy, każda grupa 100 wyborców mogła zdecydować o projekcie, którego koszt nie przekraczał {display_int(int(endowment * 100))}  zł.
