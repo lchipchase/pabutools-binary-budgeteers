@@ -1,0 +1,210 @@
+<!--Priority TODOs: 
+Focus on implementing table
+
+Other TODOs:
+Implement Comparisons
+Implement Example
+Maybe implement page description?
+
+
+-->
+
+<!DOCTYPE html>
+<html translate="no">
+
+<head>
+    <!-- <title>!FILE!</title> -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src='sorttable.js'></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            --ifm-table-cell-padding: 0.75rem;
+            --ifm-table-background: #0000;
+            --ifm-table-stripe-background: #00000008;
+            --ifm-table-border-width: 1px;
+            --ifm-table-border-color: #0000001f;
+            --ifm-table-head-background: inherit;
+            --ifm-table-head-color: inherit;
+            --ifm-table-head-font-weight: 500;
+            --ifm-table-cell-color: inherit;
+        }
+
+        body {
+            font-family: "Helvetica-Neue", "Helvetica", Arial, sans-serif;
+            font-size: 16px;
+            padding: 5px 20px;
+            line-height: 1.3;
+            margin: 0 auto;
+            max-width: 1300px;
+        }
+
+        table {
+            border-collapse: collapse;
+            display: block;
+            margin-bottom: 1rem
+        }
+
+        table thead tr {
+            border-bottom: 2px solid var(--ifm-table-border-color)
+        }
+
+        table thead,
+        table tr:nth-child(2n) {
+            background-color: var(--ifm-table-stripe-background)
+        }
+
+        table tr {
+            background-color: var(--ifm-table-background);
+            border-top: var(--ifm-table-border-width) solid var(--ifm-table-border-color)
+        }
+
+        table td,
+        table th {
+            border: var(--ifm-table-border-width) solid var(--ifm-table-border-color);
+            padding: var(--ifm-table-cell-padding)
+        }
+
+        table th {
+            background-color: var(--ifm-table-head-background);
+            color: var(--ifm-table-head-color);
+            font-weight: var(--ifm-table-head-font-weight)
+        }
+
+        table td {
+            color: var(--ifm-table-cell-color)
+        }
+
+        table tr.winner td {
+            background-color: rgb(113, 166, 91);
+            color: #fff;
+        }
+
+        table tr.loser-first-phase td {
+            background-color: rgb(240, 200, 200);
+        }
+
+        table tr.highlighted td {
+            background-color: hsl(102, 30%, 70%);
+            color: #000;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            margin: -10px 0;
+        }
+
+        .cost-locator-container {
+            width: 300px;
+            height: 11px;
+            position: relative;
+        }
+
+        .cost-locator {
+            position: absolute;
+            top: 0;
+            /* width: 15px; */
+            padding: 0 5px;
+            text-align: right;
+            cursor: default;
+            font-size: 10px;
+            font-weight: 300;
+            color: black;
+            white-space: nowrap;
+        }
+
+        .chart {
+            background: #fff;
+            border: 0.5px solid #777;
+            width: 300px;
+            height: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .bar {
+            height: 100%;
+            background: #00A000;
+        }
+
+        .final-bar{
+            background: #aaa;
+        }
+        table tr.winner td .final-bar {
+            background: #cee9cc;
+        }
+
+        .bar-blue {
+            background: #83a8e6;
+        }
+        .bar-light {
+            background: #f6c8c8;
+        }
+        .bar-dark {
+            background: #dea0a0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <h1>!FILE!</h1> -->
+    <!-- !DESCRIPTION! -->
+
+    <!-- !SAMPLE_EXPLANATION1! -->
+    </br>
+    <!-- <table>
+        <tbody>
+            !SAMPLE_EXPLANATION_ROW!
+        </tbody>
+    </table> -->
+
+    <!-- !SAMPLE_EXPLANATION2! -->
+
+    <!-- Heading before table is displayed-->
+    <h2>[GOOGLE TRANSLATE] Results </h2>
+
+    <p>[GOOGLE TRANSLATE] You can sort the table by clicking on the column against which you want to rank it</p></br>
+
+    <!-- <table class='sortable'>
+        <thead>
+        <th>Runda</th>
+        <th>Nr</th>
+        <th>Nazwa projektu</th>
+        <th>Koszt</th>
+        <th>Liczba głosów</th>
+        <th>Efektywne poparcie</th>
+        <th>
+        </th>
+        </thead>
+        <tbody>
+            !ROWS!
+        </tbody>
+    </table> -->
+
+    </br></br>
+    <!-- <h2>Porównanie metody równych udziałów z metodą większościową</h2> -->
+
+    <p>[GOOGLE TRANSLATE] We conducted an analysis comparing the equal shares method to the majority method, which is the most frequently used method in citizen budgets. </p>
+
+    <!-- !COMPARISON! -->
+
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script>tippy('[data-tippy-content]', { allowHTML: true, maxWidth: 1000});
+
+        function highlight_project(ids) {
+            for (i = 0; i < ids.length; i++) {
+                document.getElementById(ids[i]).classList.add('highlighted');
+            }
+        }
+        function unhighlight_project(ids) {
+            for (i = 0; i < ids.length; i++) {
+                document.getElementById(ids[i]).classList.remove('highlighted');
+            }
+        }</script>
+</body>
+
+</html>
