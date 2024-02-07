@@ -111,27 +111,39 @@ def make_chart(project):
     # Text below the displayed example table row (but before bulle points)
     detailed_text_desc2 += """<p>Kwota początkowo przysługująca tym wyborcom została częściowo przeznaczona na wcześniej wybrane projekty, na które ci wyborcy również zagłosowali: <ul> """
     detailed_text_desc3 = []
+    # Div that displays location of project cost on the chart
     html.append(f"<div class='cost-locator' style='left: calc({percent(project.cost)} - 9px);' data-tippy-content='{tooltip}'><b>&darr; {display_int(project.cost)}</b></div>")
     html.append("</div>")
+
+    # Div for the 3-coloured bar.
     html.append("<div class='chart'>")
+    # Text shown on mouse-over for blue bar
     if final_money_behind >= project.cost:
+        # When product has been funded
         tooltip = f"&#10004; zwolennikom projektu pozostało {display_int(int(final_money_behind))} zł, co wystarcza na pokrycie kosztu {display_int(project.cost)} zł"
         html.append(f"<div class='bar {'bar-blue'}' style='width: {percent(final_money_behind)};' data-tippy-content='{tooltip}'></div>")
     elif money_lost and final_money_behind < project.cost:
+        # When project was originally funded but voters no longer have the required funds at this stage of the project
         tooltip = f"&#10008; po sfinansowaniu dotychczasowych projektów, zwolennikom tego projektu pozostało {display_int(int(final_money_behind))} zł, czyli mniej niż {display_int(project.cost)} zł"
         html.append(f"<div class='bar {'bar-blue'}' style='width: {percent(final_money_behind)};' data-tippy-content='{tooltip}'></div>")
     else:
+        # Project did not recieve enough votes to be funded at any point in time
         tooltip = f"&#10008; zwolennikom projektu przysługuje jedynie {display_int(int(final_money_behind))} zł, czyli mniej niż {display_int(project.cost)} zł"
         html.append(f"<div class='bar {'bar-blue'}' style='width: {percent(final_money_behind)};' data-tippy-content='{tooltip}'></div>")
 
+    # For red bar
     total_paid = sum([paid for _, paid in money_lost])
+    # Sentence above bullet points displayed on red bar mouse-over
     tooltip_data = f"<html lang=\"en\"><body> Z początkowej kwoty wydano <b>{display_int(int(total_paid))} zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul>"
     js_events_highlight = "onmouseover='highlight_project(["
     js_events_unhighlight = " onmouseout='unhighlight_project(["
     displayed_num = 0
+    # For each project (list sorted by highest money taken from the row's voters)...
     for candidate, paid in sorted(money_lost, key=lambda item: item[1], reverse=True):
         displayed_num += 1
+        # Max 3 projects displayed in tooltip
         if displayed_num <= max_project_num_dispayed_in_money_spent:
+            # Adds bullet point to list displayed on red bar mouse-over
             tooltip_data += f" <li>Projekt {candidate.name} ({display_short_string(candidate.id)}): {display_int(int(paid))} zł. <hr style=\"width:{100 * paid/ total_paid}%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0\"></hr></li>"
             if displayed_num == 1:
                 js_events_highlight += f"\"project-{candidate.name}\""
@@ -139,10 +151,12 @@ def make_chart(project):
             else:
                 js_events_highlight += f",\"project-{candidate.name}\""
                 js_events_unhighlight += f",\"project-{candidate.name}\""
+        # Used for displayed example so that it can show ALL projects who have taken money from voters.
         detailed_text_desc3.append(f"<li>Projekt {candidate.name} ({display_short_string(candidate.id)}): wykorzystano na niego {display_int(int(paid))} zł. </li>")
     tooltip_data += "</ul></body></html>"
     js_events_highlight += "])'"
     js_events_unhighlight += "])'"
+    # Combines all of the above into one piece of HTML code
     html.append(f"<div class='bar {'bar-light'}' {js_events_highlight} {js_events_unhighlight} style='width: {percent(total_paid)};' data-tippy-content='{tooltip_data}'; allowHTML: true></div>")
 
     # List of bullet points for example
