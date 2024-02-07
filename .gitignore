@@ -176,3 +176,5 @@ test.ipynb
 # Additional Development
 binary_budget/**
 test.ipynb
+output.html
+.gitignore
