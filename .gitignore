@@ -178,3 +178,4 @@ binary_budget/**
 test.ipynb
 output.html
 .gitignore
+pabutools/visualisation/page-summary/output_summary.html
