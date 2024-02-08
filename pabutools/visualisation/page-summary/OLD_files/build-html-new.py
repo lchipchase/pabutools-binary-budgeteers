@@ -108,7 +108,7 @@ def make_chart(project):
                           <p>Koszt projektu {project.name} wynosił {display_int(project.cost)} zł (koszt ten jest oznaczony jako górna strzałka na diagramie). Projekt ten otrzymał {total_points[project]} głosów.
                           Ponieważ na każdego wyborcę przypada {int(endowment)} zł, zwolennikom projektu początkowo przysługuje kwota {display_int(int(money_behind_candidate[0]))} zł
                           (kwota ta jest oznaczona jako dolna strzałka na diagramie).</p>"""
-    # Text below the displayed example table row (but before bulle points)
+    # Text below the displayed example table row (but before bullet points)
     detailed_text_desc2 += """<p>Kwota początkowo przysługująca tym wyborcom została częściowo przeznaczona na wcześniej wybrane projekty, na które ci wyborcy również zagłosowali: <ul> """
     detailed_text_desc3 = []
     # Div that displays location of project cost on the chart
