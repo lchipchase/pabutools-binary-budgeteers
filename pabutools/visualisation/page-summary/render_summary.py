@@ -12,11 +12,11 @@ budget = 1000
 spent = 1000
 
 projects = [
-    {"id": "A", "name": "Project A", "description": "Adding a new hospital ward.", "totalvotes": 70, "elected": True},
-    {"id": "B", "name": "Project B", "description": "Building a new school.", "totalvotes": 60, "elected": True},
-    {"id": "C", "name": "Project C", "description": "Building a new library.", "totalvotes": 15, "elected": True},
-    {"id": "D", "name": "Project D", "description": "Building a new park.", "totalvotes": 30, "elected": True},
-    {"id": "E", "name": "Project E", "description": "Building a new swimming pool.", "totalvotes": 5, "elected": True}
+    {"id": "A", "name": "Project A", "description": "Adding a new hospital ward.", "cost": 500, "totalvotes": 70, "elected": True},
+    {"id": "B", "name": "Project B", "description": "Building a new school.", "cost": 300, "totalvotes": 60, "elected": True},
+    {"id": "C", "name": "Project C", "description": "Building a new library.", "cost": 200, "totalvotes": 15, "elected": True},
+    {"id": "D", "name": "Project D", "description": "Building a new park.", "cost": 100, "totalvotes": 30, "elected": True},
+    {"id": "E", "name": "Project E", "description": "Building a new swimming pool.", "cost": 300, "totalvotes": 5, "elected": True}
 ]
 
 # What project is selected in each round of MES. Ordered in terms of what project was selected first.
@@ -24,6 +24,16 @@ rounds = [
     {
         "name": "Project A", 
         "id": "A",
+        "cost": 500,
+        "totalvotes": 70,
+        "cost_percent": 50,
+        "initial_voter_funding": 800,
+        "initial_voter_funding_percent": (800/budget) * 100,
+        "final_voter_funding": 600,
+        "final_voter_funding_percent": (600/budget) * 100,
+        "funding_lost": 200,
+        "funding_lost_percent": (200/budget) * 100,
+
         "effective_vote_count": {
             "A": 70,
             "B": 60,
@@ -67,6 +77,16 @@ rounds = [
     {
         "name": "Project B", 
         "id": "B",
+        "cost": 300,
+        "totalvotes": 60,
+        "cost_percent": 30,
+        "initial_voter_funding": 700,
+        "initial_voter_funding_percent": (700/budget) * 100,
+        "final_voter_funding": 500,
+        "final_voter_funding_percent": (500/budget) * 100,
+        "funding_lost": 200,
+        "funding_lost_percent": (200/budget) * 100,
+
         "effective_vote_count": {
             "B": 50,
             "C": 14,
@@ -96,6 +116,16 @@ rounds = [
     {
         "name": "Project C", 
         "id": "C",
+        "cost": 200,
+        "totalvotes": 60,
+        "cost_percent": 20,
+        "initial_voter_funding": 450,
+        "initial_voter_funding_percent": (450/budget) * 100,
+        "final_voter_funding": 200,
+        "final_voter_funding_percent": (200/budget) * 100,
+        "funding_lost": 250,
+        "funding_lost_percent": (250/budget) * 100,
+
         "effective_vote_count": {
             "C": 14,
             "D": 2,

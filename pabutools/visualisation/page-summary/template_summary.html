@@ -1,5 +1,7 @@
 <!--Priority TODOs: 
-Focus on implementing table
+Deal with rejected projects
+Fix tooltip for red bars
+Fix highlight for red bars
 
 Other TODOs:
 Implement Comparisons
@@ -164,30 +166,88 @@ Maybe implement page description?
     <!-- !SAMPLE_EXPLANATION2! -->
 
     <!-- Heading before table is displayed-->
-    <h2>[GOOGLE TRANSLATE] Results </h2>
+    <h2>Results</h2>
 
-    <p>[GOOGLE TRANSLATE] You can sort the table by clicking on the column against which you want to rank it</p></br>
+    <p>[GOOGLE TRANSLATE] You can sort the table by clicking on the column against which you want to rank it.</p></br>
 
-    <!-- <table class='sortable'>
+    <table class='sortable'>
         <thead>
-        <th>Runda</th>
-        <th>Nr</th>
-        <th>Nazwa projektu</th>
-        <th>Koszt</th>
-        <th>Liczba głosów</th>
-        <th>Efektywne poparcie</th>
-        <th>
-        </th>
+        <tr>
+        <th>Round</th>
+        <th>ID</th>
+        <th>Project Name</th>
+        <th>Cost</th>
+        <th>Number of Votes</th>
+        <th>Effective Support</th>
+        <th>Chart</th>
+        </tr>
         </thead>
         <tbody>
-            !ROWS!
+            {% for round in rounds %}
+                <tr class='winner' id='project-{{ round.id }}'>
+                <td class='num' style='text-align:right' sorttable_customkey='{{ loop.index }}'> {{ loop.index }} </td>
+                <td class='num' style='text-align:right' sorttable_customkey='{{ round.id }}'>{{ round.id }}</td>
+                <td>{{ round.name }}</td>
+                <td class='num' style='text-align:right' sorttable_customkey='{{ round.cost }}'>{{ round.cost }}</td>
+                <td class='num' style='text-align:right' sorttable_customkey='{{ round.totalvotes }}'>{{ round.totalvotes }}</td>
+                <td style='text-align:right' sorttable_customkey='{{ round.effective_vote_count[round.id] }}'>{{ round.effective_vote_count[round.id] }}</td>
+                <td>
+                    <div class='chart-container'>
+                        <div class='cost-locator-container'>
+                            <div class='cost-locator' 
+                                style='left: calc({{ round.cost_percent }}&#37; - 9px);'
+                                data-tippy-content='Project Cost: {{ round.cost }}'>
+                                    <b>
+                                        &darr; {{ round.cost }}
+                                    </b>
+                            </div>
+                        </div>
+
+                        <div class='chart'>
+                            <div class='bar bar-blue'
+                                style='width: {{ round.final_voter_funding_percent }}&#37;;'
+                                data-tippy-content='&#10004; Supporters of the project have {{ round.final_voter_funding }} GBP, which is enough to cover the cost {{ round.cost }} GBP'>
+                            </div>
+
+                            <div class='bar bar-light'
+                                onmouseover='highlight_project(["TODO"])'
+                                onmouseout='unhighlight_project(["TODO"])'
+                                style='width: {{ round.funding_lost_percent }}&#37;;'
+                                data-tippy-content='<html lang=\"en\"><body>From the initial total funding, <b> {{ round.initial_voter_funding }} GBP </b> was spent on previously selected projects. </br> 
+                                Most of the funding was spent on: TODO
+
+                                <!-- For ...
+                                        display_num++
+                                        if display_num <= 3
+                                            add to tooltip
+                                            add to mouseover
+                                            add to mouseout
+                                -->
+                                '
+                                allowHTML: true>
+                            </div>
+                        </div>
+
+                        <div class='cost-locator-container'>
+                            <div class='cost-locator'
+                                style='left: calc({{ round.initial_voter_funding_percent }}&#37; - 9px);'
+                                data-tippy-content='Project initially has a funding of {{ round.initial_voter_funding }} GBP'>
+                                <b>
+                                    &uarr;
+                                </b>
+                                {{ round.initial_voter_funding }}
+                            </div>
+                        </div>
+                    </div>                    
+                </td>
+            {% endfor %}
         </tbody>
-    </table> -->
+    </table>
 
     </br></br>
-    <!-- <h2>Porównanie metody równych udziałów z metodą większościową</h2> -->
+    <!-- <h2>[GOOGLE TRANSLATE] Comparison of the method of equal shares with the greedy method</h2> -->
 
-    <p>[GOOGLE TRANSLATE] We conducted an analysis comparing the equal shares method to the majority method, which is the most frequently used method in citizen budgets. </p>
+    <!-- <p>[GOOGLE TRANSLATE] We conducted an analysis comparing the equal shares method to the greedy method, which is the most frequently used method in citizen budgets. </p> -->
 
     <!-- !COMPARISON! -->
 
