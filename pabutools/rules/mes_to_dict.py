@@ -573,9 +573,6 @@ def method_of_equal_shares_scheme(
     pairwise_project_votes = {}
     pairwise_dict = {}
     rounds = []
-
-    print(profile)
-    print(instance)
     # If storing, then we get the project and pairwise project votes
     if storing:
         id_to_index_dict = {}
@@ -589,11 +586,10 @@ def method_of_equal_shares_scheme(
 
         for project in projectsList:
             pairwise_dict["proj" +str(project)] = str(project)
-            for count in pairwise_project_matrix[id_to_index_dict[project]]:
-                for projectPair in projectsList:
-                    pairCount = pairwise_project_matrix[id_to_index_dict[project]][id_to_index_dict[projectPair]]
-                    myString = "proj"+str(project)+"to"+str(projectPair)
-                    pairwise_dict[myString] = pairCount
+            for projectPair in projectsList:
+                pairCount = pairwise_project_matrix[id_to_index_dict[project]][id_to_index_dict[projectPair]]
+                myString = "proj"+str(project)+"to"+str(projectPair)
+                pairwise_dict[myString] = pairCount
         
         print(pairwise_dict)
 

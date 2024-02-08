@@ -8,6 +8,23 @@ class MESDataStore:
         self.profile = profile
         self.instance = instance     
 
+    def __get_project_counts(self):
+        # Creating a dictionary to count the occurrences
+        project_votes = {}
+
+        # Function to update the project_votes dictionary
+        def update_votes(project_list):
+            for project_id in project_list:
+                if project_id in project_votes:
+                    project_votes[project_id] += 1
+                else:
+                    project_votes[project_id] = 1
+
+        for prof in self.profile:
+            update_votes(list(prof))
+
+        return project_votes
+
 
     def __get_pairwise_matrix(self, id_to_index_dict):
         # Initialize a dictionary to store pairwise interactions
@@ -42,10 +59,11 @@ class MESDataStore:
                 pairCount = pairwise_project_matrix[id_to_index_dict[project]][id_to_index_dict[projectPair]]
                 myString = "proj"+str(project)+"to"+str(projectPair)
                 pairwise_dict[myString] = pairCount
-        print(pairwise_dict)
+        return pairwise_dict 
 
     def __calculate(self):
-       self.__calculate_pairwise()
+       print(self.__calculate_pairwise())
+       print(self.__get_project_counts())
 
 
 
