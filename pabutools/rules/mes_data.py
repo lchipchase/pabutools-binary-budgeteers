@@ -628,6 +628,7 @@ def method_of_equal_shares(
     if binary_sat is None:
         binary_sat = isinstance(profile, AbstractApprovalProfile)
 
+    
     return method_of_equal_shares_scheme(
         instance,
         profile,

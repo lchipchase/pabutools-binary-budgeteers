@@ -4,7 +4,7 @@ class MESDataStore:
 
     def __init__(self, profile, instance):
         self.profile = profile
-        self.instance = instance     
+        self.instance = instance   
 
 
     def __get_project_counts(self):
@@ -48,7 +48,7 @@ class MESDataStore:
         projectsList = list(self.instance)
         for i in range(len(projectsList)):
             id_to_index_dict[projectsList[i]] = i
-            
+
         pairwise_project_matrix = self.__get_pairwise_matrix(id_to_index_dict)
         for project in projectsList:
             pairwise_dict["proj" +str(project)] = str(project)
@@ -59,12 +59,26 @@ class MESDataStore:
         return pairwise_dict 
 
 
-    def __calculate(self):
-       print(self.__calculate_pairwise())
-       print(self.__get_project_counts())
+    def __calculate(self, outcome):
+        projectVotes = self.__get_project_counts()
+        for project in self.instance:
+            print("Project", project.name, "of cost", project.cost, "has", projectVotes[project.name], "votes")
+        print(self.__calculate_pairwise())
 
+        projects = []
+        for project in self.instance:
+            projectDict = {}
+            projectDict["id"] = project.name
+            projectDict["name"] = project.name
+            projectDict["totalvotes"] = projectVotes[project.name]
+            if project.name in outcome:   
+                projectDict["elected"] = True
+            else:
+                projectDict["elected"] = False
+            projects.append(projectDict)
+        print(projects)
+           
 
-
-    def render(self, outputName):
-        self.__calculate()
+    def render(self, outputName, outcome):
+        self.__calculate(outcome)
         print("")
