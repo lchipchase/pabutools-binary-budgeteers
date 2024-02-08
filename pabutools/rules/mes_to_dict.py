@@ -17,7 +17,7 @@ from pabutools.election.satisfaction import SatisfactionMeasure
 from pabutools.tiebreaking import lexico_tie_breaking
 from pabutools.fractions import frac
 from pabutools.tiebreaking import TieBreakingRule
-from pandas import DataFrame
+from pabutools.mes_data_store import MESDataStore
 
 
 class MESVoter:
@@ -574,7 +574,8 @@ def method_of_equal_shares_scheme(
     pairwise_dict = {}
     rounds = []
 
-        
+    print(profile)
+    print(instance)
     # If storing, then we get the project and pairwise project votes
     if storing:
         id_to_index_dict = {}
