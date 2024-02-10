@@ -286,6 +286,7 @@ def mes_inner_algo(
     all_allocs: list[list[Project]],
     resoluteness: bool,
     verbose: bool = False,
+    mes_data_store: MESDataStore = None
 ) -> None:
     """
     The inner algorithm used to compute the outcome of the Method of Equal Shares (MES). See the website
@@ -324,6 +325,8 @@ def mes_inner_algo(
     best_afford = float("inf")
     if verbose:
         print("========================")
+    if mes_data_store is not None:
+        mes_data_store.record_round_start(projects)
     for project in sorted(projects, key=lambda p: p.affordability):
         if verbose:
             print(f"\tConsidering: {project}")
@@ -378,6 +381,8 @@ def mes_inner_algo(
                 break
             current_contribution += supporter.total_budget()
             denominator -= supporter.multiplicity * project.supporters_sat(supporter)
+    if mes_data_store is not None:
+        mes_data_store.record_round_end(projects)
     if verbose:
         print(f"{tied_projects}")
     if not tied_projects:
@@ -423,6 +428,7 @@ def mes_inner_algo(
                 all_allocs,
                 resoluteness,
                 verbose=verbose,
+                mes_data_store=mes_data_store
             )
 
 
@@ -437,6 +443,7 @@ def method_of_equal_shares_scheme(
     voter_budget_increment=None,
     binary_sat=False,
     verbose: bool = False,
+    mes_data_store: MESDataStore = None
 ) -> list[Project] | list[list[Project]]:
     """
     The main wrapper to compute the outcome of the Method of Equal Shares (MES). This is where the
@@ -525,6 +532,7 @@ def method_of_equal_shares_scheme(
             all_budget_allocations,
             resoluteness,
             verbose,
+            mes_data_store
         )
         if resoluteness:
             outcome = all_budget_allocations[0]
@@ -640,4 +648,5 @@ def method_of_equal_shares(
         voter_budget_increment=voter_budget_increment,
         binary_sat=binary_sat,
         verbose=verbose,
+        mes_data_store=mes_data_store
     )
