@@ -116,9 +116,9 @@ rounds = [
     {
         "name": "Project C", 
         "id": "C",
-        "cost": 200,
+        "cost": 100,
         "totalvotes": 60,
-        "cost_percent": 20,
+        "cost_percent": 10,
         "initial_voter_funding": 450,
         "initial_voter_funding_percent": (450/budget) * 100,
         "final_voter_funding": 200,
@@ -153,7 +153,7 @@ rounds = [
 
 rendered_output = template.render(
     election_name=election_name, 
-    rounds=rounds, 
+    rounds=rounds,
     projects=projects,
     number_of_elected_projects=number_of_elected_projects,
     number_of_unelected_projects=number_of_unelected_projects,
@@ -162,4 +162,4 @@ rendered_output = template.render(
 )
 
 file_path = os.path.abspath(os.path.dirname("render_summary.py"))
-open(file_path + "/output_summary.html", "w").write(rendered_output)
+open(file_path + "/output_summary.html", "w", encoding="utf-8").write(rendered_output)
