@@ -50,8 +50,11 @@ class MESDataStore:
         def update_interactions(vote_list):
             for i in range(len(vote_list)):
                 for j in range(i + 1, len(vote_list)):
+                    if vote_list[i] != vote_list[j]:
                         pairwise_interactions[id_to_index_dict[vote_list[i]]][id_to_index_dict[vote_list[j]]] += 1
                         pairwise_interactions[id_to_index_dict[vote_list[j]]][id_to_index_dict[vote_list[i]]] += 1
+                    else:
+                        pairwise_interactions[id_to_index_dict[vote_list[i]]][id_to_index_dict[vote_list[j]]] += 1
 
         # Process each vote list
         for vote in self.profile:
@@ -75,11 +78,68 @@ class MESDataStore:
                 myString = "proj"+str(project)+"to"+str(projectPair)
                 pairwise_dict[myString] = pairCount
         return pairwise_dict 
+    
+    def __calculate_voter_flow(self):
+        # Initialize a dictionary to store voter flow
+        voter_flow = {}
+        projectsList = list(self.instance)
 
+        # For each project
+        for project in projectsList:
+            # Initialize a dictionary to store voter flow for the project
+            voter_flow[project] = {}
+            # For each project
+            for other_project in projectsList:
+                # Initialize the voter flow for the project to the other project to 0
+                voter_flow[project][other_project] = 0
+
+        # Function to update voter flow
+        def update_voter_flow(vote_list):
+            for i in range(len(vote_list)):
+                for j in range(i + 1, len(vote_list)):
+                    voter_flow[vote_list[i]][vote_list[j]] += 1
+                    voter_flow[vote_list[j]][vote_list[i]] += 1
+
+        # Process each vote list
+        for vote in self.profile:
+            update_voter_flow(list(vote))
+        
+        print(voter_flow)
+        return voter_flow
+    
+    def __calculate_voters(self, project, selected, vote_flow):
+        round_voters = vote_flow[project.name][selected]
+        non_round_voters = sum(vote_flow[project.name].values()) - round_voters
+        return round_voters, non_round_voters
+
+    def __calculate_pie_charts(self):
+        for round in self.rounds:
+            pie_chart_items = []
+
+            # The last round does not have a name
+            if "name" in round:
+                selected = round["name"]
+
+                for project in self.instance:
+                    round_voters, non_round_voters = self.__calculate_voters(project, selected, round["voter_flow"])
+                    reduction = 0
+
+                    if  project.name in round["effective_vote_count_reduction"]:
+                        reduction = round["effective_vote_count_reduction"][project.name]
+
+                    pie_chart_item = {
+                        "project": project.name,
+                        "roundVoters": round_voters,
+                        "nonRoundVoters": non_round_voters,
+                        "reduction": reduction
+                    }
+                    pie_chart_items.append(pie_chart_item)
+
+                round["pie_chart_items"] = pie_chart_items
 
     def __calculate(self, outcome):
         """
-        TODO: Add "pie_chart_items" and "voter_flow" to each round dictionary in self.rounds
+        TODO: Should be done now
         {
             "...",
             "pie_chart_items": [ 
@@ -104,6 +164,7 @@ class MESDataStore:
             }
         }
         """
+
         projectVotes = self.__get_project_counts()
         for project in self.instance:
             print("Project", project.name, "of cost", project.cost, "has", projectVotes[project.name], "votes")
@@ -121,6 +182,11 @@ class MESDataStore:
                 projectDict["elected"] = False
             projects.append(projectDict)
         print(projects)
+
+        for round in self.rounds:
+            round["voter_flow"] = self.__calculate_voter_flow()
+        
+        self.__calculate_pie_charts()
            
 
     def render(self, outputName, outcome):
