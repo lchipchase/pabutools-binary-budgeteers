@@ -1,5 +1,6 @@
 import jinja2
 import os
+import pandas as pd
 
 class MESDataStore:
 
@@ -15,7 +16,7 @@ class MESDataStore:
         # Could move most of this to a later calculate method that can be called during render to avoid taking up too much time during MES loop
         round = {
             "effective_vote_count": {
-                p.name: 1/p.affordability for p in projects
+                p.name: float(1/p.affordability) for p in projects
             }
         }
         if len(self.rounds) > 0: 
@@ -26,7 +27,7 @@ class MESDataStore:
 
     def record_round_end(self, projects):
         self.rounds[-1]["effective_vote_count_reduction"] = {
-            p.name: self.rounds[-1]["effective_vote_count"][p]-1/p.affordability for p in projects
+            p.name: float(self.rounds[-1]["effective_vote_count"][p]-1/p.affordability) for p in projects
         }
 
     def __get_project_counts(self):
@@ -91,18 +92,18 @@ class MESDataStore:
         # For each project
         for project in projectsList:
             # Initialize a dictionary to store voter flow for the project
-            voter_flow[project] = {}
+            voter_flow[str(project)] = {}
             # For each project
             for other_project in projectsList:
                 # Initialize the voter flow for the project to the other project to 0
-                voter_flow[project][other_project] = 0
+                voter_flow[str(project)][str(other_project)] = 0
 
         # Function to update voter flow
         def update_voter_flow(vote_list):
             for i in range(len(vote_list)):
                 for j in range(i + 1, len(vote_list)):
-                    voter_flow[vote_list[i]][vote_list[j]] += 1
-                    voter_flow[vote_list[j]][vote_list[i]] += 1
+                    voter_flow[str(vote_list[i])][str(vote_list[j])] += 1
+                    voter_flow[str(vote_list[j])][str(vote_list[i])] += 1
 
         # Process each vote list
         for vote in self.profile:
@@ -121,6 +122,7 @@ class MESDataStore:
 
             # The last round does not have a name
             if "name" in round:
+                round["id"] = round["name"]
                 selected = round["name"]
 
                 for project in self.instance:
@@ -173,143 +175,18 @@ class MESDataStore:
         env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(os.path.abspath(__file__))))
         template = env.get_template('./visualisation/mes_template.html')
 
-        print(self.rounds[0])
-
         spent = 0
 
         for project in self.instance:
             if project.name in outcome:
                 spent += project.cost
 
-        
-
-
-
-
-
-
-
-
-        election_name = "Random PB Election"
-        number_of_projects = 5
-        number_of_elected_projects = 2
-        number_of_unelected_projects = 3
-        budget = 1000
-        spent = 1000
-
-        projects = [
-            {"id": "A", "name": "Project A", "description": "Adding a new hospital ward.", "totalvotes": 70, "elected": True},
-            {"id": "B", "name": "Project B", "description": "Building a new school.", "totalvotes": 60, "elected": True},
-            {"id": "C", "name": "Project C", "description": "Building a new library.", "totalvotes": 15, "elected": True},
-            {"id": "D", "name": "Project D", "description": "Building a new park.", "totalvotes": 30, "elected": True},
-            {"id": "E", "name": "Project E", "description": "Building a new swimming pool.", "totalvotes": 5, "elected": True}
-        ]
-
-        # What project is selected in each round of MES. Ordered in terms of what project was selected first.
-        rounds = [ 
-            {
-                "name": "Project A", 
-                "id": "A",
-                "effective_vote_count": {
-                    "A": 70,
-                    "B": 60,
-                    "C": 15,
-                    "D": 30,
-                    "E": 5
-                },
-                # BUG: Multiple visual bugs involving the pie charts:
-                    # Pie chart visuals break after the first round (probably the same issue that is affecting the chord diagrams).
-                    # Pie charts in carousels with less than 3 items expand to fill space in the wrapper, while textboxes don't.
-                    # Pie charts currently display weirdly when any voter values are 0 (see output.html for an example).
-                # BUG: Any reductions that are integers are displayed incorrectly (e.g. "1.0" instead of "1.00").
-
-                "pie_chart_items": [ 
-                    # Carousel has 3 pie charts per slide, so each list in this list 
-                    # should have a max of 3 pie charts (to avoid having complex divide by 3 and dealing with remainder logic in HTML)
-                    [
-                        {"project": "Project B", "roundVoters": 10, "nonRoundVoters": 60, "reduction": 12.32}, 
-                        {"project": "Project C", "roundVoters": 0, "nonRoundVoters": 70, "reduction": 9.11}, 
-                        {"project": "Project D", "roundVoters": 35, "nonRoundVoters": 35, "reduction": 3.23}
-                    ],
-                    [
-                        {"project": "Project E", "roundVoters": 40, "nonRoundVoters": 30, "reduction": 1.00}
-                    ]
-                ],
-                "voter_flow": {
-                    # How many voters who voted for a specific project also voted for all other projects
-                    "A":{"A": 10, "B": 7, "C": 23, "D": 3, "E": 10},
-                    "B":{"A": 7, "B": 21, "C": 3, "D": 9, "E": 11},
-                    "C":{"A": 3, "B": 1, "C": 2, "D": 4, "E": 1},
-                    "D":{"A": 5, "B": 3, "C": 3, "D": 5, "E": 10},
-                    "E":{"A": 1, "B": 1, "C": 1, "D": 1, "E": 1},
-                },
-                "effective_vote_count_reduction": {
-                    "B": 10,
-                    "C": 1,
-                    "D": 10,
-                    "E": 1
-                }
-            },
-            {
-                "name": "Project B", 
-                "id": "B",
-                "effective_vote_count": {
-                    "B": 50,
-                    "C": 14,
-                    "D": 20,
-                    "E": 4
-                },
-                "pie_chart_items": [
-                    [
-                        {"project": "Project C", "roundVoters": 30, "nonRoundVoters": 20, "reduction": 12.32}, 
-                        {"project": "Project D", "roundVoters": 6, "nonRoundVoters": 48, "reduction": 12.73}, 
-                        {"project": "Project E", "roundVoters": 42, "nonRoundVoters": 8, "reduction": 12.35}
-                    ]
-                ],
-                "voter_flow": {
-                    "A":{"A": 10, "B": 7, "C": 23, "D": 3, "E": 10},
-                    "B":{"A": 7, "B": 21, "C": 3, "D": 9, "E": 11},
-                    "C":{"A": 3, "B": 1, "C": 2, "D": 4, "E": 1},
-                    "D":{"A": 5, "B": 3, "C": 3, "D": 5, "E": 10},
-                    "E":{"A": 1, "B": 1, "C": 1, "D": 1, "E": 1},
-                },
-                "effective_vote_count_reduction": {
-                    "C": 0,
-                    "D": 18,
-                    "E": 1
-                }
-            },
-            {
-                "name": "Project C", 
-                "id": "C",
-                "effective_vote_count": {
-                    "C": 14,
-                    "D": 2,
-                    "E": 3
-                },
-                "pie_chart_items": [
-                    [
-                        {"project": "Project D", "roundVoters": 7, "nonRoundVoters": 7, "reduction": 1.25}, 
-                        {"project": "Project E", "roundVoters": 4, "nonRoundVoters": 10, "reduction": 9.45}, 
-                    ],
-                ],
-                "voter_flow": {
-                    "A":{"A": 10, "B": 7, "C": 23, "D": 3, "E": 10},
-                    "B":{"A": 7, "B": 21, "C": 3, "D": 9, "E": 11},
-                    "C":{"A": 3, "B": 1, "C": 2, "D": 4, "E": 1},
-                    "D":{"A": 5, "B": 3, "C": 3, "D": 5, "E": 10},
-                    "E":{"A": 1, "B": 1, "C": 1, "D": 1, "E": 1},
-                },
-                "effective_vote_count_reduction": {
-                    "D": 0,
-                    "E": 0
-                }
-            },
-        ]
+        for r in self.rounds:
+            print(r)
 
         rendered_output = template.render(
             election_name=self.instance.meta["description"] if "description" in self.instance.meta else "No description provided.", 
-            rounds=rounds, 
+            rounds=[self.rounds[0]], 
             projects=list(self.instance),
             number_of_elected_projects=len(outcome),
             number_of_unelected_projects=len(self.instance) - len(outcome),
