@@ -1,3 +1,6 @@
+import jinja2
+import os
+
 class MESDataStore:
 
     pairwise_dict = {}
@@ -104,7 +107,6 @@ class MESDataStore:
         for vote in self.profile:
             update_voter_flow(list(vote))
         
-        print(voter_flow)
         return voter_flow
     
     def __calculate_voters(self, project, selected, vote_flow):
@@ -138,33 +140,6 @@ class MESDataStore:
                 round["pie_chart_items"] = pie_chart_items
 
     def __calculate(self, outcome):
-        """
-        TODO: Should be done now
-        {
-            "...",
-            "pie_chart_items": [ 
-                # Carousel has 3 pie charts per slide, so each list in this list 
-                # should have a max of 3 pie charts (to avoid having complex divide by 3 and dealing with remainder logic in HTML)
-                [
-                    {"project": "Project B", "roundVoters": 10, "nonRoundVoters": 60, "reduction": 12.32}, 
-                    {"project": "Project C", "roundVoters": 0, "nonRoundVoters": 70, "reduction": 9.11}, 
-                    {"project": "Project D", "roundVoters": 35, "nonRoundVoters": 35, "reduction": 3.23}
-                ],
-                [
-                    {"project": "Project E", "roundVoters": 40, "nonRoundVoters": 30, "reduction": 1.00}
-                ]
-            ],
-            "voter_flow": {
-                # How many voters who voted for a specific project also voted for all other projects
-                "A":{"A": 10, "B": 7, "C": 23, "D": 3, "E": 10},
-                "B":{"A": 7, "B": 21, "C": 3, "D": 9, "E": 11},
-                "C":{"A": 3, "B": 1, "C": 2, "D": 4, "E": 1},
-                "D":{"A": 5, "B": 3, "C": 3, "D": 5, "E": 10},
-                "E":{"A": 1, "B": 1, "C": 1, "D": 1, "E": 1},
-            }
-        }
-        """
-
         projectVotes = self.__get_project_counts()
         for project in self.instance:
             print("Project", project.name, "of cost", project.cost, "has", projectVotes[project.name], "votes")
@@ -181,6 +156,7 @@ class MESDataStore:
             else:
                 projectDict["elected"] = False
             projects.append(projectDict)
+        
         print(projects)
 
         for round in self.rounds:
@@ -191,4 +167,29 @@ class MESDataStore:
 
     def render(self, outputName, outcome):
         self.__calculate(outcome)
+
+        # Load the render thing
+        env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(os.path.abspath(__file__))))
+        template = env.get_template('./visualisation/mes_template.html')
+
+        print(self.rounds[0])
+
+        spent = 0
+        for value in self.instance:
+            if value["elected"]:
+                spent += value["cost"]
+
+        rendered_output = template.render(
+            election_name= self.instance.meta["description"] if "description" in self.instance.meta else "No description provided.",
+            rounds=self.rounds, 
+            projects=list(self.instance),
+            number_of_elected_projects=len(outcome),
+            number_of_unelected_projects=len(self.instance) - len(outcome),
+            spent=spent,
+            budget= self.instance.meta["budget"]
+        )
+
+        file_path = os.path.abspath(os.path.dirname("mes_data_store.py"))
+        open(file_path + "/output.html", "w").write(rendered_output)
+
         print(self.rounds)
