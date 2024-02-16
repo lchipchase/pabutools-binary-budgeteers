@@ -1,3 +1,9 @@
+"""
+TODO: Delete
+
+Used for quick testing of web pages
+"""
+
 import jinja2
 import os
 
