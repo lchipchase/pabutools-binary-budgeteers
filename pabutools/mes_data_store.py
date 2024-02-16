@@ -84,39 +84,46 @@ class MESDataStore:
                 pairwise_dict[myString] = pairCount
         return pairwise_dict 
     
+    def __filter_voter_flows(self, voter_flow, projects_to_remove):
+        # This function is not currently used, but will be vital when we have to filter out projects that have been removed
+        # And projects that are not as relevant
+        filtered_dict = {
+            outer_key: {inner_key: value for inner_key, value in outer_value.items() if inner_key not in projects_to_remove}
+            for outer_key, outer_value in voter_flow.items() if outer_key not in projects_to_remove
+        }
+
+        return filtered_dict
+
     def __calculate_voter_flow(self):
-        # Initialize a dictionary to store voter flow
         voter_flow = {}
         projectsList = list(self.instance)
 
-        # For each project
         for project in projectsList:
-            # Initialize a dictionary to store voter flow for the project
             voter_flow[str(project)] = {}
-            # For each project
             for other_project in projectsList:
-                # Initialize the voter flow for the project to the other project to 0
                 voter_flow[str(project)][str(other_project)] = 0
 
-        # Function to update voter flow
         def update_voter_flow(vote_list):
             for i in range(len(vote_list)):
                 for j in range(i + 1, len(vote_list)):
                     voter_flow[str(vote_list[i])][str(vote_list[j])] += 1
                     voter_flow[str(vote_list[j])][str(vote_list[i])] += 1
+            if len(vote_list) == 1:
+                voter_flow[str(vote_list[0])][str(vote_list[0])] += 1
 
-        # Process each vote list
         for vote in self.profile:
             update_voter_flow(list(vote))
         
         return voter_flow
     
-    def __calculate_voters(self, project, selected, vote_flow):
+    def __calculate_voters(self, project, selected, vote_flow, projectVotes):
         round_voters = vote_flow[project.name][selected]
-        non_round_voters = sum(vote_flow[project.name].values()) - round_voters
+        non_round_voters = projectVotes - round_voters
         return round_voters, non_round_voters
 
-    def __calculate_pie_charts(self):
+    def __calculate_pie_charts(self, projectVotes):
+        winners = []
+
         for round in self.rounds:
             pie_chart_items = []
 
@@ -124,23 +131,29 @@ class MESDataStore:
             if "name" in round:
                 round["id"] = round["name"]
                 selected = round["name"]
+                winners.append(selected)
 
                 for project in self.instance:
-                    round_voters, non_round_voters = self.__calculate_voters(project, selected, round["voter_flow"])
-                    reduction = 0
+                    if project.name not in winners:
+                        round_voters, non_round_voters = self.__calculate_voters(project, selected, round["voter_flow"], projectVotes[project.name])
+                        reduction = 0
 
-                    if  project.name in round["effective_vote_count_reduction"]:
-                        reduction = round["effective_vote_count_reduction"][project.name]
+                        if  project.name in round["effective_vote_count_reduction"]:
+                            reduction = round["effective_vote_count_reduction"][project.name]
 
-                    pie_chart_item = {
-                        "project": project.name,
-                        "roundVoters": round_voters,
-                        "nonRoundVoters": non_round_voters,
-                        "reduction": reduction
-                    }
-                    pie_chart_items.append(pie_chart_item)
+                        pie_chart_item = {
+                            "project": project.name,
+                            "roundVoters": round_voters,
+                            "nonRoundVoters": non_round_voters,
+                            "reduction": reduction
+                        }
+                        pie_chart_items.append(pie_chart_item)
 
-                round["pie_chart_items"] = pie_chart_items
+                pie_chart_items = sorted(pie_chart_items, key=lambda x: x["roundVoters"], reverse=True)
+                if len(pie_chart_items) > 3:
+                    pie_chart_items = pie_chart_items[:3]
+
+                round["pie_chart_items"] = [pie_chart_items]
 
     def __calculate(self, outcome):
         projectVotes = self.__get_project_counts()
@@ -161,11 +174,12 @@ class MESDataStore:
             projects.append(projectDict)
         
         self.projects = projects
+        print(self.projects)
 
         for round in self.rounds:
             round["voter_flow"] = self.__calculate_voter_flow()
         
-        self.__calculate_pie_charts()
+        self.__calculate_pie_charts(projectVotes)
            
 
     def render(self, outputName, outcome):
@@ -197,4 +211,4 @@ class MESDataStore:
         file_path = os.path.abspath(os.path.dirname("mes_data_store.py"))
         open(file_path + "/output.html", "w").write(rendered_output)
 
-        print(self.rounds)
+        # print(self.rounds)

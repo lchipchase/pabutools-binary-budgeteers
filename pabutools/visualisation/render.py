@@ -49,6 +49,7 @@ rounds = [
 				{"project": "Project E", "roundVoters": 40, "nonRoundVoters": 30, "reduction": 1.00}
 			]
         ],
+        
         "voter_flow": {
 			# How many voters who voted for a specific project also voted for all other projects
 			"A":{"A": 10, "B": 7, "C": 23, "D": 3, "E": 10},
