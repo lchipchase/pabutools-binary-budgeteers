@@ -1,0 +1,300 @@
+<!--Priority TODOs: 
+Deal with rejected projects
+Fix tooltip for red bars
+Fix highlight for red bars
+
+Other TODOs:
+Implement Comparisons
+Implement Example
+Maybe implement page description?
+
+
+-->
+
+<!DOCTYPE html>
+<html translate="no">
+
+<head>
+    <!-- <title>!FILE!</title> -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src='sorttable.js'></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            --ifm-table-cell-padding: 0.75rem;
+            --ifm-table-background: #0000;
+            --ifm-table-stripe-background: #00000008;
+            --ifm-table-border-width: 1px;
+            --ifm-table-border-color: #0000001f;
+            --ifm-table-head-background: inherit;
+            --ifm-table-head-color: inherit;
+            --ifm-table-head-font-weight: 500;
+            --ifm-table-cell-color: inherit;
+        }
+
+        body {
+            font-family: "Helvetica-Neue", "Helvetica", Arial, sans-serif;
+            font-size: 16px;
+            padding: 5px 20px;
+            line-height: 1.3;
+            margin: 0 auto;
+            max-width: 1300px;
+        }
+
+        table {
+            border-collapse: collapse;
+            display: block;
+            margin-bottom: 1rem
+        }
+
+        table thead tr {
+            border-bottom: 2px solid var(--ifm-table-border-color)
+        }
+
+        table thead,
+        table tr:nth-child(2n) {
+            background-color: var(--ifm-table-stripe-background)
+        }
+
+        table tr {
+            background-color: var(--ifm-table-background);
+            border-top: var(--ifm-table-border-width) solid var(--ifm-table-border-color)
+        }
+
+        table td,
+        table th {
+            border: var(--ifm-table-border-width) solid var(--ifm-table-border-color);
+            padding: var(--ifm-table-cell-padding)
+        }
+
+        table th {
+            background-color: var(--ifm-table-head-background);
+            color: var(--ifm-table-head-color);
+            font-weight: var(--ifm-table-head-font-weight)
+        }
+
+        table td {
+            color: var(--ifm-table-cell-color)
+        }
+
+        table tr.winner td {
+            background-color: rgb(113, 166, 91);
+            color: #fff;
+        }
+
+        table tr.loser-first-phase td {
+            background-color: rgb(240, 200, 200);
+        }
+
+        table tr.highlighted td {
+            background-color: hsl(102, 30%, 70%);
+            color: #000;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            margin: -10px 0;
+        }
+
+        .cost-locator-container {
+            width: 300px;
+            height: 11px;
+            position: relative;
+        }
+
+        .cost-locator {
+            position: absolute;
+            top: 0;
+            /* width: 15px; */
+            padding: 0 5px;
+            text-align: right;
+            cursor: default;
+            font-size: 10px;
+            font-weight: 300;
+            color: black;
+            white-space: nowrap;
+        }
+
+        .chart {
+            background: #fff;
+            border: 0.5px solid #777;
+            width: 300px;
+            height: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .chart-budget {
+            background: #fff;
+            border: 1.5px solid #000000;
+            width: 900px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+        }
+
+        .bar {
+            height: 100%;
+            background: #00A000;
+        }
+
+        .bar-border {
+            border: 0.75px solid #000000;
+        }
+
+        .final-bar{
+            background: #aaa;
+        }
+        table tr.winner td .final-bar {
+            background: #cee9cc;
+        }
+
+        .bar-blue {
+            background: #83a8e6;
+        }
+        .bar-light {
+            background: #f6c8c8;
+        }
+        .bar-dark {
+            background: #dea0a0;
+        }
+
+        .center {
+            text-align: center;
+            width: 900px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <h1>!FILE!</h1> -->
+    <!-- !DESCRIPTION! -->
+
+    <!-- !SAMPLE_EXPLANATION1! -->
+    </br>
+    <!-- <table>
+        <tbody>
+            !SAMPLE_EXPLANATION_ROW!
+        </tbody>
+    </table> -->
+
+    <!-- !SAMPLE_EXPLANATION2! -->
+
+    <!-- Heading before table is displayed-->
+    <h2>Results</h2>
+    <p>The budget of {{ budget }} GBP was allocated across {{ rounds|length }} projects:</p><br>
+    <div class='chart-container'>
+        <div class="center"><span><b>Budget allocation across selected projects.</b></span></div>
+        <div class='chart-budget'>
+            {% for round in rounds %}
+                <div class='bar bar-blue bar-border'
+                    style='width: {{ round.cost_percent }}&#37;;'
+                    data-tippy-content="Project '{{ round.name }}' was voted in round {{ loop.index }}, costing {{ round.cost }} GBP. This is {{ round.cost_percent }}&#37; of the budget.">
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <br><p>You can sort the table by clicking on the column against which you want to rank it.</p></br>
+
+    <table class='sortable'>
+        <thead>
+        <tr>
+        <th>Round</th>
+        <th>ID</th>
+        <th>Project Name</th>
+        <th>Cost</th>
+        <th>Number of Votes</th>
+        <th>Effective Support</th>
+        <th>Chart</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for round in rounds %}
+                <tr class='winner' id='project-{{ round.id }}'>
+                <td class='num' style='text-align:right' sorttable_customkey='{{ loop.index }}'> {{ loop.index }} </td>
+                <td class='num' style='text-align:right' sorttable_customkey='{{ round.id }}'>{{ round.id }}</td>
+                <td>{{ round.name }}</td>
+                <td class='num' style='text-align:right' sorttable_customkey='{{ round.cost }}'>{{ round.cost }}</td>
+                <td class='num' style='text-align:right' sorttable_customkey='{{ round.totalvotes }}'>{{ round.totalvotes }}</td>
+                <td style='text-align:right' sorttable_customkey='{{ round.effective_vote_count[round.id] }}'>{{ round.effective_vote_count[round.id] }}</td>
+                <td>
+                    <div class='chart-container'>
+                        <div class='cost-locator-container'>
+                            <div class='cost-locator' 
+                                style='left: calc({{ round.cost_percent }}&#37; - 9px);'
+                                data-tippy-content='Project Cost: {{ round.cost }}'>
+                                    <b>
+                                        &darr; {{ round.cost }}
+                                    </b>
+                            </div>
+                        </div>
+
+                        <div class='chart'>
+                            <div class='bar bar-blue'
+                                style='width: {{ round.final_voter_funding_percent }}&#37;;'
+                                data-tippy-content='&#10004; Supporters of the project have {{ round.final_voter_funding }} GBP, which is enough to cover the cost {{ round.cost }} GBP'>
+                            </div>
+
+                            <div class='bar bar-light'
+                                onmouseover='highlight_project(["TODO"])'
+                                onmouseout='unhighlight_project(["TODO"])'
+                                style='width: {{ round.funding_lost_percent }}&#37;;'
+                                data-tippy-content='<html lang=\"en\"><body>From the initial total funding, <b> {{ round.initial_voter_funding }} GBP </b> was spent on previously selected projects. </br> 
+                                Most of the funding was spent on: TODO
+
+                                <!-- For ...
+                                        display_num++
+                                        if display_num <= 3
+                                            add to tooltip
+                                            add to mouseover
+                                            add to mouseout
+                                -->
+                                '
+                                allowHTML: true>
+                            </div>
+                        </div>
+
+                        <div class='cost-locator-container'>
+                            <div class='cost-locator'
+                                style='left: calc({{ round.initial_voter_funding_percent }}&#37; - 9px);'
+                                data-tippy-content='Project initially has a funding of {{ round.initial_voter_funding }} GBP'>
+                                <b>
+                                    &uarr;
+                                </b>
+                                {{ round.initial_voter_funding }}
+                            </div>
+                        </div>
+                    </div>                    
+                </td>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    </br></br>
+    <!-- <h2>[GOOGLE TRANSLATE] Comparison of the method of equal shares with the greedy method</h2> -->
+
+    <!-- <p>[GOOGLE TRANSLATE] We conducted an analysis comparing the equal shares method to the greedy method, which is the most frequently used method in citizen budgets. </p> -->
+
+    <!-- !COMPARISON! -->
+
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script>tippy('[data-tippy-content]', { allowHTML: true, maxWidth: 1000});
+
+        function highlight_project(ids) {
+            for (i = 0; i < ids.length; i++) {
+                document.getElementById(ids[i]).classList.add('highlighted');
+            }
+        }
+        function unhighlight_project(ids) {
+            for (i = 0; i < ids.length; i++) {
+                document.getElementById(ids[i]).classList.remove('highlighted');
+            }
+        }</script>
+</body>
+
+</html>
