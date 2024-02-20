@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html translate="no">
+
+<head>
+    <title>Wyniki Budżetu Obywatelskiego w Świeciu w 2024</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src='sorttable.js'></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            --ifm-table-cell-padding: 0.75rem;
+            --ifm-table-background: #0000;
+            --ifm-table-stripe-background: #00000008;
+            --ifm-table-border-width: 1px;
+            --ifm-table-border-color: #0000001f;
+            --ifm-table-head-background: inherit;
+            --ifm-table-head-color: inherit;
+            --ifm-table-head-font-weight: 500;
+            --ifm-table-cell-color: inherit;
+        }
+
+        body {
+            font-family: "Helvetica-Neue", "Helvetica", Arial, sans-serif;
+            font-size: 16px;
+            padding: 5px 20px;
+            line-height: 1.3;
+            margin: 0 auto;
+            max-width: 1300px;
+        }
+
+        table {
+            border-collapse: collapse;
+            display: block;
+            margin-bottom: 1rem
+        }
+
+        table thead tr {
+            border-bottom: 2px solid var(--ifm-table-border-color)
+        }
+
+        table thead,
+        table tr:nth-child(2n) {
+            background-color: var(--ifm-table-stripe-background)
+        }
+
+        table tr {
+            background-color: var(--ifm-table-background);
+            border-top: var(--ifm-table-border-width) solid var(--ifm-table-border-color)
+        }
+
+        table td,
+        table th {
+            border: var(--ifm-table-border-width) solid var(--ifm-table-border-color);
+            padding: var(--ifm-table-cell-padding)
+        }
+
+        table th {
+            background-color: var(--ifm-table-head-background);
+            color: var(--ifm-table-head-color);
+            font-weight: var(--ifm-table-head-font-weight)
+        }
+
+        table td {
+            color: var(--ifm-table-cell-color)
+        }
+
+        table tr.winner td {
+            background-color: rgb(113, 166, 91);
+            color: #fff;
+        }
+
+        table tr.loser-first-phase td {
+            background-color: rgb(240, 200, 200);
+        }
+
+        table tr.highlighted td {
+            background-color: hsl(102, 30%, 70%);
+            color: #000;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            margin: -10px 0;
+        }
+
+        .cost-locator-container {
+            width: 300px;
+            height: 11px;
+            position: relative;
+        }
+
+        .cost-locator {
+            position: absolute;
+            top: 0;
+            /* width: 15px; */
+            padding: 0 5px;
+            text-align: right;
+            cursor: default;
+            font-size: 10px;
+            font-weight: 300;
+            color: black;
+            white-space: nowrap;
+        }
+
+        .chart {
+            background: #fff;
+            border: 0.5px solid #777;
+            width: 300px;
+            height: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .bar {
+            height: 100%;
+            background: #00A000;
+        }
+
+        .final-bar{
+            background: #aaa;
+        }
+        table tr.winner td .final-bar {
+            background: #cee9cc;
+        }
+
+        .bar-blue {
+            background: #83a8e6;
+        }
+        .bar-light {
+            background: #f6c8c8;
+        }
+        .bar-dark {
+            background: #dea0a0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Wyniki Budżetu Obywatelskiego w Świeciu w 2024</h1>
+    <p>W wyborach użyto <a href="https://equalshares.net/pl/">metody równych udziałów</a>. Dostępny budżet wynosił 1&nbsp;070&nbsp;000 zł, a 2&nbsp;553 mieszkańców oddało poprawny głos. Na każdego głosującego <b>przypadała zatem kwota około 419 zł</b>.
+    Ze względu na naturę metody (<a href="https://equalshares.net/pl/implementation/completion">zainteresowanych odsyłamy do szczegółowego opisu</a>) kwota ta wzrosła <b>do 661 zł</b>.
+    Innymi słowy, każda grupa 100 wyborców mogła zdecydować o projekcie, którego koszt nie przekraczał 66&nbsp;111  zł.
+    Spośród zgłoszonych projektów, 22 zweryfikowano pozytywnie od strony formalnej, z czego <b>17 wybrano do realizacji</b>.</p>
+
+    
+    <p>Całkowity koszt wybranych projektów wynosi 1&nbsp;040&nbsp;337 zł. Poniżej przedstawiamy listę zgłoszonych projektów. Projekty, które zostały
+    wybrane do realizacji zostały oznaczone na zielono. Projekty, które zostały odrzucone w pierwszej fazie oznaczono na czerwono. Są to projekty, które są zbyt drogie w stosunku
+    do uzyskanej liczby głosów. (Liczba zwolenników dla takigo projektu podzielona przez liczbę wszystkich głosujących jest mniejsza niż koszt projektu podzielony przez trzykrotną wartość dostępnego budżetu.) </p>
+     
+    <p>Przy każdym projekcie podajemy jego koszt i liczbę głosów, które otrzymał. Ponadto, dla każdego projektu podajemy jego <b>efektywne poparcie</b>,
+    które jest procentową wartością opisującą w jakim stopniu wielkość poparcia przekracza próg wymagany do akceptacji projektu:
+    wartość powyżej 100% oznacza, że projekt został wybrany, a wartość poniżej 100% oznacza, że projekt nie został wybrany.
+    Przykładowo, wartość efektywnego poparcia na poziomie 60% oznacza, że projekt otrzymał 60% głosów wymaganych do akceptacji. </p>
+
+    Projekty mogły zostać niewybrane z jednego z następujących powodów:
+    <ol>
+    <li>projekt otrzymał zbyt mało głosów w stosunku do swojego kosztu, lub </li>
+    <li>wyborcy, którzy głosowali na dany projekt głosowali również na inne bardziej popularne projekty, zatem ich głosy przełożyły się w pierwszej kolejności na sfinansowanie tych bardziej popularnych projektów. </li>
+    </ol>
+    
+    <p>Przy każdym projekcie przedstawiamy również <b>diagram słupkowy</b>. Wyjaśnia on jaką kwotą zwolennicy każdego projektu początkowo dysponowali.
+    Na diagramach możemy również zobaczyć, dlaczego dany projekt nie został wybrany. W szzcególności, możemy zobaczyć na które bardziej popularne projekty głosowali
+    zwolennicy danego niewybranego projektu, oraz jaka część przysługujących im środków została przeznaczona na te bardziej popularne projekty. </p>
+    
+
+    <h2> Wyjaśnienie diagramu dla przykładowego projektu (Projekt 23) </h2>
+
+                          <p>Koszt projektu 23 wynosił 150&nbsp;000 zł (koszt ten jest oznaczony jako górna strzałka na diagramie). Projekt ten otrzymał 279 głosów.
+                          Ponieważ na każdego wyborcę przypada 661 zł, zwolennikom projektu początkowo przysługuje kwota 184&nbsp;451 zł
+                          (kwota ta jest oznaczona jako dolna strzałka na diagramie).</p>
+    </br>
+    <table>
+        <tbody>
+            <tr class='loser'><td class='num' style='text-align:right' sorttable_customkey='23'>  &#10008; </td><td class='num' style='text-align:right' sorttable_customkey='23'>23</td><td>Więcej parku w przyszpitalnych terenach zielonych</td><td class='num' style='text-align:right' sorttable_customkey='150000'>150&nbsp;000</td><td class='num' style='text-align:right' sorttable_customkey='279'>279</td><td style='text-align:right' sorttable_customkey='72'>72%</td><td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(17.6% - 9px);' data-tippy-content='koszt projektu: 150&nbsp;000 zł'><b>&darr; 150&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 13.5%;' data-tippy-content='&#10008; po sfinansowaniu dotychczasowych projektów, zwolennikom tego projektu pozostało 114&nbsp;654 zł, czyli mniej niż 150&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-31","project-18","project-11"])'  onmouseout='unhighlight_project(["project-31","project-18","project-11"])' style='width: 8.2%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>69&nbsp;796 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 31 (Zakup samochodu pożarniczego...): 28&nbsp;860 zł. <hr style="width:41.34862595217199%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 18 (Modernizacja kojców w...): 21&nbsp;407 zł. <hr style="width:30.67151785350417%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 11 (Zielone i przyjazne...): 6&nbsp;664 zł. <hr style="width:9.54882008950339%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(21.7% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 184&nbsp;451 zł'><b>&uarr;</b> 184&nbsp;451</div>
+</div>
+</div></td></tr>
+        </tbody>
+    </table>
+
+    <p>Kwota początkowo przysługująca tym wyborcom została częściowo przeznaczona na wcześniej wybrane projekty, na które ci wyborcy również zagłosowali: <ul> <li>Projekt 31 (Zakup samochodu pożarniczego...): wykorzystano na niego 28&nbsp;860 zł. </li><li>Projekt 18 (Modernizacja kojców w...): wykorzystano na niego 21&nbsp;407 zł. </li><li>Projekt 11 (Zielone i przyjazne...): wykorzystano na niego 6&nbsp;664 zł. </li><li>Projekt 16 (Sterylizacja suk z terenów...): wykorzystano na niego 4&nbsp;347 zł. </li><li>Projekt 3 (Dron z kamerą termowizyjną...): wykorzystano na niego 2&nbsp;650 zł. </li><li>Projekt 1 (Bezpieczny Strażak- zakup...): wykorzystano na niego 2&nbsp;570 zł. </li><li>Projekt 19 (Rozwój mediów/telewizji...): wykorzystano na niego 1&nbsp;404 zł. </li><li>Projekt 5 (Zakup sprzętu do ratownictwa...): wykorzystano na niego 1&nbsp;148 zł. </li><li>Projekt 29 (Zakup sprzętu szkoleniowego...): wykorzystano na niego 742 zł. </li></ul> <p> Całkowita kwota wykorzystana na wcześniej wybrane projekty jest zaznaczona jako różowy pasek na diagramie. Po najechaniu myszką pojawiają się informacje o najbardziej popularnych z tych projektów.</p>
+                            <p> Ostatecznie wyborcom pozostało 114&nbsp;654 zł. Kwota ta oznaczona jest jako niebieski pasek. Kwota ta jest mniejsza niż koszt projektu, dlatego projekt nie został wybrany.
+
+    <h2> Wyniki </h2>
+
+    <p> TabelkÄ™ moÅ¼na posortowaÄ‡ klikajÄ…c na kolumnÄ™ wzglÄ™dem ktÃ³rej chcemy jÄ… uszeregowaÄ‡.</p></br>
+
+    <table class='sortable'>
+        <thead>
+        <th>Runda</th>
+        <th>Nr</th>
+        <th>Nazwa projektu</th>
+        <th>Koszt</th>
+        <th>Liczba gÅ‚osÃ³w</th>
+        <th>Efektywne poparcie</th>
+        <th>
+        </th>
+        </thead>
+        <tbody>
+            <tr class='winner' id='project-18'>
+<td class='num' style='text-align:right' sorttable_customkey='1'> 1 </td>
+<td class='num' style='text-align:right' sorttable_customkey='18'>18</td>
+<td>Modernizacja kojców w schronisku dla zwierząt w celu poprawy warunków psów tam przebywających</td>
+<td class='num' style='text-align:right' sorttable_customkey='150000'>150&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='1030'>1&nbsp;030</td>
+<td style='text-align:right' sorttable_customkey='309'>309%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(17.6% - 9px);' data-tippy-content='koszt projektu: 150&nbsp;000 zł'><b>&darr; 150&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 80.0%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 680&nbsp;948 zł, co wystarcza na pokrycie kosztu 150&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project([])'  onmouseout='unhighlight_project([])' style='width: 0.0%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>0 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(80.0% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 680&nbsp;948 zł'><b>&uarr;</b> 680&nbsp;948</div>
+</div>
+</div></td>
+</tr>
+<tr class='loser'>
+<td class='num' style='text-align:right' sorttable_customkey='23'>  &#10008; </td>
+<td class='num' style='text-align:right' sorttable_customkey='10'>10</td>
+<td>Naprawa i modernizacja pomostu nad Jeziorem Deczno</td>
+<td class='num' style='text-align:right' sorttable_customkey='413000'>413&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='623'>623</td>
+<td style='text-align:right' sorttable_customkey='90'>90%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(48.5% - 9px);' data-tippy-content='koszt projektu: 413&nbsp;000 zł'><b>&darr; 413&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 44.1%;' data-tippy-content='&#10008; po sfinansowaniu dotychczasowych projektów, zwolennikom tego projektu pozostało 375&nbsp;321 zł, czyli mniej niż 413&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-18"])'  onmouseout='unhighlight_project(["project-18"])' style='width: 4.3%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>36&nbsp;553 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 18 (Modernizacja kojców w...): 36&nbsp;553 zł. <hr style="width:100.0%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(48.4% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 411&nbsp;874 zł'><b>&uarr;</b> 411&nbsp;874</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-16'>
+<td class='num' style='text-align:right' sorttable_customkey='2'> 2 </td>
+<td class='num' style='text-align:right' sorttable_customkey='16'>16</td>
+<td>Sterylizacja suk z terenów wiejskich</td>
+<td class='num' style='text-align:right' sorttable_customkey='39000'>39&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='610'>610</td>
+<td style='text-align:right' sorttable_customkey='559'>559%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(4.6% - 9px);' data-tippy-content='koszt projektu: 39&nbsp;000 zł'><b>&darr; 39&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 38.9%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 331&nbsp;338 zł, co wystarcza na pokrycie kosztu 39&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-18"])'  onmouseout='unhighlight_project(["project-18"])' style='width: 8.5%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>71&nbsp;941 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 18 (Modernizacja kojców w...): 71&nbsp;941 zł. <hr style="width:100.0%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(47.4% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 403&nbsp;280 zł'><b>&uarr;</b> 403&nbsp;280</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-29'>
+<td class='num' style='text-align:right' sorttable_customkey='3'> 3 </td>
+<td class='num' style='text-align:right' sorttable_customkey='29'>29</td>
+<td>Zakup sprzętu szkoleniowego dla OSP w Świeciu- Przechowo</td>
+<td class='num' style='text-align:right' sorttable_customkey='21900'>21&nbsp;900</td>
+<td class='num' style='text-align:right' sorttable_customkey='531'>531</td>
+<td style='text-align:right' sorttable_customkey='400'>400%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(2.6% - 9px);' data-tippy-content='koszt projektu: 21&nbsp;900 zł'><b>&darr; 21&nbsp;900</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 39.9%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 339&nbsp;504 zł, co wystarcza na pokrycie kosztu 21&nbsp;900 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-18","project-16"])'  onmouseout='unhighlight_project(["project-18","project-16"])' style='width: 1.4%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>11&nbsp;547 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 18 (Modernizacja kojców w...): 9&nbsp;757 zł. <hr style="width:84.49731642973556%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 16 (Sterylizacja suk z terenów...): 1&nbsp;790 zł. <hr style="width:15.502683570264434%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(41.2% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 351&nbsp;051 zł'><b>&uarr;</b> 351&nbsp;051</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-31'>
+<td class='num' style='text-align:right' sorttable_customkey='4'> 4 </td>
+<td class='num' style='text-align:right' sorttable_customkey='31'>31</td>
+<td>Zakup samochodu pożarniczego (operacyjnego) 9-cio osobowego</td>
+<td class='num' style='text-align:right' sorttable_customkey='291000'>291&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='501'>501</td>
+<td style='text-align:right' sorttable_customkey='102'>102%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(34.2% - 9px);' data-tippy-content='koszt projektu: 291&nbsp;000 zł'><b>&darr; 291&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 35.1%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 299&nbsp;044 zł, co wystarcza na pokrycie kosztu 291&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-18","project-29","project-16"])'  onmouseout='unhighlight_project(["project-18","project-29","project-16"])' style='width: 3.8%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>32&nbsp;173 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 18 (Modernizacja kojców w...): 17&nbsp;330 zł. <hr style="width:53.86412242145352%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 29 (Zakup sprzętu szkoleniowego...): 12&nbsp;414 zł. <hr style="width:38.58466039422873%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 16 (Sterylizacja suk z terenów...): 2&nbsp;429 zł. <hr style="width:7.551217184317745%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(38.9% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 331&nbsp;218 zł'><b>&uarr;</b> 331&nbsp;218</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-3'>
+<td class='num' style='text-align:right' sorttable_customkey='5'> 5 </td>
+<td class='num' style='text-align:right' sorttable_customkey='3'>3</td>
+<td>Dron z kamerą termowizyjną dla Gminy Świecie</td>
+<td class='num' style='text-align:right' sorttable_customkey='40000'>40&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='435'>435</td>
+<td style='text-align:right' sorttable_customkey='363'>363%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(4.7% - 9px);' data-tippy-content='koszt projektu: 40&nbsp;000 zł'><b>&darr; 40&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 26.5%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 225&nbsp;632 zł, co wystarcza na pokrycie kosztu 40&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-31","project-18","project-16"])'  onmouseout='unhighlight_project(["project-31","project-18","project-16"])' style='width: 7.3%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>61&nbsp;952 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 31 (Zakup samochodu pożarniczego...): 39&nbsp;535 zł. <hr style="width:63.81536964805882%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 18 (Modernizacja kojców w...): 15&nbsp;145 zł. <hr style="width:24.44716963730343%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 16 (Sterylizacja suk z terenów...): 4&nbsp;219 zł. <hr style="width:6.8111417702618455%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(33.8% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 287&nbsp;584 zł'><b>&uarr;</b> 287&nbsp;584</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-5'>
+<td class='num' style='text-align:right' sorttable_customkey='6'> 6 </td>
+<td class='num' style='text-align:right' sorttable_customkey='5'>5</td>
+<td>Zakup sprzętu do ratownictwa wodnego dla OSP Ratownik</td>
+<td class='num' style='text-align:right' sorttable_customkey='20000'>20&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='434'>434</td>
+<td style='text-align:right' sorttable_customkey='726'>726%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(2.3% - 9px);' data-tippy-content='koszt projektu: 20&nbsp;000 zł'><b>&darr; 20&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 22.6%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 192&nbsp;232 zł, co wystarcza na pokrycie kosztu 20&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-31","project-18","project-3"])'  onmouseout='unhighlight_project(["project-31","project-18","project-3"])' style='width: 11.1%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>94&nbsp;691 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 31 (Zakup samochodu pożarniczego...): 60&nbsp;082 zł. <hr style="width:63.45115593048573%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 18 (Modernizacja kojców w...): 17&nbsp;475 zł. <hr style="width:18.455477354382896%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 3 (Dron z kamerą termowizyjną...): 8&nbsp;892 zł. <hr style="width:9.390580514574868%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(33.7% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 286&nbsp;923 zł'><b>&uarr;</b> 286&nbsp;923</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-11'>
+<td class='num' style='text-align:right' sorttable_customkey='9'> 9 </td>
+<td class='num' style='text-align:right' sorttable_customkey='11'>11</td>
+<td>Zielone i przyjazne Przechowo (zagospodarowanie skweru przy rondzie i szkole podstawowej)</td>
+<td class='num' style='text-align:right' sorttable_customkey='55000'>55&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='391'>391</td>
+<td style='text-align:right' sorttable_customkey='218'>218%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(6.5% - 9px);' data-tippy-content='koszt projektu: 55&nbsp;000 zł'><b>&darr; 55&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 21.2%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 180&nbsp;837 zł, co wystarcza na pokrycie kosztu 55&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-31","project-18","project-29"])'  onmouseout='unhighlight_project(["project-31","project-18","project-29"])' style='width: 9.1%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>77&nbsp;658 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 31 (Zakup samochodu pożarniczego...): 40&nbsp;925 zł. <hr style="width:52.69927097894064%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 18 (Modernizacja kojców w...): 18&nbsp;640 zł. <hr style="width:24.003663862104258%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 29 (Zakup sprzętu szkoleniowego...): 5&nbsp;237 zł. <hr style="width:6.744765380635394%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(30.4% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 258&nbsp;495 zł'><b>&uarr;</b> 258&nbsp;495</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-1'>
+<td class='num' style='text-align:right' sorttable_customkey='8'> 8 </td>
+<td class='num' style='text-align:right' sorttable_customkey='1'>1</td>
+<td>Bezpieczny Strażak- zakup ubrań specjalnych dla OSP Gruczno</td>
+<td class='num' style='text-align:right' sorttable_customkey='68000'>68&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='380'>380</td>
+<td style='text-align:right' sorttable_customkey='188'>188%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(8.0% - 9px);' data-tippy-content='koszt projektu: 68&nbsp;000 zł'><b>&darr; 68&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 22.6%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 192&nbsp;123 zł, co wystarcza na pokrycie kosztu 68&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-31","project-18","project-3"])'  onmouseout='unhighlight_project(["project-31","project-18","project-3"])' style='width: 6.9%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>59&nbsp;100 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 31 (Zakup samochodu pożarniczego...): 29&nbsp;259 zł. <hr style="width:49.50866406229234%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 18 (Modernizacja kojców w...): 13&nbsp;689 zł. <hr style="width:23.162783665655304%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 3 (Dron z kamerą termowizyjną...): 5&nbsp;514 zł. <hr style="width:9.330645030657728%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(29.5% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 251&nbsp;223 zł'><b>&uarr;</b> 251&nbsp;223</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-19'>
+<td class='num' style='text-align:right' sorttable_customkey='7'> 7 </td>
+<td class='num' style='text-align:right' sorttable_customkey='19'>19</td>
+<td>Rozwój mediów/telewizji klubowej KS WDA Świecie</td>
+<td class='num' style='text-align:right' sorttable_customkey='45000'>45&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='364'>364</td>
+<td style='text-align:right' sorttable_customkey='373'>373%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(5.3% - 9px);' data-tippy-content='koszt projektu: 45&nbsp;000 zł'><b>&darr; 45&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 25.5%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 217&nbsp;009 zł, co wystarcza na pokrycie kosztu 45&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-31","project-3","project-18"])'  onmouseout='unhighlight_project(["project-31","project-3","project-18"])' style='width: 2.8%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>23&nbsp;636 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 31 (Zakup samochodu pożarniczego...): 9&nbsp;456 zł. <hr style="width:40.00861046192052%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 3 (Dron z kamerą termowizyjną...): 4&nbsp;923 zł. <hr style="width:20.831365525063458%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 18 (Modernizacja kojców w...): 4&nbsp;514 zł. <hr style="width:19.10026814400709%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(28.3% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 240&nbsp;645 zł'><b>&uarr;</b> 240&nbsp;645</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-6'>
+<td class='num' style='text-align:right' sorttable_customkey='11'> 11 </td>
+<td class='num' style='text-align:right' sorttable_customkey='6'>6</td>
+<td>Street Workout Park w Kozłowie</td>
+<td class='num' style='text-align:right' sorttable_customkey='80000'>80&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='314'>314</td>
+<td style='text-align:right' sorttable_customkey='145'>145%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(9.4% - 9px);' data-tippy-content='koszt projektu: 80&nbsp;000 zł'><b>&darr; 80&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 16.0%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 136&nbsp;355 zł, co wystarcza na pokrycie kosztu 80&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-31","project-11","project-18"])'  onmouseout='unhighlight_project(["project-31","project-11","project-18"])' style='width: 8.4%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>71&nbsp;234 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 31 (Zakup samochodu pożarniczego...): 19&nbsp;732 zł. <hr style="width:27.7009879384518%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 11 (Zielone i przyjazne...): 18&nbsp;010 zł. <hr style="width:25.283102718196414%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 18 (Modernizacja kojców w...): 15&nbsp;291 zł. <hr style="width:21.465989327338843%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(24.4% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 207&nbsp;590 zł'><b>&uarr;</b> 207&nbsp;590</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-17'>
+<td class='num' style='text-align:right' sorttable_customkey='10'> 10 </td>
+<td class='num' style='text-align:right' sorttable_customkey='17'>17</td>
+<td>Miej serce- ratuj serce!</td>
+<td class='num' style='text-align:right' sorttable_customkey='37387'>37&nbsp;387</td>
+<td class='num' style='text-align:right' sorttable_customkey='308'>308</td>
+<td style='text-align:right' sorttable_customkey='292'>292%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(4.4% - 9px);' data-tippy-content='koszt projektu: 37&nbsp;387 zł'><b>&darr; 37&nbsp;387</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 16.5%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 140&nbsp;302 zł, co wystarcza na pokrycie kosztu 37&nbsp;387 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-18","project-31","project-1"])'  onmouseout='unhighlight_project(["project-18","project-31","project-1"])' style='width: 7.4%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>63&nbsp;321 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 18 (Modernizacja kojców w...): 23&nbsp;883 zł. <hr style="width:37.7180106824545%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 31 (Zakup samochodu pożarniczego...): 13&nbsp;451 zł. <hr style="width:21.243592051657433%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 1 (Bezpieczny Strażak- zakup...): 7&nbsp;042 zł. <hr style="width:11.121747962076311%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(23.9% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 203&nbsp;623 zł'><b>&uarr;</b> 203&nbsp;623</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-9'>
+<td class='num' style='text-align:right' sorttable_customkey='12'> 12 </td>
+<td class='num' style='text-align:right' sorttable_customkey='9'>9</td>
+<td>Szlak murali ARCHITEKCI NASZEJ CODZIENNOŚCI</td>
+<td class='num' style='text-align:right' sorttable_customkey='30000'>30&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='285'>285</td>
+<td style='text-align:right' sorttable_customkey='329'>329%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(3.5% - 9px);' data-tippy-content='koszt projektu: 30&nbsp;000 zł'><b>&darr; 30&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 14.8%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 126&nbsp;251 zł, co wystarcza na pokrycie kosztu 30&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-18","project-31","project-6"])'  onmouseout='unhighlight_project(["project-18","project-31","project-6"])' style='width: 7.3%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>62&nbsp;165 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 18 (Modernizacja kojców w...): 16&nbsp;601 zł. <hr style="width:26.705845981444828%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 31 (Zakup samochodu pożarniczego...): 12&nbsp;936 zł. <hr style="width:20.809162483093296%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 6 (Street Workout Park w Kozłowie): 5&nbsp;938 zł. <hr style="width:9.55333541714863%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(22.1% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 188&nbsp;417 zł'><b>&uarr;</b> 188&nbsp;417</div>
+</div>
+</div></td>
+</tr>
+<tr class='loser'>
+<td class='num' style='text-align:right' sorttable_customkey='23'>  &#10008; </td>
+<td class='num' style='text-align:right' sorttable_customkey='23'>23</td>
+<td>Więcej parku w przyszpitalnych terenach zielonych</td>
+<td class='num' style='text-align:right' sorttable_customkey='150000'>150&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='279'>279</td>
+<td style='text-align:right' sorttable_customkey='72'>72%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(17.6% - 9px);' data-tippy-content='koszt projektu: 150&nbsp;000 zł'><b>&darr; 150&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 13.5%;' data-tippy-content='&#10008; po sfinansowaniu dotychczasowych projektów, zwolennikom tego projektu pozostało 114&nbsp;654 zł, czyli mniej niż 150&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-31","project-18","project-11"])'  onmouseout='unhighlight_project(["project-31","project-18","project-11"])' style='width: 8.2%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>69&nbsp;796 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 31 (Zakup samochodu pożarniczego...): 28&nbsp;860 zł. <hr style="width:41.34862595217199%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 18 (Modernizacja kojców w...): 21&nbsp;407 zł. <hr style="width:30.67151785350417%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 11 (Zielone i przyjazne...): 6&nbsp;664 zł. <hr style="width:9.54882008950339%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(21.7% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 184&nbsp;451 zł'><b>&uarr;</b> 184&nbsp;451</div>
+</div>
+</div></td>
+</tr>
+<tr class='loser'>
+<td class='num' style='text-align:right' sorttable_customkey='23'>  &#10008; </td>
+<td class='num' style='text-align:right' sorttable_customkey='22'>22</td>
+<td>Aktywnie w szkole aktywnie po szkole Aranżacja przestrzeni przed budynkiem Szkoły Podstawowej w Terespolu Pomorskim</td>
+<td class='num' style='text-align:right' sorttable_customkey='80000'>80&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='272'>272</td>
+<td style='text-align:right' sorttable_customkey='99'>99%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(9.4% - 9px);' data-tippy-content='koszt projektu: 80&nbsp;000 zł'><b>&darr; 80&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 9.4%;' data-tippy-content='&#10008; po sfinansowaniu dotychczasowych projektów, zwolennikom tego projektu pozostało 79&nbsp;705 zł, czyli mniej niż 80&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-31","project-18","project-6"])'  onmouseout='unhighlight_project(["project-31","project-18","project-6"])' style='width: 11.8%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>100&nbsp;118 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 31 (Zakup samochodu pożarniczego...): 47&nbsp;733 zł. <hr style="width:47.67681420906049%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 18 (Modernizacja kojców w...): 13&nbsp;834 zł. <hr style="width:13.818640174885122%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 6 (Street Workout Park w Kozłowie): 8&nbsp;937 zł. <hr style="width:8.927424114570387%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(21.1% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 179&nbsp;823 zł'><b>&uarr;</b> 179&nbsp;823</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-28'>
+<td class='num' style='text-align:right' sorttable_customkey='13'> 13 </td>
+<td class='num' style='text-align:right' sorttable_customkey='28'>28</td>
+<td>Modernizacja wejścia do świetlicy wiejskiej w Topolinku</td>
+<td class='num' style='text-align:right' sorttable_customkey='36500'>36&nbsp;500</td>
+<td class='num' style='text-align:right' sorttable_customkey='190'>190</td>
+<td style='text-align:right' sorttable_customkey='131'>131%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(4.3% - 9px);' data-tippy-content='koszt projektu: 36&nbsp;500 zł'><b>&darr; 36&nbsp;500</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 9.4%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 79&nbsp;610 zł, co wystarcza na pokrycie kosztu 36&nbsp;500 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-1","project-31","project-18"])'  onmouseout='unhighlight_project(["project-1","project-31","project-18"])' style='width: 5.4%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>46&nbsp;001 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 1 (Bezpieczny Strażak- zakup...): 22&nbsp;103 zł. <hr style="width:48.04937402674321%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 31 (Zakup samochodu pożarniczego...): 9&nbsp;772 zł. <hr style="width:21.244736800834346%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 18 (Modernizacja kojców w...): 3&nbsp;640 zł. <hr style="width:7.914439892714161%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(14.8% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 125&nbsp;611 zł'><b>&uarr;</b> 125&nbsp;611</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-7'>
+<td class='num' style='text-align:right' sorttable_customkey='14'> 14 </td>
+<td class='num' style='text-align:right' sorttable_customkey='7'>7</td>
+<td>Remont schodów wymiana drzwi wewnętrznych malowanie korytarza zainstalowanie oświetlenia zaślepienie gzymsów w budynku Sali Wiejskiej w Kosowie</td>
+<td class='num' style='text-align:right' sorttable_customkey='34000'>34&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='177'>177</td>
+<td style='text-align:right' sorttable_customkey='156'>156%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(4.0% - 9px);' data-tippy-content='koszt projektu: 34&nbsp;000 zł'><b>&darr; 34&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 6.9%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 58&nbsp;313 zł, co wystarcza na pokrycie kosztu 34&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-1","project-28","project-31"])'  onmouseout='unhighlight_project(["project-1","project-28","project-31"])' style='width: 6.9%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>58&nbsp;703 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 1 (Bezpieczny Strażak- zakup...): 20&nbsp;355 zł. <hr style="width:34.67427248794108%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 28 (Modernizacja wejścia do...): 15&nbsp;814 zł. <hr style="width:26.939037704370254%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 31 (Zakup samochodu pożarniczego...): 6&nbsp;901 zł. <hr style="width:11.757011549729361%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(13.7% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 117&nbsp;017 zł'><b>&uarr;</b> 117&nbsp;017</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-24'>
+<td class='num' style='text-align:right' sorttable_customkey='15'> 15 </td>
+<td class='num' style='text-align:right' sorttable_customkey='24'>24</td>
+<td>Wykonanie drewnianej altany wolnostojącej z dachem dwuspadowym wraz z wyłożeniem terenu polbrukiem oraz zakup mebli ogrodowych</td>
+<td class='num' style='text-align:right' sorttable_customkey='39000'>39&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='139'>139</td>
+<td style='text-align:right' sorttable_customkey='140'>140%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(4.6% - 9px);' data-tippy-content='koszt projektu: 39&nbsp;000 zł'><b>&darr; 39&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 6.6%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 55&nbsp;960 zł, co wystarcza na pokrycie kosztu 39&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-19","project-28","project-31"])'  onmouseout='unhighlight_project(["project-19","project-28","project-31"])' style='width: 4.2%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>35&nbsp;934 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 19 (Rozwój mediów/telewizji...): 6&nbsp;254 zł. <hr style="width:17.405451757585602%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 28 (Modernizacja wejścia do...): 5&nbsp;903 zł. <hr style="width:16.429939240146584%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 31 (Zakup samochodu pożarniczego...): 4&nbsp;950 zł. <hr style="width:13.77755376872109%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(10.8% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 91&nbsp;894 zł'><b>&uarr;</b> 91&nbsp;894</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-26'>
+<td class='num' style='text-align:right' sorttable_customkey='16'> 16 </td>
+<td class='num' style='text-align:right' sorttable_customkey='26'>26</td>
+<td>Wydanie albumu książkowego ŚWIECKA SZTUKA</td>
+<td class='num' style='text-align:right' sorttable_customkey='25000'>25&nbsp;000</td>
+<td class='num' style='text-align:right' sorttable_customkey='119'>119</td>
+<td style='text-align:right' sorttable_customkey='199'>199%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(2.9% - 9px);' data-tippy-content='koszt projektu: 25&nbsp;000 zł'><b>&darr; 25&nbsp;000</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 6.1%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 51&nbsp;701 zł, co wystarcza na pokrycie kosztu 25&nbsp;000 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-9","project-18","project-31"])'  onmouseout='unhighlight_project(["project-9","project-18","project-31"])' style='width: 3.2%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>26&nbsp;971 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 9 (Szlak murali ARCHITEKCI...): 4&nbsp;826 zł. <hr style="width:17.894245697138825%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 18 (Modernizacja kojców w...): 4&nbsp;805 zł. <hr style="width:17.81810756835544%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 31 (Zakup samochodu pożarniczego...): 4&nbsp;288 zł. <hr style="width:15.901631850417683%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(9.2% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 78&nbsp;672 zł'><b>&uarr;</b> 78&nbsp;672</div>
+</div>
+</div></td>
+</tr>
+<tr class='loser'>
+<td class='num' style='text-align:right' sorttable_customkey='23'>  &#10008; </td>
+<td class='num' style='text-align:right' sorttable_customkey='8'>8</td>
+<td>Kapitalny remont pomieszczeń sanitarnych i hallu oraz pomieszczeń magazynowych</td>
+<td class='num' style='text-align:right' sorttable_customkey='106788'>106&nbsp;788</td>
+<td class='num' style='text-align:right' sorttable_customkey='119'>119</td>
+<td style='text-align:right' sorttable_customkey='47'>47%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(12.5% - 9px);' data-tippy-content='koszt projektu: 106&nbsp;788 zł'><b>&darr; 106&nbsp;788</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 6.1%;' data-tippy-content='&#10008; po sfinansowaniu dotychczasowych projektów, zwolennikom tego projektu pozostało 51&nbsp;686 zł, czyli mniej niż 106&nbsp;788 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-18","project-31","project-6"])'  onmouseout='unhighlight_project(["project-18","project-31","project-6"])' style='width: 3.2%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>26&nbsp;986 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 18 (Modernizacja kojców w...): 7&nbsp;135 zł. <hr style="width:26.442676562751004%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 31 (Zakup samochodu pożarniczego...): 5&nbsp;959 zł. <hr style="width:22.0820297232679%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 6 (Street Workout Park w Kozłowie): 3&nbsp;691 zł. <hr style="width:13.67901899112899%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(9.2% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 78&nbsp;672 zł'><b>&uarr;</b> 78&nbsp;672</div>
+</div>
+</div></td>
+</tr>
+<tr class='winner' id='project-21'>
+<td class='num' style='text-align:right' sorttable_customkey='17'> 17 </td>
+<td class='num' style='text-align:right' sorttable_customkey='21'>21</td>
+<td>Strategia wsparcia rodzin przeżywających trudności po doświadczeniach związanych z pandemią</td>
+<td class='num' style='text-align:right' sorttable_customkey='28550'>28&nbsp;550</td>
+<td class='num' style='text-align:right' sorttable_customkey='92'>92</td>
+<td style='text-align:right' sorttable_customkey='140'>140%</td>
+<td><div class='chart-container'>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(3.4% - 9px);' data-tippy-content='koszt projektu: 28&nbsp;550 zł'><b>&darr; 28&nbsp;550</b></div>
+</div>
+<div class='chart'>
+<div class='bar bar-blue' style='width: 4.7%;' data-tippy-content='&#10004; zwolennikom projektu pozostało 40&nbsp;177 zł, co wystarcza na pokrycie kosztu 28&nbsp;550 zł'></div>
+<div class='bar bar-light' onmouseover='highlight_project(["project-31","project-19","project-18"])'  onmouseout='unhighlight_project(["project-31","project-19","project-18"])' style='width: 2.4%;' data-tippy-content='<html lang="en"><body> Z początkowej kwoty wydano <b>20&nbsp;644 zł</b> na wcześniej wybrane projekty. </br> Najwięcej wydano na: <ul> <li>Projekt 31 (Zakup samochodu pożarniczego...): 3&nbsp;867 zł. <hr style="width:18.73232944782678%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 19 (Rozwój mediów/telewizji...): 3&nbsp;446 zł. <hr style="width:16.69348889209438%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li> <li>Projekt 18 (Modernizacja kojców w...): 2&nbsp;621 zł. <hr style="width:12.697307991345216%;height:10px;color:#f6c8c8;background-color:#f6c8c8;text-align:left;margin-left:0"></hr></li></ul></body></html>'; allowHTML: true></div>
+</div>
+<div class='cost-locator-container'>
+<div class='cost-locator' style='left: calc(7.1% - 9px);' data-tippy-content='zwolenikom projektu początkowo przysługuje 60&nbsp;822 zł'><b>&uarr;</b> 60&nbsp;822</div>
+</div>
+</div></td>
+</tr>
+<tr class='loser-first-phase'>
+<td class='num' style='text-align:right' sorttable_customkey='24'>  &#10008; </td>
+<td class='num' style='text-align:right' sorttable_customkey='34'>34</td>
+<td>Modernizacja ciągów komunikacyjnych na terenie Klubu Sportowego WDA Świecie</td>
+<td class='num' style='text-align:right' sorttable_customkey='482037'>482&nbsp;037</td>
+<td class='num' style='text-align:right' sorttable_customkey='375'>375</td>
+<td style='text-align:right' sorttable_customkey='0'></td>
+<td>Odrzucony w pierwszej fazie.</td>
+</tr>
+        </tbody>
+    </table>
+
+    </br></br>
+    <h2>PorÃ³wnanie metody rÃ³wnych udziaÅ‚Ã³w z metodÄ… wiÄ™kszoÅ›ciowÄ…</h2>
+
+    <p> PrzeprowadziliÅ›my analizÄ™, porÃ³wnujÄ…c metodÄ™ rÃ³wnych udziaÅ‚Ã³w do metody wiÄ™kszoÅ›ciowej, ktÃ³ra jest najczÄ™sciej uÅ¼ywanÄ… metodÄ… w budÅ¼etach obywatelskich. </p>
+
+    <p>  
+    <ol>
+    <li>W przypadku metody równych udziałów 0,16% wyborców nie otrzymało żadnego z projektów, na który zagłosowali. Gdyby użyć metody większościowej, to odsetek ten wynosiłby 9,09%. </li>
+    <li>W przypadku metody równych udziałów średnio dla wyborcy wybrano 2,47 projektów spośród tych na które zagłosował. Gdyby użyć metody większościowej, to liczba ta wynosiłaby 1,90.</li>
+    </ol>
+    
+
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script>tippy('[data-tippy-content]', { allowHTML: true, maxWidth: 1000});
+
+        function highlight_project(ids) {
+            for (i = 0; i < ids.length; i++) {
+                document.getElementById(ids[i]).classList.add('highlighted');
+            }
+        }
+        function unhighlight_project(ids) {
+            for (i = 0; i < ids.length; i++) {
+                document.getElementById(ids[i]).classList.remove('highlighted');
+            }
+        }</script>
+</body>
+
+</html>
