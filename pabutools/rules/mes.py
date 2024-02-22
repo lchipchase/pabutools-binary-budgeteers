@@ -384,7 +384,7 @@ def mes_inner_algo(
     if verbose:
         print(f"{tied_projects}")
     if mes_data_store is not None and tied_projects:
-        mes_data_store.record_round_end(projects, tied_projects[0])
+        mes_data_store.record_round_end(projects, tied_projects[0], voters)
     if not tied_projects:
         if resoluteness:
             all_allocs.append(current_alloc)

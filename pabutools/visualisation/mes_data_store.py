@@ -28,11 +28,18 @@ class MESDataStore(DataStore):
         }
         self.rounds.append(round)
 
-    def record_round_end(self, projects, winner):
+    def record_round_end(self, projects, winner, voters):
         self.rounds[-1]["effective_vote_count_reduction"] = {
             p.name: float(self.rounds[-1]["effective_vote_count"][p]-1/p.affordability) for p in projects
         }
         self.rounds[-1]["name"] = winner.name
+
+        # Initial voter funding - the funds the supporters could've had if they hadn't spent on previous selected projects
+        initial_budget_per_voter = float(self.instance.meta["budget"]) / float(self.instance.meta["num_votes"])
+        self.rounds[-1]["initial_voter_funding"] = initial_budget_per_voter * len(winner.supporter_indices)
+
+        # Final voter funding - the funds the supporters actually have
+        self.rounds[-1]["final_voter_funding"] = float(sum(voters[i].total_budget() for i in winner.supporter_indices))
 
     def __calculate_pie_charts(self, projectVotes):
         winners = []
