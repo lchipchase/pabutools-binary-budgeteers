@@ -13,6 +13,7 @@ class DataStore:
 
 class MESDataStore(DataStore):
     template = ENV.get_template('./templates/mes_template.html') 
+    summary_template = ENV.get_template('./page-summary/template_summary.html')
     
     def __init__(self, profile, instance, verbose=False):
         self.profile = profile
@@ -40,6 +41,12 @@ class MESDataStore(DataStore):
 
         # Final voter funding - the funds the supporters actually have
         self.rounds[-1]["final_voter_funding"] = float(sum(voters[i].total_budget() for i in winner.supporter_indices))
+
+        # Get cost of winning project
+        self.rounds[-1]["cost"] = winner.cost
+        
+        # Number of votes for winning project
+        self.rounds[-1]["totalvotes"] = len(winner.supporter_indices)
 
     def __calculate_pie_charts(self, projectVotes):
         winners = []
@@ -75,7 +82,7 @@ class MESDataStore(DataStore):
             round["voter_flow"] = voter_flow_matrix(self.instance, self.profile)
         self.__calculate_pie_charts(projectVotes)
 
-    def render(self, outcome, output_file_path):
+    def render(self, outcome, output_file_path, summary_output_file_path):
         self.__calculate()
         if self.verbose:
             print(self.rounds)
@@ -88,5 +95,18 @@ class MESDataStore(DataStore):
             spent=total_cost(p for p in self.instance if p.name in outcome),
             budget=self.instance.meta["budget"]
         )
+
+        summary_rendered_output = MESDataStore.summary_template.render( # TODO: Some redudant data is being passed to the template that can be calculated within template directly
+            election_name=self.instance.meta["description"] if "description" in self.instance.meta else "No description provided.", 
+            rounds=self.rounds, 
+            projects=list(self.instance),
+            number_of_elected_projects=len(outcome),
+            number_of_unelected_projects=len(self.instance) - len(outcome),
+            spent=total_cost(p for p in self.instance if p.name in outcome),
+            budget=self.instance.meta["budget"]
+        )
         with open(output_file_path, "w") as o:
             o.write(rendered_output)
+    
+        with open(summary_output_file_path, "w") as o:
+            o.write(summary_rendered_output)

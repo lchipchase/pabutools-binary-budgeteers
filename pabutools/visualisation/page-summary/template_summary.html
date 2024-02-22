@@ -7,6 +7,7 @@ Other TODOs:
 Implement Comparisons
 Implement Example
 Maybe implement page description?
+Add commas to separate large numbers
 
 
 -->
@@ -191,8 +192,8 @@ Maybe implement page description?
         <div class='chart-budget'>
             {% for round in rounds %}
                 <div class='bar bar-blue bar-border'
-                    style='width: {{ round.cost_percent }}&#37;;'
-                    data-tippy-content="Project '{{ round.name }}' was voted in round {{ loop.index }}, costing {{ round.cost }} GBP. This is {{ round.cost_percent }}&#37; of the budget.">
+                    style='width: {{ (round.cost / budget | float) * 100 }}&#37;;'
+                    data-tippy-content="Project '{{ round.name }}' was voted in round {{ loop.index }}, costing {{ round.cost }} GBP. This is {{ (round.cost / budget | float) * 100 }}&#37; of the budget.">
                 </div>
             {% endfor %}
         </div>
@@ -225,7 +226,7 @@ Maybe implement page description?
                     <div class='chart-container'>
                         <div class='cost-locator-container'>
                             <div class='cost-locator' 
-                                style='left: calc({{ round.cost_percent }}&#37; - 9px);'
+                                style='left: calc({{ (round.cost / budget | float) * 100 }}&#37; - 9px);'
                                 data-tippy-content='Project Cost: {{ round.cost }}'>
                                     <b>
                                         &darr; {{ round.cost }}
@@ -235,15 +236,15 @@ Maybe implement page description?
 
                         <div class='chart'>
                             <div class='bar bar-blue'
-                                style='width: {{ round.final_voter_funding_percent }}&#37;;'
-                                data-tippy-content='&#10004; Supporters of the project have {{ round.final_voter_funding }} GBP, which is enough to cover the cost {{ round.cost }} GBP'>
+                                style='width: {{ (round.final_voter_funding / budget | float) * 100 }}&#37;;'
+                                data-tippy-content='&#10004; Supporters of the project have {{ round.final_voter_funding | float }} GBP, which is enough to cover the cost {{ round.cost }} GBP'>
                             </div>
 
                             <div class='bar bar-light'
                                 onmouseover='highlight_project(["TODO"])'
                                 onmouseout='unhighlight_project(["TODO"])'
-                                style='width: {{ round.funding_lost_percent }}&#37;;'
-                                data-tippy-content='<html lang=\"en\"><body>From the initial total funding, <b> {{ round.funding_lost }} GBP </b> was spent on previously selected projects. </br> 
+                                style='width: {{ ((round.initial_voter_funding - round.final_voter_funding) / budget | float) * 100 }}&#37;;'
+                                data-tippy-content='<html lang=\"en\"><body>From the initial total funding, <b> {{ round.initial_voter_funding - round.final_voter_funding | int }} GBP </b> was spent on previously selected projects. </br> 
                                 Most of the funding was spent on: TODO
 
                                 <!-- For ...
@@ -260,12 +261,12 @@ Maybe implement page description?
 
                         <div class='cost-locator-container'>
                             <div class='cost-locator'
-                                style='left: calc({{ round.initial_voter_funding_percent }}&#37; - 9px);'
-                                data-tippy-content='Project initially has a funding of {{ round.initial_voter_funding }} GBP'>
+                                style='left: calc({{ (round.initial_voter_funding / budget | float) * 100 }}&#37; - 9px);'
+                                data-tippy-content='Project initially has a funding of {{ round.initial_voter_funding | int }} GBP'>
                                 <b>
                                     &uarr;
                                 </b>
-                                {{ round.initial_voter_funding }}
+                                {{ round.initial_voter_funding | int}}
                             </div>
                         </div>
                     </div>                    
