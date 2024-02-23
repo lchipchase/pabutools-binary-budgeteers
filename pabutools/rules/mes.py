@@ -383,8 +383,6 @@ def mes_inner_algo(
             denominator -= supporter.multiplicity * project.supporters_sat(supporter)
     if verbose:
         print(f"{tied_projects}")
-    if mes_data_store is not None and tied_projects:
-        mes_data_store.record_round_end(projects, tied_projects[0])
     if not tied_projects:
         if resoluteness:
             all_allocs.append(current_alloc)
@@ -398,6 +396,8 @@ def mes_inner_algo(
             if resoluteness:
                 tied_projects = tied_projects[:1]
         for selected_project in tied_projects:
+            if mes_data_store is not None:
+                mes_data_store.record_round_end(projects, selected_project.project)
             if resoluteness:
                 new_alloc = current_alloc
                 new_projects = projects
