@@ -11,18 +11,19 @@ from pabutools.election import (
     Project,
     SatisfactionMeasure,
 )
+from pabutools.rules.budgetallocation import BudgetAllocation
 
 
 def popularity_comparison(
     instance: Instance,
     profile: Profile,
     sat_class: type[SatisfactionMeasure],
-    rule_sequence: Iterable[Callable],
-    rule_params: Iterable[dict] | None = None,
-    initial_budget_allocation: Collection[Project] | None = None,
-) -> Iterable[Collection[Project]]:
+    rule_sequence: Collection[Callable],
+    rule_params: Collection[dict] | None = None,
+    initial_budget_allocation: Iterable[Project] | None = None,
+) -> list[BudgetAllocation]:
     """
-    Compute the outcome of several rules and returns the one that is the most preferred by the largest set of voters,
+    Compute the outcome of several rules and returns the ones that are the most preferred by the largest set of voters,
     according to a given satisfaction measure. Should only be applied to resolute rules.
 
     Parameters
@@ -33,17 +34,17 @@ def popularity_comparison(
             The profile.
         sat_class: type[:py:class:`~pabutools.election.satisfaction.satisfactionmeasure.SatisfactionMeasure`]
             The satisfaction measure used to do the comparison.
-        rule_sequence: Iterable[Callable]
+        rule_sequence: Collection[Callable]
             Iterable of the rule functions.
-        rule_params: Iterable[dict], optional
+        rule_params: Collection[dict], optional
             Iterable of dictionaries of additional parameters that are passed as keyword arguments to the rule
             functions. Defaults to `{}`.
-        initial_budget_allocation: Collection[Project], optional
+        initial_budget_allocation: Iterable[Project], optional
             An initial budget allocation, typically empty. Defaults to `[]`.
 
     Returns
     -------
-        Iterable[Iterable[:py:class:`~pabutools.election.instance.Project`]]
+        list[:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`]
             All the budget allocations yielding the maximum total satisfaction for the outcomes of the rules.
     """
     if rule_params is not None and len(rule_sequence) != len(rule_params):
@@ -52,10 +53,10 @@ def popularity_comparison(
         )
     if rule_params is None:
         rule_params = [{} for _ in rule_sequence]
-    if initial_budget_allocation is not None:
-        budget_allocation = list(initial_budget_allocation)
+    if initial_budget_allocation is None:
+        budget_allocation = BudgetAllocation()
     else:
-        budget_allocation = []
+        budget_allocation = BudgetAllocation(initial_budget_allocation)
     results = []
     for index, rule in enumerate(rule_sequence):
         res = rule(
@@ -91,10 +92,10 @@ def social_welfare_comparison(
     instance: Instance,
     profile: Profile,
     sat_class: type[SatisfactionMeasure],
-    rule_sequence: Iterable[Callable],
-    rule_params: Iterable[dict] | None = None,
-    initial_budget_allocation: Collection[Project] | None = None,
-) -> Iterable[Collection[Project]]:
+    rule_sequence: Collection[Callable],
+    rule_params: Collection[dict] | None = None,
+    initial_budget_allocation: Iterable[Project] | None = None,
+) -> list[BudgetAllocation]:
     """
     Compute the outcome of several rules and returns the one that is the most preferred by the voters according to a
     given satisfaction measure. Should only be applied to resolute rules.
@@ -107,17 +108,17 @@ def social_welfare_comparison(
             The profile.
         sat_class: type[:py:class:`~pabutools.election.satisfaction.satisfactionmeasure.SatisfactionMeasure`]
             The satisfaction measure used to do the comparison.
-        rule_sequence: Iterable[Callable]
+        rule_sequence: Collection[Callable]
             Iterable of the rule functions.
-        rule_params: Iterable[dict], optional
+        rule_params: Collection[dict], optional
             Iterable of dictionaries of additional parameters that are passed as keyword arguments to the rule
             functions. Defaults to `{}`.
-        initial_budget_allocation: Collection[Project], optional
+        initial_budget_allocation: Iterable[Project], optional
             An initial budget allocation, typically empty. Defaults to `[]`.
 
     Returns
     -------
-        Iterable[Iterable[:py:class:`~pabutools.election.instance.Project`]]
+        list[:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`]
             All the budget allocations yielding the maximum total satisfaction for the outcomes of the rules.
     """
     if rule_params is not None and len(rule_sequence) != len(rule_params):
@@ -127,9 +128,9 @@ def social_welfare_comparison(
     if rule_params is None:
         rule_params = [{} for _ in rule_sequence]
     if initial_budget_allocation is not None:
-        budget_allocation = list(initial_budget_allocation)
+        budget_allocation = BudgetAllocation(initial_budget_allocation)
     else:
-        budget_allocation = []
+        budget_allocation = BudgetAllocation()
     results = []
     for index, rule in enumerate(rule_sequence):
         res = rule(

@@ -16,6 +16,7 @@ from pabutools.election import (
     GroupSatisfactionMeasure,
     AbstractProfile,
 )
+from pabutools.rules.budgetallocation import BudgetAllocation
 
 
 def max_additive_utilitarian_welfare_scheme(
@@ -23,7 +24,7 @@ def max_additive_utilitarian_welfare_scheme(
     sat_profile: GroupSatisfactionMeasure,
     initial_budget_allocation: Collection[Project],
     resoluteness: bool = True,
-) -> Collection[Project] | Collection[Collection[Project]]:
+) -> BudgetAllocation | list[BudgetAllocation]:
     """
     The inner algorithm for the welfare maximizing rule. It generates the corresponding budget allocations using a
     linear program solver. Note that there is no control over the way ties are broken.
@@ -41,7 +42,7 @@ def max_additive_utilitarian_welfare_scheme(
             Defaults to True.
     Returns
     -------
-        Collection[Project] | Iterable[Collection[Project]]
+        :py:class:`~pabutools.rules.budgetallocation.BudgetAllocation` | list[:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`]
             The selected projects if resolute (`resoluteness` = True), or the set of selected projects if irresolute
             (`resoluteness = False`).
     """
@@ -64,9 +65,9 @@ def max_additive_utilitarian_welfare_scheme(
     opt_value = mip_model.objective_value
 
     if resoluteness:
-        return sorted(
-            [p for p in p_vars if p_vars[p].x >= 0.99] + list(initial_budget_allocation)
-        )
+        res = BudgetAllocation(initial_budget_allocation)
+        res.extend([p for p in p_vars if p_vars[p].x >= 0.99])
+        return res
 
     previous_partial_alloc = [p for p in p_vars if p_vars[p].x >= 0.99]
     all_partial_allocs = [previous_partial_alloc]
@@ -92,10 +93,12 @@ def max_additive_utilitarian_welfare_scheme(
         previous_partial_alloc = [p for p in p_vars if p_vars[p].x >= 0.99]
         if previous_partial_alloc not in all_partial_allocs:
             all_partial_allocs.append(previous_partial_alloc)
-    return [
-        sorted(partial_alloc + list(initial_budget_allocation))
-        for partial_alloc in all_partial_allocs
-    ]
+    res = []
+    for partial_alloc in all_partial_allocs:
+        alloc = BudgetAllocation(initial_budget_allocation)
+        alloc.extend(partial_alloc)
+        res.append(alloc)
+    return res
 
 
 def max_additive_utilitarian_welfare(
@@ -105,7 +108,7 @@ def max_additive_utilitarian_welfare(
     sat_profile: GroupSatisfactionMeasure | None = None,
     resoluteness: bool = True,
     initial_budget_allocation: Collection[Project] | None = None,
-) -> Collection[Project] | Collection[Collection[Project]]:
+) -> BudgetAllocation | list[BudgetAllocation]:
     """
     Rule returning the budget allocation(s) maximizing the utilitarian social welfare. The utilitarian social welfare is
     defined as the sum of the satisfactin of the voters, where the satisfaction is computed using the satisfaction
@@ -134,14 +137,14 @@ def max_additive_utilitarian_welfare(
 
     Returns
     -------
-        Collection[Project] | Iterable[Collection[Project]]
+        :py:class:`~pabutools.rules.budgetallocation.BudgetAllocation` | list[:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`]
             The selected projects if resolute (`resoluteness` = True), or the set of selected projects if irresolute
             (`resoluteness = False`).
     """
     if initial_budget_allocation is not None:
-        budget_allocation = list(initial_budget_allocation)
+        budget_allocation = BudgetAllocation(initial_budget_allocation)
     else:
-        budget_allocation = []
+        budget_allocation = BudgetAllocation()
 
     if sat_class is None:
         if sat_profile is None:

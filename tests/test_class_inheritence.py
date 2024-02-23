@@ -28,6 +28,7 @@ from pabutools.election import (
     OrdinalMultiProfile,
     SatisfactionMultiProfile,
 )
+from pabutools.rules.budgetallocation import BudgetAllocation
 
 
 def check_members_equality(obj1, obj2, verbose=False):
@@ -455,3 +456,8 @@ class TestAnalysis(TestCase):
         )
         sats = [Additive_Borda_Sat(instance, profile, ballot) for ballot in ballots]
         check_dict_members(sat_profile, sats[:10], sats[10:])
+
+    def test_budget_allocation_members(self):
+        projects = [Project(str(i), i) for i in range(20)]
+        budget_alloc = BudgetAllocation(projects[:10])
+        check_list_members(budget_alloc, projects[:10], projects[10:])

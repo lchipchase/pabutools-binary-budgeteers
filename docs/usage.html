@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-theme="light">
+<html lang="en" data-content_root="./" data-theme="light">
 
   <head>
     <meta charset="utf-8" />
@@ -18,27 +18,28 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="_static/documentation_options.js?v=3c867bb8"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'usage';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -53,7 +54,15 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -88,11 +97,14 @@
 </form></div>
   </div>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -107,6 +119,7 @@
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
   
 
 <a class="navbar-brand logo" href="index.html">
@@ -115,10 +128,22 @@
   
   
   
+  
     <p class="title logo__title">Pabutools</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="index.html">Pabutools</a></li>
@@ -262,20 +287,22 @@
 </button>
 
 
+
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
 
+
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -324,6 +351,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rules">Rules</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#budget-allocation">Budget Allocation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#additive-utilitarian-welfare-maximiser">Additive Utilitarian Welfare Maximiser</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#greedy-approximation-of-the-welfare-maximiser">Greedy Approximation of the Welfare Maximiser</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-phragmen-s-rule">Sequential Phragmén’s Rule</a></li>
@@ -343,14 +371,14 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section id="complete-guide">
-<h1>Complete Guide<a class="headerlink" href="#complete-guide" title="Permalink to this heading">#</a></h1>
+<h1>Complete Guide<a class="headerlink" href="#complete-guide" title="Link to this heading">#</a></h1>
 <p>This guide offers a comprehensive explanation on using Pabutools. For a simpler tutorial,
 refer to the <a class="reference internal" href="quickstart.html#quickstart"><span class="std std-ref">Quick Start</span></a> page.</p>
 <section id="instances">
-<h2>Instances<a class="headerlink" href="#instances" title="Permalink to this heading">#</a></h2>
+<h2>Instances<a class="headerlink" href="#instances" title="Link to this heading">#</a></h2>
 <p>Please refer to the module <a class="reference internal" href="reference/election/instance.html#module-pabutools.election.instance" title="pabutools.election.instance"><code class="xref py py-mod docutils literal notranslate"><span class="pre">instance</span></code></a> for more information.</p>
 <p>A participatory budgeting instance encapsulates all the elements defining the elections. It includes
 the projects up for voting, along with the budget limit.</p>
@@ -390,7 +418,7 @@ test the feasibility of a set of projects, and so on.</p>
 </div>
 </section>
 <section id="profiles">
-<h2>Profiles<a class="headerlink" href="#profiles" title="Permalink to this heading">#</a></h2>
+<h2>Profiles<a class="headerlink" href="#profiles" title="Link to this heading">#</a></h2>
 <p>For reference, please refer to the modules <a class="reference internal" href="reference/election/ballot.html#module-pabutools.election.ballot" title="pabutools.election.ballot"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ballot</span></code></a> and
 <a class="reference internal" href="reference/election/profile.html#module-pabutools.election.profile" title="pabutools.election.profile"><code class="xref py py-mod docutils literal notranslate"><span class="pre">profile</span></code></a>.</p>
 <p>A profile is the second fundamental component of a participatory budgeting election; it stores
@@ -415,7 +443,7 @@ of the ballots in a profile.</p>
 </pre></div>
 </div>
 <section id="approval-profiles">
-<h3>Approval Profiles<a class="headerlink" href="#approval-profiles" title="Permalink to this heading">#</a></h3>
+<h3>Approval Profiles<a class="headerlink" href="#approval-profiles" title="Link to this heading">#</a></h3>
 <p>When submitting approval ballots, voters submit a set of projects they approve of.
 Approval ballots are represented through the class
 <a class="reference internal" href="reference/election/ballot.html#pabutools.election.ballot.approvalballot.ApprovalBallot" title="pabutools.election.ballot.approvalballot.ApprovalBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApprovalBallot</span></code></a> that inherits
@@ -443,7 +471,7 @@ validator to <a class="reference internal" href="reference/election/ballot.html#
 </div>
 </section>
 <section id="cardinal-profiles">
-<h3>Cardinal Profiles<a class="headerlink" href="#cardinal-profiles" title="Permalink to this heading">#</a></h3>
+<h3>Cardinal Profiles<a class="headerlink" href="#cardinal-profiles" title="Link to this heading">#</a></h3>
 <p>When required to submit cardinal ballots, voters are asked to assign a score to each project.
 Cardinal ballots are represented using the class
 <a class="reference internal" href="reference/election/ballot.html#pabutools.election.ballot.cardinalballot.CardinalBallot" title="pabutools.election.ballot.cardinalballot.CardinalBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">CardinalBallot</span></code></a>.
@@ -464,7 +492,7 @@ It inherits from the <a class="reference internal" href="reference/election/prof
 </div>
 </section>
 <section id="cumulative-profiles">
-<h3>Cumulative Profiles<a class="headerlink" href="#cumulative-profiles" title="Permalink to this heading">#</a></h3>
+<h3>Cumulative Profiles<a class="headerlink" href="#cumulative-profiles" title="Link to this heading">#</a></h3>
 <p>Cumulative ballots correspond to a specific type of cardinal ballots where the voters are
 allocated a specific number of points that they can distribute among the projects.
 The class <a class="reference internal" href="reference/election/ballot.html#pabutools.election.ballot.cumulativeballot.CumulativeBallot" title="pabutools.election.ballot.cumulativeballot.CumulativeBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">CumulativeBallot</span></code></a>
@@ -477,7 +505,7 @@ that inherits from the <a class="reference internal" href="reference/election/pr
 (and acts thus as a <cite>list</cite>).</p>
 </section>
 <section id="ordinal-profiles">
-<h3>Ordinal Profiles<a class="headerlink" href="#ordinal-profiles" title="Permalink to this heading">#</a></h3>
+<h3>Ordinal Profiles<a class="headerlink" href="#ordinal-profiles" title="Link to this heading">#</a></h3>
 <p>When ordinal ballots are used, voters are asked to rank the projects based on their
 preferences. The class <a class="reference internal" href="reference/election/ballot.html#pabutools.election.ballot.ordinalballot.OrdinalBallot" title="pabutools.election.ballot.ordinalballot.OrdinalBallot"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrdinalBallot</span></code></a>
 represents such ballots. It inherits from the Python class <cite>list</cite> (actually the class
@@ -497,7 +525,7 @@ and our class <a class="reference internal" href="reference/election/ballot.html
 </section>
 </section>
 <section id="multiprofile">
-<h2>Multiprofile<a class="headerlink" href="#multiprofile" title="Permalink to this heading">#</a></h2>
+<h2>Multiprofile<a class="headerlink" href="#multiprofile" title="Link to this heading">#</a></h2>
 <p>For reference, see the modules <a class="reference internal" href="reference/election/profile.html#module-pabutools.election.profile" title="pabutools.election.profile"><code class="xref py py-mod docutils literal notranslate"><span class="pre">profile</span></code></a>.</p>
 <p>In some cases, it is faster to use multisets instead of lists for the profiles. We have
 implemented this through multiprofiles. A multiprofile is a collection of ballots where
@@ -559,11 +587,11 @@ runtime and plotted the following measure:</p>
 <p>(Note the log scale above)</p>
 </section>
 <section id="preference-libraries">
-<h2>Preference Libraries<a class="headerlink" href="#preference-libraries" title="Permalink to this heading">#</a></h2>
+<h2>Preference Libraries<a class="headerlink" href="#preference-libraries" title="Link to this heading">#</a></h2>
 <p>See <a class="reference internal" href="reference/election/libraries.html#preflibraries"><span class="std std-ref">Preference Libraries</span></a> for a reference.</p>
 <p>We provide support for standard preference libraries.</p>
 <section id="id1">
-<h3>PaBuLib<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<h3>PaBuLib<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
 <p>Full support is provided for the participatory budgeting data hosted on the
 <a class="reference external" href="http://pabulib.org">pabulib</a> website. You can use the function
 <a class="reference internal" href="reference/election/libraries.html#pabutools.election.pabulib.parse_pabulib" title="pabutools.election.pabulib.parse_pabulib"><code class="xref py py-func docutils literal notranslate"><span class="pre">parse_pabulib()</span></code></a> to parse a file
@@ -621,7 +649,7 @@ length of a ballot or the number of points that must be allocated for instance.<
 </div>
 </section>
 <section id="preflib">
-<h3>PrefLib<a class="headerlink" href="#preflib" title="Permalink to this heading">#</a></h3>
+<h3>PrefLib<a class="headerlink" href="#preflib" title="Link to this heading">#</a></h3>
 <p>In addition to <a class="reference external" href="http://pabulib.org">pabulib</a> , our package also supports the
 <a class="reference external" href="https://preflib.org">preflib</a>  format, providing functions to convert a participatory
 budgeting election into a PrefLib instance.</p>
@@ -646,7 +674,7 @@ budgeting election into a PrefLib instance.</p>
 </section>
 </section>
 <section id="satisfaction-measures">
-<h2>Satisfaction Measures<a class="headerlink" href="#satisfaction-measures" title="Permalink to this heading">#</a></h2>
+<h2>Satisfaction Measures<a class="headerlink" href="#satisfaction-measures" title="Link to this heading">#</a></h2>
 <p>In participatory budgeting, various concepts and rules utilize proxies for voter satisfaction,
 which are deduced from the submitted ballots rather than using the ballots directly.</p>
 <p>We offer a range of satisfaction functions and provide flexible ways to create custom ones.
@@ -696,7 +724,7 @@ methods and provide several widely used satisfaction functions.</p>
 </div>
 <p>Next, we present additional tools we provide to define satisfaction functions.</p>
 <section id="functional-satisfaction-functions">
-<h3>Functional Satisfaction Functions<a class="headerlink" href="#functional-satisfaction-functions" title="Permalink to this heading">#</a></h3>
+<h3>Functional Satisfaction Functions<a class="headerlink" href="#functional-satisfaction-functions" title="Link to this heading">#</a></h3>
 <p>For more specific ways of defining satisfaction functions, we introduce the class
 <a class="reference internal" href="reference/election/satisfaction.html#pabutools.election.satisfaction.functionalsatisfaction.FunctionalSatisfaction" title="pabutools.election.satisfaction.functionalsatisfaction.FunctionalSatisfaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalSatisfaction</span></code></a>.
 This class corresponds to a satisfaction function defined by a function that takes as arguments
@@ -715,7 +743,7 @@ at least one approved project is selected and 0 otherwise).</p>
 </div>
 </section>
 <section id="additive-satisfaction-functions">
-<h3>Additive Satisfaction Functions<a class="headerlink" href="#additive-satisfaction-functions" title="Permalink to this heading">#</a></h3>
+<h3>Additive Satisfaction Functions<a class="headerlink" href="#additive-satisfaction-functions" title="Link to this heading">#</a></h3>
 <p>We also offer additive satisfaction functions, where the satisfaction for a set
 of projects is equal to the sum of the satisfaction of each individual project. The class
 <a class="reference internal" href="reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.AdditiveSatisfaction" title="pabutools.election.satisfaction.additivesatisfaction.AdditiveSatisfaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdditiveSatisfaction</span></code></a>
@@ -736,7 +764,7 @@ how to define the cardinality satisfaction function.</p>
 </div>
 </section>
 <section id="positional-satisfaction-functions">
-<h3>Positional Satisfaction Functions<a class="headerlink" href="#positional-satisfaction-functions" title="Permalink to this heading">#</a></h3>
+<h3>Positional Satisfaction Functions<a class="headerlink" href="#positional-satisfaction-functions" title="Link to this heading">#</a></h3>
 <p>For ordinal ballots, we have positional satisfaction functions, where a voter’s
 satisfaction depends on the position of projects in their ballot. The class
 <a class="reference internal" href="reference/election/satisfaction.html#pabutools.election.satisfaction.positionalsatisfaction.PositionalSatisfaction" title="pabutools.election.satisfaction.positionalsatisfaction.PositionalSatisfaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">PositionalSatisfaction</span></code></a>
@@ -757,7 +785,7 @@ of projects. As an example, we define the additive Borda satisfaction function.<
 </div>
 </section>
 <section id="satisfaction-functions-already-defined">
-<h3>Satisfaction Functions Already Defined<a class="headerlink" href="#satisfaction-functions-already-defined" title="Permalink to this heading">#</a></h3>
+<h3>Satisfaction Functions Already Defined<a class="headerlink" href="#satisfaction-functions-already-defined" title="Link to this heading">#</a></h3>
 <p>Several satisfaction functions are already defined in the package and can be imported
 from <cite>pabutools.election</cite>. We list them below.</p>
 <ul class="simple">
@@ -776,11 +804,18 @@ from <cite>pabutools.election</cite>. We list them below.</p>
 </section>
 </section>
 <section id="rules">
-<h2>Rules<a class="headerlink" href="#rules" title="Permalink to this heading">#</a></h2>
+<h2>Rules<a class="headerlink" href="#rules" title="Link to this heading">#</a></h2>
 <p>For reference, see the module <a class="reference internal" href="reference/rules/index.html#module-pabutools.rules" title="pabutools.rules"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rules</span></code></a>.</p>
 <p>We provide the implementation of the most celebrated rules for participatory budgeting.</p>
+<section id="budget-allocation">
+<h3>Budget Allocation<a class="headerlink" href="#budget-allocation" title="Link to this heading">#</a></h3>
+<p>All rules return a <a class="reference internal" href="reference/rules/index.html#pabutools.rules.budgetallocation.BudgetAllocation" title="pabutools.rules.budgetallocation.BudgetAllocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">BudgetAllocation</span></code></a> object.
+The <a class="reference internal" href="reference/rules/index.html#pabutools.rules.budgetallocation.BudgetAllocation" title="pabutools.rules.budgetallocation.BudgetAllocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">BudgetAllocation</span></code></a> class inherits from
+<code class="code docutils literal notranslate"><span class="pre">list</span></code> and behave similarly. It is used to store additional information about the
+outcome (for visualisation/explanation purposes).</p>
+</section>
 <section id="additive-utilitarian-welfare-maximiser">
-<h3>Additive Utilitarian Welfare Maximiser<a class="headerlink" href="#additive-utilitarian-welfare-maximiser" title="Permalink to this heading">#</a></h3>
+<h3>Additive Utilitarian Welfare Maximiser<a class="headerlink" href="#additive-utilitarian-welfare-maximiser" title="Link to this heading">#</a></h3>
 <p>The first rule provided is the Additive Utilitarian Welfare Maximiser. It aims to return
 budget allocations that maximize the utilitarian social welfare when the satisfaction
 measure is additive.</p>
@@ -834,7 +869,7 @@ have no control as to how ties are broken. Moreover, there are no clear ways to 
 for non-additive satisfaction measures.</p>
 </section>
 <section id="greedy-approximation-of-the-welfare-maximiser">
-<h3>Greedy Approximation of the Welfare Maximiser<a class="headerlink" href="#greedy-approximation-of-the-welfare-maximiser" title="Permalink to this heading">#</a></h3>
+<h3>Greedy Approximation of the Welfare Maximiser<a class="headerlink" href="#greedy-approximation-of-the-welfare-maximiser" title="Link to this heading">#</a></h3>
 <p>The library also implements standard greedy rules. The primary rule used in this
 context is the Greedy Utilitarian Welfare. It behaves similarly to the
 Utilitarian Welfare Maximiser but offers additional functionalities: it is not limited
@@ -901,7 +936,7 @@ to additive satisfaction measures (and runs faster).</p>
 </div>
 </section>
 <section id="sequential-phragmen-s-rule">
-<h3>Sequential Phragmén’s Rule<a class="headerlink" href="#sequential-phragmen-s-rule" title="Permalink to this heading">#</a></h3>
+<h3>Sequential Phragmén’s Rule<a class="headerlink" href="#sequential-phragmen-s-rule" title="Link to this heading">#</a></h3>
 <p>Another rule provided is the Sequential Phragmén’s Rule, which is different from the
 previous two as it does not rely on a satisfaction measure.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pabutools.election</span> <span class="kn">import</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">ApprovalProfile</span><span class="p">,</span> <span class="n">ApprovalBallot</span><span class="p">,</span> <span class="n">Cost_Sat</span>
@@ -946,7 +981,7 @@ previous two as it does not rely on a satisfaction measure.</p>
 </div>
 </section>
 <section id="method-of-equal-shares-mes">
-<h3>Method of Equal Shares (MES)<a class="headerlink" href="#method-of-equal-shares-mes" title="Permalink to this heading">#</a></h3>
+<h3>Method of Equal Shares (MES)<a class="headerlink" href="#method-of-equal-shares-mes" title="Link to this heading">#</a></h3>
 <p>The Method of Equal Shares is another rule that returns budget allocations based on the satisfaction
 measure provided. For more details, see the <a class="reference external" href="https://equalshares.net/">equalshares.net</a> website.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pabutools.election</span> <span class="kn">import</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">ApprovalProfile</span><span class="p">,</span> <span class="n">ApprovalBallot</span><span class="p">,</span> <span class="n">Cost_Sat</span>
@@ -1014,7 +1049,7 @@ performances, one should use the following:</p>
 </div>
 </section>
 <section id="exhaustion-methods">
-<h3>Exhaustion Methods<a class="headerlink" href="#exhaustion-methods" title="Permalink to this heading">#</a></h3>
+<h3>Exhaustion Methods<a class="headerlink" href="#exhaustion-methods" title="Link to this heading">#</a></h3>
 <p>Since not all rules return exhaustive budget allocations, the library offers standard
 methods to render their outcome exhaustive.</p>
 <p>Two methods are provided: the first applies a sequence of rules until achieving an
@@ -1089,7 +1124,7 @@ method (which only does something if the outcome is not already exhaustive).</p>
 parameter directly to obtain the iterated version.</p>
 </section>
 <section id="rule-composition">
-<h3>Rule Composition<a class="headerlink" href="#rule-composition" title="Permalink to this heading">#</a></h3>
+<h3>Rule Composition<a class="headerlink" href="#rule-composition" title="Link to this heading">#</a></h3>
 <p>The library also provides ways to compose rules, such as selecting the outcome that is
 preferred by the largest number of voters for a given satisfaction measure.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pabutools.election</span> <span class="kn">import</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">ApprovalProfile</span><span class="p">,</span> <span class="n">ApprovalBallot</span>
@@ -1161,7 +1196,7 @@ the following:</p>
 </section>
 </section>
 <section id="tie-breaking">
-<h2>Tie-Breaking<a class="headerlink" href="#tie-breaking" title="Permalink to this heading">#</a></h2>
+<h2>Tie-Breaking<a class="headerlink" href="#tie-breaking" title="Link to this heading">#</a></h2>
 <p>For reference, see the module <a class="reference internal" href="reference/tiebreaking.html#module-pabutools.tiebreaking" title="pabutools.tiebreaking"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tiebreaking</span></code></a>.</p>
 <p>We provide several ways to break ties between several projects. All tie-breaking rules are
 instantiations of the <a class="reference internal" href="reference/tiebreaking.html#pabutools.tiebreaking.TieBreakingRule" title="pabutools.tiebreaking.TieBreakingRule"><code class="xref py py-class docutils literal notranslate"><span class="pre">pabutools.tiebreaking.TieBreakingRule</span></code></a> class.
@@ -1192,7 +1227,7 @@ from a set of several or order a list of projects.</p>
 <p>These are mainly used as arguments for the rules, as seen above.</p>
 </section>
 <section id="fractions">
-<h2>Fractions<a class="headerlink" href="#fractions" title="Permalink to this heading">#</a></h2>
+<h2>Fractions<a class="headerlink" href="#fractions" title="Link to this heading">#</a></h2>
 <p>For reference, see the module <a class="reference internal" href="reference/fractions.html#module-pabutools.fractions" title="pabutools.fractions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">fractions</span></code></a>.</p>
 <p>We provide a customizable way to handle fractions. In general, all fractions should be defined
 using the <a class="reference internal" href="reference/fractions.html#pabutools.fractions.frac" title="pabutools.fractions.frac"><code class="xref py py-func docutils literal notranslate"><span class="pre">frac()</span></code></a> function provided in the <a class="reference internal" href="reference/fractions.html#module-pabutools.fractions" title="pabutools.fractions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">fractions</span></code></a>
@@ -1234,11 +1269,10 @@ handle fractions. To change this, simply change the value of the <cite>FRACTION<
 
               
               
-                <footer class="bd-footer-article">
+              
+              
+                <footer class="prev-next-footer">
                   
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="quickstart.html"
@@ -1258,10 +1292,7 @@ handle fractions. To change this, simply change the value of the <cite>FRACTION<
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -1269,6 +1300,7 @@ handle fractions. To change this, simply change the value of the <cite>FRACTION<
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -1298,6 +1330,7 @@ handle fractions. To change this, simply change the value of the <cite>FRACTION<
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rules">Rules</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#budget-allocation">Budget Allocation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#additive-utilitarian-welfare-maximiser">Additive Utilitarian Welfare Maximiser</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#greedy-approximation-of-the-welfare-maximiser">Greedy Approximation of the Welfare Maximiser</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-phragmen-s-rule">Sequential Phragmén’s Rule</a></li>
@@ -1329,6 +1362,7 @@ By Simon Rey, Grzegorz Pierczyński, Markus Utke and Piotr Skowron
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
       © Copyright 2023, Simon Rey, Grzegorz Pierczyński, Markus Utke and Piotr Skowron.
@@ -1355,8 +1389,8 @@ By Simon Rey, Grzegorz Pierczyński, Markus Utke and Piotr Skowron
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from copy import deepcopy, copy
-from collections.abc import Collection, Callable, Iterable, Sequence
+from collections.abc import Collection, Callable, Iterable
 
 from pabutools.election.instance import Instance, Project
 from pabutools.election.profile import AbstractProfile
 from pabutools.fractions import frac
+from pabutools.rules.budgetallocation import BudgetAllocation
 
 from pabutools.utils import Numeric
 
@@ -13,11 +14,11 @@ from pabutools.utils import Numeric
 def completion_by_rule_combination(
     instance: Instance,
     profile: AbstractProfile,
-    rule_sequence: Sequence[Callable],
-    rule_params: Sequence[dict] | None = None,
-    initial_budget_allocation: Collection[Project] | None = None,
+    rule_sequence: Collection[Callable],
+    rule_params: Collection[dict] | None = None,
+    initial_budget_allocation: Iterable[Project] | None = None,
     resoluteness: bool = True,
-) -> Collection[Project] | Iterable[Collection[Project]]:
+) -> BudgetAllocation | list[BudgetAllocation]:
     """
     Runs the given rules on the given instance and profile in sequence until an exhaustive budget allocation has been
     reached (or all rules have been applied). This is useful if the first rules are non-exhaustive.
@@ -42,7 +43,7 @@ def completion_by_rule_combination(
 
     Returns
     -------
-        Collection[Project] | Iterable[Collection[Project]]
+        :py:class:`~pabutools.rules.budgetallocation.BudgetAllocation` | list[:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`]
             The selected projects.
     """
     if rule_params is not None and len(rule_sequence) != len(rule_params):
@@ -59,12 +60,12 @@ def completion_by_rule_combination(
             )
     budget_allocations = []
     res = []
-    if initial_budget_allocation is not None:
-        budget_allocations.append(list(initial_budget_allocation))
+    if initial_budget_allocation is None:
+        budget_allocations.append(BudgetAllocation())
     else:
-        budget_allocations.append([])
+        budget_allocations.append(BudgetAllocation(initial_budget_allocation))
     for index, rule in enumerate(rule_sequence):
-        new_budget_allocations = []
+        new_budget_allocations = BudgetAllocation()
         for budget_allocation in budget_allocations:
             outcome = rule(
                 instance,
@@ -100,11 +101,11 @@ def exhaustion_by_budget_increase(
     profile: AbstractProfile,
     rule: Callable,
     rule_params: dict | None = None,
-    initial_budget_allocation: Collection[Project] | None = None,
+    initial_budget_allocation: Iterable[Project] | None = None,
     resoluteness: bool = True,
     budget_step: Numeric | None = None,
     budget_bound: Numeric | None = None,
-) -> Collection[Project]:
+) -> BudgetAllocation | list[BudgetAllocation]:
     """
     Runs the given rule iteratively with increasing budget, until an exhaustive allocation is retrieved or
     the budget limit is exceeded by the rule with increased budget. In the irresolute version, as soon as one outcome is
@@ -141,9 +142,9 @@ def exhaustion_by_budget_increase(
         rule_params = {}
     current_instance = deepcopy(instance)
     if initial_budget_allocation is None:
-        initial_budget_allocation = []
+        initial_budget_allocation = BudgetAllocation()
     else:
-        initial_budget_allocation = list(initial_budget_allocation)
+        initial_budget_allocation = BudgetAllocation(initial_budget_allocation)
     rule_params["initial_budget_allocation"] = initial_budget_allocation
     if resoluteness:
         previous_outcome = copy(initial_budget_allocation)

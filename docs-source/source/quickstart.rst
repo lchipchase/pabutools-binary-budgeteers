@@ -122,3 +122,8 @@ Other methods can be used, such as Phragmén's sequential rule or the method of 
 
     outcome1 = sequential_phragmen(instance, profile)
     outcome2 = method_of_equal_shares(instance, profile, sat_class=Cost_Sat)
+
+All rules return a :py:class:`~pabutools.rules.budgetallocation.BudgetAllocation` object.
+The :py:class:`~pabutools.rules.budgetallocation.BudgetAllocation` class inherits from
+:code:`list` and behave similarly. It is used to store additional information about the
+outcome (for visualisation/explanation purposes).

@@ -16,6 +16,7 @@ from pabutools.election.satisfaction import (
     Additive_Cost_Log_Sat,
 )
 from pabutools.election.instance import Project, Instance, total_cost
+from pabutools.rules.budgetallocation import BudgetAllocation
 from pabutools.rules.phragmen import sequential_phragmen
 from pabutools.rules.exhaustion import (
     completion_by_rule_combination,
@@ -338,9 +339,11 @@ def run_sat_rule(rule, verbose=False):
                         )
                         if verbose:
                             print(
-                                f"Res outcome:  {resolute_out} -- In irres: {sorted(resolute_out) in test_election.irr_results_sat[rule][sat_class]}"
+                                f"Res outcome:  {resolute_out} -- In irres: "
+                                f"{sorted(resolute_out) in test_election.irr_results_sat[rule][sat_class]} "
+                                f"({type(resolute_out)})"
                             )
-                        irresolute_out = sorted(
+                        irresolute_out = (
                             rule(
                                 test_election.instance,
                                 profile,
@@ -351,7 +354,8 @@ def run_sat_rule(rule, verbose=False):
                             )
                         )
                         if verbose:
-                            print(f"Irres outcome:  {irresolute_out}")
+                            print(f"Irres outcome:  {irresolute_out} "
+                                  f"({tuple(type(out) for out in irresolute_out)})")
                             print(
                                 f"Irres expected: {test_election.irr_results_sat[rule][sat_class]}"
                             )
@@ -366,7 +370,9 @@ def run_sat_rule(rule, verbose=False):
                         )
                         if verbose:
                             print(
-                                f"Res outcome with sat_profile: {resolute_out_sat_profile} -- Same: {resolute_out == resolute_out_sat_profile}"
+                                f"Res outcome with sat_profile: {resolute_out_sat_profile} -- Same: "
+                                f"{resolute_out == resolute_out_sat_profile} "
+                                f"({type(resolute_out_sat_profile)})"
                             )
 
                         assert (
@@ -387,9 +393,15 @@ def run_sat_rule(rule, verbose=False):
                         )
                         assert sorted(resolute_out) == sorted(resolute_out_sat_profile)
                         assert (
-                            irresolute_out
-                            == test_election.irr_results_sat[rule][sat_class]
+                            sorted(sorted(x) for x in irresolute_out)
+                            == sorted(test_election.irr_results_sat[rule][sat_class])
                         )
+
+                        assert isinstance(resolute_out, BudgetAllocation)
+                        assert isinstance(resolute_out_sat_profile, BudgetAllocation)
+                        assert isinstance(irresolute_out, list)
+                        for out in irresolute_out:
+                            assert isinstance(out, BudgetAllocation)
 
 
 def run_non_sat_rule(rule):

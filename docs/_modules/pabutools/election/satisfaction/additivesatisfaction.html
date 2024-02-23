@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-theme="light">
+<html lang="en" data-content_root="../../../../" data-theme="light">
 
   <head>
     <meta charset="utf-8" />
@@ -17,27 +17,28 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
   
-  <link href="../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=384b581d" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-    <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/sphinx_highlight.js"></script>
-    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../../../../_static/documentation_options.js?v=3c867bb8"></script>
+    <script src="../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pabutools/election/satisfaction/additivesatisfaction';</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
@@ -50,7 +51,15 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -85,11 +94,16 @@
 </form></div>
   </div>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -104,6 +118,7 @@
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
   
 
 <a class="navbar-brand logo" href="../../../../index.html">
@@ -112,10 +127,22 @@
   
   
   
+  
     <p class="title logo__title">Pabutools</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Pabutools</a></li>
@@ -211,20 +238,22 @@
 </button>
 
 
+
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
 
+
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -251,7 +280,7 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <h1>Source code for pabutools.election.satisfaction.additivesatisfaction</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -287,7 +316,9 @@ document.write(`
     <span class="kn">from</span> <span class="nn">pabutools.election.profile</span> <span class="kn">import</span> <span class="n">AbstractProfile</span>
 
 
-<div class="viewcode-block" id="AdditiveSatisfaction"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.AdditiveSatisfaction">[docs]</a><span class="k">class</span> <span class="nc">AdditiveSatisfaction</span><span class="p">(</span><span class="n">SatisfactionMeasure</span><span class="p">):</span>
+<div class="viewcode-block" id="AdditiveSatisfaction">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.AdditiveSatisfaction">[docs]</a>
+<span class="k">class</span> <span class="nc">AdditiveSatisfaction</span><span class="p">(</span><span class="n">SatisfactionMeasure</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class representing additive satisfaction measures, that is, satisfaction functions for which the total</span>
 <span class="sd">    satisfaction is exactly the sum of the satisfaction of the individual projects. To speed up computations,</span>
@@ -334,7 +365,9 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">scores</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">precomputed_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessing</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AdditiveSatisfaction.preprocessing"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.AdditiveSatisfaction.preprocessing">[docs]</a>    <span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span>
+<div class="viewcode-block" id="AdditiveSatisfaction.preprocessing">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.AdditiveSatisfaction.preprocessing">[docs]</a>
+    <span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractProfile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">AbstractBallot</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -357,7 +390,10 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{}</span></div>
 
-<div class="viewcode-block" id="AdditiveSatisfaction.get_project_sat"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.AdditiveSatisfaction.get_project_sat">[docs]</a>    <span class="k">def</span> <span class="nf">get_project_sat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">:</span> <span class="n">Project</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+
+<div class="viewcode-block" id="AdditiveSatisfaction.get_project_sat">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.AdditiveSatisfaction.get_project_sat">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_project_sat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">:</span> <span class="n">Project</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given a project, computes the corresponding satisfaction. Stores the score after computation to avoid</span>
 <span class="sd">        re-computing it.</span>
@@ -385,11 +421,19 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="p">[</span><span class="n">project</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span>
         <span class="k">return</span> <span class="n">score</span></div>
 
-<div class="viewcode-block" id="AdditiveSatisfaction.sat"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.AdditiveSatisfaction.sat">[docs]</a>    <span class="k">def</span> <span class="nf">sat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">Project</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+
+<div class="viewcode-block" id="AdditiveSatisfaction.sat">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.AdditiveSatisfaction.sat">[docs]</a>
+    <span class="k">def</span> <span class="nf">sat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">Project</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_project_sat</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">proj</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AdditiveSatisfaction.sat_project"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.AdditiveSatisfaction.sat_project">[docs]</a>    <span class="k">def</span> <span class="nf">sat_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">:</span> <span class="n">Project</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_project_sat</span><span class="p">(</span><span class="n">project</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="AdditiveSatisfaction.sat_project">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.AdditiveSatisfaction.sat_project">[docs]</a>
+    <span class="k">def</span> <span class="nf">sat_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">:</span> <span class="n">Project</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Numeric</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_project_sat</span><span class="p">(</span><span class="n">project</span><span class="p">)</span></div>
+</div>
+
 
 
 <span class="k">def</span> <span class="nf">cardinality_sat_func</span><span class="p">(</span>
@@ -424,7 +468,9 @@ document.write(`
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">project</span> <span class="ow">in</span> <span class="n">ballot</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Cardinality_Sat"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Cardinality_Sat">[docs]</a><span class="k">class</span> <span class="nc">Cardinality_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
+<div class="viewcode-block" id="Cardinality_Sat">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Cardinality_Sat">[docs]</a>
+<span class="k">class</span> <span class="nc">Cardinality_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The cardinality satisfaction for ballots. It is equal to the number of selected projects appearing in the ballot.</span>
 <span class="sd">    It applies to all ballot types that support the `in` operator.</span>
@@ -445,6 +491,7 @@ document.write(`
         <span class="n">AdditiveSatisfaction</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">cardinality_sat_func</span>
         <span class="p">)</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">relative_cardinality_sat_func</span><span class="p">(</span>
@@ -485,7 +532,9 @@ document.write(`
     <span class="p">)</span>
 
 
-<div class="viewcode-block" id="Relative_Cardinality_Sat"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Relative_Cardinality_Sat">[docs]</a><span class="k">class</span> <span class="nc">Relative_Cardinality_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
+<div class="viewcode-block" id="Relative_Cardinality_Sat">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Relative_Cardinality_Sat">[docs]</a>
+<span class="k">class</span> <span class="nc">Relative_Cardinality_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The cardinality satisfaction for ballots. If the project appears in the ballot, it is equal</span>
 <span class="sd">    to 1 divided by the largest number of projects from the ballot that can be selected in any budget allocation. If the</span>
@@ -509,14 +558,18 @@ document.write(`
             <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">relative_cardinality_sat_func</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="Relative_Cardinality_Sat.preprocessing"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Relative_Cardinality_Sat.preprocessing">[docs]</a>    <span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span>
+<div class="viewcode-block" id="Relative_Cardinality_Sat.preprocessing">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Relative_Cardinality_Sat.preprocessing">[docs]</a>
+    <span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractProfile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">AbstractBallot</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;max_budget_allocation_card&quot;</span><span class="p">:</span> <span class="n">max_budget_allocation_cardinality</span><span class="p">(</span>
                 <span class="n">ballot</span><span class="p">,</span> <span class="n">instance</span><span class="o">.</span><span class="n">budget_limit</span>
             <span class="p">)</span>
-        <span class="p">}</span></div></div>
+        <span class="p">}</span></div>
+</div>
+
 
 
 <span class="k">def</span> <span class="nf">cost_sat_func</span><span class="p">(</span>
@@ -551,7 +604,9 @@ document.write(`
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">project</span> <span class="ow">in</span> <span class="n">ballot</span><span class="p">)</span> <span class="o">*</span> <span class="n">project</span><span class="o">.</span><span class="n">cost</span>
 
 
-<div class="viewcode-block" id="Cost_Sat"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Cost_Sat">[docs]</a><span class="k">class</span> <span class="nc">Cost_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
+<div class="viewcode-block" id="Cost_Sat">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Cost_Sat">[docs]</a>
+<span class="k">class</span> <span class="nc">Cost_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The cost satisfaction for ballots. It is equal to the total cost of the selected projects appearing in the ballot.</span>
 <span class="sd">    It applies to all ballot types that support the `in` operator.</span>
@@ -570,6 +625,7 @@ document.write(`
         <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractProfile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">AbstractBallot</span>
     <span class="p">):</span>
         <span class="n">AdditiveSatisfaction</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">cost_sat_func</span><span class="p">)</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">relative_cost_sat_func</span><span class="p">(</span>
@@ -610,7 +666,9 @@ document.write(`
     <span class="p">)</span>
 
 
-<div class="viewcode-block" id="Relative_Cost_Sat"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Relative_Cost_Sat">[docs]</a><span class="k">class</span> <span class="nc">Relative_Cost_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
+<div class="viewcode-block" id="Relative_Cost_Sat">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Relative_Cost_Sat">[docs]</a>
+<span class="k">class</span> <span class="nc">Relative_Cost_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The relative cost satisfaction for ballots. It is equal to the total cost of the selected projects appearing in the</span>
 <span class="sd">    ballot, divided by the total cost of the most expensive subset of projects appearing in the ballot. It applies to</span>
@@ -633,14 +691,18 @@ document.write(`
             <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">relative_cost_sat_func</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="Relative_Cost_Sat.preprocessing"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Relative_Cost_Sat.preprocessing">[docs]</a>    <span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span>
+<div class="viewcode-block" id="Relative_Cost_Sat.preprocessing">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Relative_Cost_Sat.preprocessing">[docs]</a>
+    <span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractProfile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">AbstractBallot</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;max_budget_allocation_cost&quot;</span><span class="p">:</span> <span class="n">max_budget_allocation_cost</span><span class="p">(</span>
                 <span class="n">ballot</span><span class="p">,</span> <span class="n">instance</span><span class="o">.</span><span class="n">budget_limit</span>
             <span class="p">)</span>
-        <span class="p">}</span></div></div>
+        <span class="p">}</span></div>
+</div>
+
 
 
 <span class="k">def</span> <span class="nf">relative_cost_approx_normaliser_sat_func</span><span class="p">(</span>
@@ -678,7 +740,9 @@ document.write(`
     <span class="k">return</span> <span class="n">frac</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">project</span> <span class="ow">in</span> <span class="n">ballot</span><span class="p">)</span> <span class="o">*</span> <span class="n">project</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span> <span class="n">precomputed_values</span><span class="p">[</span><span class="s2">&quot;normalizer&quot;</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="Relative_Cost_Approx_Normaliser_Sat"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Relative_Cost_Approx_Normaliser_Sat">[docs]</a><span class="k">class</span> <span class="nc">Relative_Cost_Approx_Normaliser_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
+<div class="viewcode-block" id="Relative_Cost_Approx_Normaliser_Sat">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Relative_Cost_Approx_Normaliser_Sat">[docs]</a>
+<span class="k">class</span> <span class="nc">Relative_Cost_Approx_Normaliser_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The cost relative satisfaction for ballots, used with an approximate normaliser (since the exact version can take</span>
 <span class="sd">    long to compute). It is equal to the total cost of the selected projects appearing in the ballot,</span>
@@ -702,12 +766,16 @@ document.write(`
             <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">relative_cost_approx_normaliser_sat_func</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="Relative_Cost_Approx_Normaliser_Sat.preprocessing"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Relative_Cost_Approx_Normaliser_Sat.preprocessing">[docs]</a>    <span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span>
+<div class="viewcode-block" id="Relative_Cost_Approx_Normaliser_Sat.preprocessing">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Relative_Cost_Approx_Normaliser_Sat.preprocessing">[docs]</a>
+    <span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractProfile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">AbstractBallot</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;normalizer&quot;</span><span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="n">total_cost</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ballot</span><span class="p">]),</span> <span class="n">instance</span><span class="o">.</span><span class="n">budget_limit</span><span class="p">)</span>
-        <span class="p">}</span></div></div>
+        <span class="p">}</span></div>
+</div>
+
 
 
 <span class="k">def</span> <span class="nf">add_cost_sqrt_sat_func</span><span class="p">(</span>
@@ -743,7 +811,9 @@ document.write(`
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">project</span> <span class="ow">in</span> <span class="n">ballot</span><span class="p">)</span> <span class="o">*</span> <span class="n">frac</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">cost</span><span class="p">)))</span>
 
 
-<div class="viewcode-block" id="Additive_Cost_Sqrt_Sat"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Additive_Cost_Sqrt_Sat">[docs]</a><span class="k">class</span> <span class="nc">Additive_Cost_Sqrt_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
+<div class="viewcode-block" id="Additive_Cost_Sqrt_Sat">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Additive_Cost_Sqrt_Sat">[docs]</a>
+<span class="k">class</span> <span class="nc">Additive_Cost_Sqrt_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Additive cost square root satisfaction. It is equal to the sum over the approved and selected projects of the square</span>
 <span class="sd">    root of their costs. It can be applied to all ballot format supporting the `in` operator.</span>
@@ -771,6 +841,7 @@ document.write(`
                     <span class="nb">type</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
                 <span class="p">)</span>
             <span class="p">)</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">additive_cost_log_sat_func</span><span class="p">(</span>
@@ -806,7 +877,9 @@ document.write(`
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">project</span> <span class="ow">in</span> <span class="n">ballot</span><span class="p">)</span> <span class="o">*</span> <span class="n">frac</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">project</span><span class="o">.</span><span class="n">cost</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="Additive_Cost_Log_Sat"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Additive_Cost_Log_Sat">[docs]</a><span class="k">class</span> <span class="nc">Additive_Cost_Log_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
+<div class="viewcode-block" id="Additive_Cost_Log_Sat">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Additive_Cost_Log_Sat">[docs]</a>
+<span class="k">class</span> <span class="nc">Additive_Cost_Log_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Additive cost log satisfaction. It is equal to the sum over the approved and selected projects of the log of 1 plus</span>
 <span class="sd">    the cost of the projects. It can be applied to all ballot format supporting the `in` operator.</span>
@@ -834,6 +907,7 @@ document.write(`
                     <span class="nb">type</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
                 <span class="p">)</span>
             <span class="p">)</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">effort_sat_func</span><span class="p">(</span>
@@ -871,7 +945,9 @@ document.write(`
     <span class="k">return</span> <span class="mi">0</span>
 
 
-<div class="viewcode-block" id="Effort_Sat"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Effort_Sat">[docs]</a><span class="k">class</span> <span class="nc">Effort_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
+<div class="viewcode-block" id="Effort_Sat">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Effort_Sat">[docs]</a>
+<span class="k">class</span> <span class="nc">Effort_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The effort satisfaction. It is equal to the sum over the selected projects appearing in the</span>
 <span class="sd">    ballot of the cost of the project divided by the number of voters who included the project in their ballot. It</span>
@@ -891,6 +967,7 @@ document.write(`
         <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractProfile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">:</span> <span class="n">AbstractBallot</span>
     <span class="p">):</span>
         <span class="n">AdditiveSatisfaction</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">ballot</span><span class="p">,</span> <span class="n">effort_sat_func</span><span class="p">)</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">additive_card_sat_func</span><span class="p">(</span>
@@ -924,7 +1001,9 @@ document.write(`
     <span class="k">return</span> <span class="n">ballot</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Additive_Cardinal_Sat"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Additive_Cardinal_Sat">[docs]</a><span class="k">class</span> <span class="nc">Additive_Cardinal_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
+<div class="viewcode-block" id="Additive_Cardinal_Sat">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Additive_Cardinal_Sat">[docs]</a>
+<span class="k">class</span> <span class="nc">Additive_Cardinal_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The additive satisfaction for cardinal ballots. It is equal to the sum over the selected projects appearing in the</span>
 <span class="sd">    ballot of the score assigned to the project by the voter. It only applies to cardinal ballots.</span>
@@ -955,6 +1034,7 @@ document.write(`
                     <span class="nb">type</span><span class="p">(</span><span class="n">ballot</span><span class="p">)</span>
                 <span class="p">)</span>
             <span class="p">)</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">additive_card_relative_sat_func</span><span class="p">(</span>
@@ -993,7 +1073,9 @@ document.write(`
     <span class="p">)</span>
 
 
-<div class="viewcode-block" id="Additive_Cardinal_Relative_Sat"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Additive_Cardinal_Relative_Sat">[docs]</a><span class="k">class</span> <span class="nc">Additive_Cardinal_Relative_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
+<div class="viewcode-block" id="Additive_Cardinal_Relative_Sat">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Additive_Cardinal_Relative_Sat">[docs]</a>
+<span class="k">class</span> <span class="nc">Additive_Cardinal_Relative_Sat</span><span class="p">(</span><span class="n">AdditiveSatisfaction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The relative additive satisfaction for cardinal ballots. It is equal to the sum over the selected projects appearing</span>
 <span class="sd">    in the ballot of the score assigned to the project by the voter, divided by the highest total score achievable by</span>
@@ -1026,7 +1108,9 @@ document.write(`
                 <span class="p">)</span>
             <span class="p">)</span>
 
-<div class="viewcode-block" id="Additive_Cardinal_Relative_Sat.preprocessing"><a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Additive_Cardinal_Relative_Sat.preprocessing">[docs]</a>    <span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span>
+<div class="viewcode-block" id="Additive_Cardinal_Relative_Sat.preprocessing">
+<a class="viewcode-back" href="../../../../reference/election/satisfaction.html#pabutools.election.satisfaction.additivesatisfaction.Additive_Cardinal_Relative_Sat.preprocessing">[docs]</a>
+    <span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">instance</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span>
         <span class="n">profile</span><span class="p">:</span> <span class="n">AbstractProfile</span><span class="p">,</span>
@@ -1048,7 +1132,9 @@ document.write(`
             <span class="p">)</span>
             <span class="n">mip_model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">mip_model</span><span class="o">.</span><span class="n">objective</span><span class="o">.</span><span class="n">x</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;max_budget_allocation_score&quot;</span><span class="p">:</span> <span class="n">frac</span><span class="p">(</span><span class="n">res</span><span class="p">)}</span></div></div>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;max_budget_allocation_score&quot;</span><span class="p">:</span> <span class="n">frac</span><span class="p">(</span><span class="n">res</span><span class="p">)}</span></div>
+</div>
+
 </pre></div>
 
                 </article>
@@ -1056,21 +1142,19 @@ document.write(`
 
               
               
-                <footer class="bd-footer-article">
+              
+              
+                <footer class="prev-next-footer">
                   
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
               
             
           </div>
@@ -1088,6 +1172,7 @@ By Simon Rey, Grzegorz Pierczyński, Markus Utke and Piotr Skowron
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
       © Copyright 2023, Simon Rey, Grzegorz Pierczyński, Markus Utke and Piotr Skowron.
@@ -1114,8 +1199,8 @@ By Simon Rey, Grzegorz Pierczyński, Markus Utke and Piotr Skowron
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="../../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
   <footer class="bd-footer">
   </footer>

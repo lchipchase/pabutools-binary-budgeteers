@@ -1,7 +1,7 @@
 """
 Module introducing known rules for computing the outcome of participatory budgeting elections.
 
-The rules implemented as:
+The rules implemented are:
 
 * The utilitarian welfare maximiser: :py:func:`~pabutools.rules.maxwelfare.max_additive_utilitarian_welfare`
 * The greedy approximation of the utilitarian welfare maximiser: :py:func:`~pabutools.rules.greedywelfare.greedy_utilitarian_welfare`
@@ -13,6 +13,9 @@ sequential Phragmén rule), we also implement methods to make the outcome exhaus
 
 * The completion method by rule combination: :py:func:`~pabutools.rules.exhaustion.completion_by_rule_combination`
 * The exhaustion method by budget increase: :py:func:`~pabutools.rules.exhaustion.exhaustion_by_budget_increase`
+
+All rules return one or several lists of projects called budget allocations, represented by the class
+:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`.
 """
 from pabutools.rules.exhaustion import (
     completion_by_rule_combination,
@@ -23,6 +26,7 @@ from pabutools.rules.maxwelfare import max_additive_utilitarian_welfare
 from pabutools.rules.mes import method_of_equal_shares
 from pabutools.rules.phragmen import sequential_phragmen
 from pabutools.rules.composition import social_welfare_comparison, popularity_comparison
+from pabutools.rules.budgetallocation import BudgetAllocation
 
 __all__ = [
     "completion_by_rule_combination",
@@ -33,4 +37,5 @@ __all__ = [
     "sequential_phragmen",
     "social_welfare_comparison",
     "popularity_comparison",
+    "BudgetAllocation"
 ]

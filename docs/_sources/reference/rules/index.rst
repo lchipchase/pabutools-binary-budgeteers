@@ -3,6 +3,8 @@ Rules module
 
 .. automodule:: pabutools.rules
 
+.. autoclass:: pabutools.rules.budgetallocation.BudgetAllocation
+
 .. autofunction:: pabutools.rules.greedywelfare.greedy_utilitarian_welfare
 
 .. autofunction:: pabutools.rules.maxwelfare.max_additive_utilitarian_welfare

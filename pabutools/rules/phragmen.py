@@ -6,6 +6,7 @@ from __future__ import annotations
 from collections.abc import Collection
 from copy import deepcopy
 
+from pabutools.rules.budgetallocation import BudgetAllocation
 from pabutools.utils import Numeric
 
 from pabutools.fractions import frac
@@ -60,7 +61,7 @@ def sequential_phragmen(
     initial_budget_allocation: Collection[Project] | None = None,
     tie_breaking: TieBreakingRule | None = None,
     resoluteness: bool = True,
-) -> list[Project] | list[list[Project]]:
+) -> BudgetAllocation | list[BudgetAllocation]:
     """
     Phragmén's sequential rule. It works as follows. Voters receive money in a virtual currency. They all start with a
     budget of 0 and that budget continuously increases. As soon asa group of supporters have enough virtual currency to
@@ -88,7 +89,7 @@ def sequential_phragmen(
 
     Returns
     -------
-        Collection[Project] | Iterable[Collection[Project]]
+        :py:class:`~pabutools.rules.budgetallocation.BudgetAllocation` | list[:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`]
             The selected projects if resolute (`resoluteness` = True), or the set of selected projects if irresolute
             (`resoluteness = False`).
     """
@@ -181,7 +182,9 @@ def sequential_phragmen(
     if tie_breaking is None:
         tie_breaking = lexico_tie_breaking
     if initial_budget_allocation is None:
-        initial_budget_allocation = []
+        initial_budget_allocation = BudgetAllocation()
+    else:
+        initial_budget_allocation = BudgetAllocation(initial_budget_allocation)
     current_cost = total_cost(initial_budget_allocation)
 
     initial_projects = set(
@@ -204,7 +207,7 @@ def sequential_phragmen(
 
     scores = {project: profile.approval_score(project) for project in instance}
 
-    all_budget_allocations: list[list[Project]] = []
+    all_budget_allocations: list[BudgetAllocation] = []
     aux(
         instance,
         initial_projects,

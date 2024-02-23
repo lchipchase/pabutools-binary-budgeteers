@@ -6,7 +6,7 @@
 
 ## Overview
 
-The pabutools are a complete set of tools work with
+The pabutools are a complete set of tools to work with
 participatory budgeting instances.
 
 Participatory budgeting (PB) is a democratic tool used to allocate

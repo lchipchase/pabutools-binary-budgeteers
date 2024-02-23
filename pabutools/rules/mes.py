@@ -4,8 +4,9 @@ The method of equal shares.
 from __future__ import annotations
 
 from copy import copy, deepcopy
-from collections.abc import Collection
+from collections.abc import Collection, Iterable
 
+from pabutools.rules.budgetallocation import BudgetAllocation
 from pabutools.utils import Numeric
 
 from pabutools.election import AbstractApprovalProfile
@@ -190,7 +191,7 @@ def naive_mes(
     profile: AbstractProfile,
     sat_class: type[SatisfactionMeasure],
     initial_budget_per_voter: Numeric,
-) -> list[Project]:
+) -> BudgetAllocation:
     """
     Naive implementation of the method of equal shares. Probably slow, but useful to test the correctness of
     other implementations.
@@ -208,7 +209,7 @@ def naive_mes(
 
     Returns
     -------
-        list[Project]
+        BudgetAllocation
             All the projects selected by the method of equal shares.
 
     """
@@ -241,7 +242,7 @@ def naive_mes(
                 mes_p.total_sat = total_sat
                 projects.add(mes_p)
 
-    res = []
+    res = BudgetAllocation()
     affordabilities = dict()
 
     remaining_projects = deepcopy(projects)
@@ -314,7 +315,7 @@ def mes_inner_algo(
             (De)Activate the display of additional information.
     Returns
     -------
-        Collection[Project] | Iterable[Collection[Project]]
+        :py:class:`~pabutools.rules.budgetallocation.BudgetAllocation` | list[:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`]
             The selected projects if resolute (`resoluteness` = True), or the set of selected projects if irresolute
             (`resoluteness = False`).
 
@@ -430,13 +431,13 @@ def method_of_equal_shares_scheme(
     profile: AbstractProfile,
     sat_profile: GroupSatisfactionMeasure,
     initial_budget_per_voter: Numeric,
-    initial_budget_allocation: list[Project],
+    initial_budget_allocation: BudgetAllocation,
     tie_breaking: TieBreakingRule,
     resoluteness=True,
     voter_budget_increment=None,
     binary_sat=False,
     verbose: bool = False,
-) -> list[Project] | list[list[Project]]:
+) -> BudgetAllocation | list[BudgetAllocation]:
     """
     The main wrapper to compute the outcome of the Method of Equal Shares (MES). This is where the
     iterated method is implemented.
@@ -468,7 +469,7 @@ def method_of_equal_shares_scheme(
             (De)Activate the display of additional information.
     Returns
     -------
-        Collection[Project] | Iterable[Collection[Project]]
+        :py:class:`~pabutools.rules.budgetallocation.BudgetAllocation` | list[:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`]
             The selected projects if resolute (`resoluteness` = True), or the set of selected projects if irresolute
             (`resoluteness = False`).
     """
@@ -510,10 +511,10 @@ def method_of_equal_shares_scheme(
             else:
                 initial_budget_allocation.append(p)
 
-    previous_outcome: list[Project] | list[list[Project]] = initial_budget_allocation
+    previous_outcome: BudgetAllocation | list[BudgetAllocation] = initial_budget_allocation
 
     while True:
-        all_budget_allocations: list[list[Project]] = []
+        all_budget_allocations: list[BudgetAllocation] = []
         mes_inner_algo(
             instance,
             profile,
@@ -560,11 +561,11 @@ def method_of_equal_shares(
     sat_profile: GroupSatisfactionMeasure | None = None,
     tie_breaking: TieBreakingRule | None = None,
     resoluteness: bool = True,
-    initial_budget_allocation: list[Project] | None = None,
+    initial_budget_allocation: Iterable[Project] | None = None,
     voter_budget_increment=None,
     binary_sat=None,
     verbose: bool = False,
-) -> Collection[Project] | Collection[Collection[Project]]:
+) -> BudgetAllocation | list[BudgetAllocation]:
     """
     The Method of Equal Shares (MES). See the website
     `equalshares.net <https://equalshares.net/>`_ for details about how to compute the outcome of the rule. Note that
@@ -584,7 +585,7 @@ def method_of_equal_shares(
         sat_profile : :py:class:`~pabutools.election.satisfaction.satisfactionmeasure.GroupSatisfactionMeasure`
             The satisfaction profile corresponding to the instance and the profile. If no satisfaction profile is
             provided, but a satisfaction function is, the former is computed from the latter.
-        initial_budget_allocation : list[:py:class:`~pabutools.election.instance.Project`]
+        initial_budget_allocation : Iterable[:py:class:`~pabutools.election.instance.Project`]
             An initial budget allocation, typically empty.
         tie_breaking : :py:class:`~pabutools.tiebreaking.TieBreakingRule`, optional
             The tie-breaking rule used.
@@ -604,16 +605,16 @@ def method_of_equal_shares(
 
     Returns
     -------
-        Iterable[Project] | Iterable[Iterable[Project]]
+        :py:class:`~pabutools.rules.budgetallocation.BudgetAllocation` | list[:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`]
             The selected projects if resolute (`resoluteness` = True), or the set of selected projects if irresolute
             (`resoluteness = False`).
     """
     if tie_breaking is None:
         tie_breaking = lexico_tie_breaking
     if initial_budget_allocation is not None:
-        budget_allocation = list(initial_budget_allocation)
+        budget_allocation = BudgetAllocation(initial_budget_allocation)
     else:
-        budget_allocation = []
+        budget_allocation = BudgetAllocation()
     if sat_class is None:
         if sat_profile is None:
             raise ValueError("sat_class and sat_profile cannot both be None")

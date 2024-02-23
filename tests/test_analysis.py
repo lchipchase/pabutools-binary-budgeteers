@@ -20,6 +20,7 @@ from pabutools.election.satisfaction.additivesatisfaction import (
     Relative_Cardinality_Sat,
 )
 from pabutools.fractions import frac
+from pabutools.rules.budgetallocation import BudgetAllocation
 
 
 class TestAnalysis(TestCase):
@@ -82,7 +83,7 @@ class TestAnalysis(TestCase):
             instance, ord_multi_profile, budget_allocation, Additive_Borda_Sat
         ) == frac(6, 5)
 
-        budget_allocation = []
+        budget_allocation = BudgetAllocation()
 
         sat_hist = satisfaction_histogram(
             instance,
