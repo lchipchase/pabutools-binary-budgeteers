@@ -1,6 +1,7 @@
 from collections.abc import Iterable
 
 from pabutools.election.instance import Project
+from pabutools.rules.explanation_data import ExplanationData
 
 
 class BudgetAllocation(list[Project]):
@@ -27,7 +28,7 @@ class BudgetAllocation(list[Project]):
     def __init__(
         self,
         init: Iterable[Project] = (),
-        explanation_data=None
+        explanation_data: ExplanationData = None
     ) -> None:
         list.__init__(self, init)
         if explanation_data is None:
@@ -62,6 +63,6 @@ BudgetAllocation._wrap_methods(
         "__rmul__",
         "copy",
         "reverse",
-        "__getitem__",
+        # "__getitem__",
     ]
 )

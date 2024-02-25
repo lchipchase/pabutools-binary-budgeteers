@@ -7,6 +7,7 @@ from copy import copy, deepcopy
 from collections.abc import Collection, Iterable
 
 from pabutools.rules.budgetallocation import BudgetAllocation
+from pabutools.rules.explanation_data import MESData
 from pabutools.utils import Numeric
 
 from pabutools.election import AbstractApprovalProfile
@@ -18,7 +19,6 @@ from pabutools.election.satisfaction import SatisfactionMeasure
 from pabutools.tiebreaking import lexico_tie_breaking
 from pabutools.fractions import frac
 from pabutools.tiebreaking import TieBreakingRule
-from pabutools.visualisation.mes_data_store import MESDataStore
 
 
 class MESVoter:
@@ -283,11 +283,11 @@ def mes_inner_algo(
     voters: list[MESVoter],
     projects: set[MESProject],
     tie_breaking_rule: TieBreakingRule,
-    current_alloc: list[Project],
-    all_allocs: list[list[Project]],
+    current_alloc: list[BudgetAllocation],
+    all_allocs: list[BudgetAllocation],
     resoluteness: bool,
     verbose: bool = False,
-    mes_data_store: MESDataStore = None
+    log_details: bool = False
 ) -> None:
     """
     The inner algorithm used to compute the outcome of the Method of Equal Shares (MES). See the website
@@ -306,9 +306,9 @@ def mes_inner_algo(
             values.
         tie_breaking_rule : :py:class:`~pabutools.tiebreaking.TieBreakingRule`
             The tie-breaking rule used.
-        current_alloc: list[Project]
+        current_alloc: BudgetAllocation
             The budget allocation that is currently being built. Only populated via side effects.
-        all_allocs: list[list[Project]]
+        all_allocs: list[BudgetAllocation]
             The set of all budget allocations returned so far. Only populated via side effects.
         resoluteness : bool, optional
             Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
@@ -326,8 +326,8 @@ def mes_inner_algo(
     best_afford = float("inf")
     if verbose:
         print("========================")
-    if mes_data_store is not None:
-        mes_data_store.record_round_start(projects)
+    if log_details:
+        current_alloc.explanation_data.record_round_start(projects)
     for project in sorted(projects, key=lambda p: p.affordability):
         if verbose:
             print(f"\tConsidering: {project}")
@@ -397,8 +397,8 @@ def mes_inner_algo(
             if resoluteness:
                 tied_projects = tied_projects[:1]
         for selected_project in tied_projects:
-            if mes_data_store is not None:
-                mes_data_store.record_round_end(projects, selected_project.project)
+            if log_details:
+                current_alloc.explanation_data.record_round_end(projects, selected_project.project)
             if resoluteness:
                 new_alloc = current_alloc
                 new_projects = projects
@@ -429,7 +429,7 @@ def mes_inner_algo(
                 all_allocs,
                 resoluteness,
                 verbose=verbose,
-                mes_data_store=mes_data_store
+                log_details=log_details
             )
 
 
@@ -444,6 +444,7 @@ def method_of_equal_shares_scheme(
     voter_budget_increment=None,
     binary_sat=False,
     verbose: bool = False,
+    log_details: bool = False
 ) -> BudgetAllocation | list[BudgetAllocation]:
     """
     The main wrapper to compute the outcome of the Method of Equal Shares (MES). This is where the
@@ -532,7 +533,7 @@ def method_of_equal_shares_scheme(
             all_budget_allocations,
             resoluteness,
             verbose,
-            mes_data_store
+            log_details
         )
         if resoluteness:
             outcome = all_budget_allocations[0]
@@ -573,6 +574,7 @@ def method_of_equal_shares(
     voter_budget_increment=None,
     binary_sat=None,
     verbose: bool = False,
+    log_details = True,
 ) -> BudgetAllocation | list[BudgetAllocation]:
     """
     The Method of Equal Shares (MES). See the website
@@ -620,9 +622,9 @@ def method_of_equal_shares(
     if tie_breaking is None:
         tie_breaking = lexico_tie_breaking
     if initial_budget_allocation is not None:
-        budget_allocation = BudgetAllocation(initial_budget_allocation)
+        budget_allocation = BudgetAllocation(initial_budget_allocation, explanation_data=MESData())
     else:
-        budget_allocation = BudgetAllocation()
+        budget_allocation = BudgetAllocation(explanation_data=MESData())
     if sat_class is None:
         if sat_profile is None:
             raise ValueError("sat_class and sat_profile cannot both be None")
@@ -644,5 +646,5 @@ def method_of_equal_shares(
         voter_budget_increment=voter_budget_increment,
         binary_sat=binary_sat,
         verbose=verbose,
-        mes_data_store=mes_data_store
+        log_details=log_details
     )

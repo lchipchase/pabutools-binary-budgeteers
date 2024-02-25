@@ -1,40 +1,30 @@
 import os
 
-import jinja2
+try:
+    import jinja2
+except ImportError:
+    raise ImportError("You need to install jinja2 to use the visualisation module")
 
 from pabutools.analysis.profileproperties import votes_count_by_project, voter_flow_matrix
 from pabutools.election.instance import total_cost
+from pabutools.rules.explanation_data import MESData
 
 ENV = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(os.path.abspath(__file__))))
 
-class DataStore:
-    # TODO: Once we support multiple voting rules we can move shared calculations to the parent
+class Visualiser:
+    # TODO: A future base class which will be used to define the interface for all visualisers
     pass
 
-class MESDataStore(DataStore):
+class MESVisualiser(Visualiser):
     template = ENV.get_template('./templates/mes_template.html') 
     
-    def __init__(self, profile, instance, verbose=False):
+    def __init__(self, profile, instance, round_data: MESData, verbose=False):
         self.profile = profile
         self.instance = instance
         self.verbose = verbose
-        self.rounds = []
+        self.rounds = round_data.rounds
 
-    def record_round_start(self, projects):
-        round = {
-            "effective_vote_count": {
-                p.name: float(1/p.affordability) for p in projects
-            }
-        }
-        self.rounds.append(round)
-
-    def record_round_end(self, projects, winner):
-        self.rounds[-1]["effective_vote_count_reduction"] = {
-            p.name: float(self.rounds[-1]["effective_vote_count"][p]-1/p.affordability) for p in projects
-        }
-        self.rounds[-1]["name"] = winner.name
-
-    def __calculate_pie_charts(self, projectVotes):
+    def _calculate_pie_charts(self, projectVotes):
         winners = []
         for round in self.rounds:
             pie_chart_items = []
@@ -61,18 +51,18 @@ class MESDataStore(DataStore):
                 pie_chart_items = pie_chart_items[:3]
             round["pie_chart_items"] = [pie_chart_items]
 
-    def __calculate(self):
+    def _calculate(self):
         del self.rounds[-1] # Remove the last round, as it is just empty
         projectVotes = votes_count_by_project(self.profile)
         for round in self.rounds:
             round["voter_flow"] = voter_flow_matrix(self.instance, self.profile)
-        self.__calculate_pie_charts(projectVotes)
+        self._calculate_pie_charts(projectVotes)
 
     def render(self, outcome, output_file_path):
-        self.__calculate()
+        self._calculate()
         if self.verbose:
             print(self.rounds)
-        rendered_output = MESDataStore.template.render( # TODO: Some redudant data is being passed to the template that can be calculated within template directly
+        rendered_output = MESVisualiser.template.render( # TODO: Some redudant data is being passed to the template that can be calculated within template directly
             election_name=self.instance.meta["description"] if "description" in self.instance.meta else "No description provided.", 
             rounds=self.rounds, 
             projects=list(self.instance),
