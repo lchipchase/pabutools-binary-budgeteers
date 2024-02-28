@@ -527,7 +527,13 @@
                     {% endfor %}
                 ], // Effective votes for next round
                 "background-color": "#0070C0",
-                "text": "Current Votes"
+                "text": "Current Votes",
+                'hover-state': { /* Hover object */
+                        'background-color': "orange",
+                        // 'border-width':3,
+                        // 'border-color': "purple",
+                        // 'line-style': "dotted"
+                    }
             }, {
                 "values": {{ round.effective_vote_count_reduction.values() | list }}, // Effective votes lost this round
                 "background-color": "#FF0000",
