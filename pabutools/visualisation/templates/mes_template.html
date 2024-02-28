@@ -78,7 +78,7 @@
     </style>
 </head>
 
-<body>
+<body onload="loadRound()">
     <div class="container my-4">
         <!-- General Explanations -->
         <div class="row mb-3">
@@ -88,13 +88,13 @@
                 </h1>
             </div>
         </div>
-
+        <p id="loading-text">Loading...</p>
         <!-- Carousel for general graphs -->
-        <div id="carouselExampleControls" class="carousel slide mb-3 border-black" data-ride="carousel" data-interval="false">
+        <!-- <div id="carouselExampleControls" class="carousel slide mb-3 border-black" data-ride="carousel" data-interval="false">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <div class="d-block w-100 border-black justify-content-center" style="height:200px;">
-                        <!-- Fix issue where extra comma appears on final item in list. -->
+                        !-- Fix issue where extra comma appears on final item in list. --
                         <p>
                             Summary statistics for the election - how many total votes, projects elected, and budget spent.<br>
                             {% for project in projects %}
@@ -131,11 +131,13 @@
             </span>
                 <span class="sr-only">Next</span>
             </a>
-        </div>
+        </div> -->
 
+
+        
         <!-- Round specific visualisations -->
          {% for round in rounds %}
-            <section id="{{round.id}}" class="{% if loop.index != 1 %}hidden-section{% endif %}">
+            <section id="{{round.id}}" class="hidden-section">
                   <!-- Effective Vote Count -->
                   <div class="row mb-3 ">
                      <div class="col-3"></div>
@@ -351,14 +353,14 @@
          {% endfor %}
         
         <!-- Dropdown UI -->
-        <div class="row my-4 justify-content-center">
+        <div class="row my-4 justify-content-center hidden-section" id="dropdown-container">
             <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="projectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   {{ rounds[0].name }}
                </button>
                 <div class="dropdown-menu" aria-labelledby="projectDropdown">
                   {% for round in rounds %}
-                     <a class="dropdown-item {% if loop.index == 1 %}active{% endif %}" item="{{ round.id }}" onclick="onClickDropdown(this)">{{ round.name }}</a>
+                     <a class="dropdown-item {% if loop.index == 1 %}active{% endif %}" id="dropdown-item-{{ round.id }}" item="{{ round.id }}" onclick="onClickDropdown(this)">{{ round.name }}</a>
                   {% endfor %}
    
                 </div>
@@ -372,6 +374,22 @@
 
     <!-- Dropdown functionality -->
     <script>
+        function loadRound() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('projectId');
+
+            // Remove Loading text
+            document.getElementById("loading-text").classList.remove('active');
+            document.getElementById("loading-text").style.display = 'none';
+
+            // Display the round requested
+            onClickDropdown(document.getElementById("dropdown-item-".concat(projectId)));
+
+            // Display the dropdown
+            document.getElementById("dropdown-container").classList.add('active');
+            document.getElementById("dropdown-container").style.display = 'flex';
+        }
+
         function onClickDropdown(element) {
             var dropdownItems = document.querySelectorAll('.dropdown-item');
             dropdownItems.forEach(item => item.classList.remove('active'));

@@ -8,6 +8,7 @@ Implement Comparisons
 Implement Example
 Maybe implement page description?
 Add commas to separate large numbers
+Remove sorttable.js?
 
 
 -->
@@ -20,6 +21,11 @@ Add commas to separate large numbers
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src='sorttable.js'></script>
+    <script type="text/javascript"> 
+        function showHiddenRow(row) { 
+            document.querySelector("#" + row).classList.toggle('hidden_row');
+        } 
+    </script>
     <style>
         * {
             box-sizing: border-box;
@@ -167,6 +173,10 @@ Add commas to separate large numbers
             text-align: center;
             width: 900px;
         }
+
+        .hidden_row { 
+            display: none; 
+        } 
     </style>
 </head>
 
@@ -175,7 +185,7 @@ Add commas to separate large numbers
     <!-- !DESCRIPTION! -->
 
     <!-- !SAMPLE_EXPLANATION1! -->
-    </br>
+
     <!-- <table>
         <tbody>
             !SAMPLE_EXPLANATION_ROW!
@@ -193,13 +203,32 @@ Add commas to separate large numbers
             {% for round in rounds %}
                 <div class='bar bar-blue bar-border'
                     style='width: {{ (round.cost / budget | float) * 100 }}&#37;;'
-                    data-tippy-content="Project '{{ round.name }}' was voted in round {{ loop.index }}, costing {{ round.cost }} GBP. This is {{ (round.cost / budget | float) * 100 }}&#37; of the budget.">
+                    data-tippy-content="Project '{{ round.name }}' was voted in round {{ loop.index }}, costing {{ round.cost }} GBP. This is {{ ((round.cost / budget | int) * 100) | int }}&#37; of the budget.">
                 </div>
             {% endfor %}
         </div>
     </div>
 
-    <br><p>You can sort the table by clicking on the column against which you want to rank it.</p></br>
+    <br><p>
+        <!-- Fix issue where extra comma appears on final item in list -->
+        Summary statistics for the election - how many total votes, projects elected, and budget spent.<br>
+        {% for project in projects %}
+            {{ project.name}}: {{project.totalvotes}} votes,
+        {% endfor %}
+        <br>
+
+        {{ number_of_elected_projects }} projects elected, {{ number_of_unelected_projects }} projects not elected.<br>
+
+        ${{ spent }} out of ${{ budget }} budget spent.<br>
+
+        {% for project in projects %}
+            {{ project.name}}: {{project.description}}
+        {% endfor %}
+        <br>
+
+    </p>
+
+    <br><p>You can sort the table by clicking on the column against which you want to rank it.</p>
 
     <table class='sortable'>
         <thead>
@@ -215,7 +244,7 @@ Add commas to separate large numbers
         </thead>
         <tbody>
             {% for round in rounds %}
-                <tr class='winner' id='project-{{ round.id }}'>
+                <tr class='winner' id='project-{{ round.id }}' onclick="showHiddenRow('hidden_{{ round.id }}');">
                 <td class='num' style='text-align:right' sorttable_customkey='{{ loop.index }}'> {{ loop.index }} </td>
                 <td class='num' style='text-align:right' sorttable_customkey='{{ round.id }}'>{{ round.id }}</td>
                 <td>{{ round.name }}</td>
@@ -237,14 +266,14 @@ Add commas to separate large numbers
                         <div class='chart'>
                             <div class='bar bar-blue'
                                 style='width: {{ (round.final_voter_funding / budget | float) * 100 }}&#37;;'
-                                data-tippy-content='&#10004; Supporters of the project have {{ round.final_voter_funding | float }} GBP, which is enough to cover the cost {{ round.cost }} GBP'>
+                                data-tippy-content='&#10004; Supporters of the project have {{ round.final_voter_funding | int }} GBP, which is enough to cover the cost {{ round.cost }} GBP'>
                             </div>
 
                             <div class='bar bar-light'
                                 onmouseover='highlight_project(["TODO"])'
                                 onmouseout='unhighlight_project(["TODO"])'
                                 style='width: {{ ((round.initial_voter_funding - round.final_voter_funding) / budget | float) * 100 }}&#37;;'
-                                data-tippy-content='<html lang=\"en\"><body>From the initial total funding, <b> {{ round.initial_voter_funding - round.final_voter_funding | int }} GBP </b> was spent on previously selected projects. </br> 
+                                data-tippy-content='<html lang=\"en\"><body>From the initial total funding, <b> {{ (round.initial_voter_funding - round.final_voter_funding) | int }} GBP </b> was spent on previously selected projects. </br> 
                                 Most of the funding was spent on: TODO
 
                                 <!-- For ...
@@ -271,11 +300,17 @@ Add commas to separate large numbers
                         </div>
                     </div>                    
                 </td>
+                </tr>
+                <tr class="hidden_row" id="hidden_{{ round.id }}" > 
+                    <td colspan=7> 
+                        <a href="output.html?projectId={{ round.id }}">Click Me!</a>
+                        TODO - Other useful metrics
+                    </td> 
+                </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    </br></br>
     <!-- <h2>[GOOGLE TRANSLATE] Comparison of the method of equal shares with the greedy method</h2> -->
 
     <!-- <p>[GOOGLE TRANSLATE] We conducted an analysis comparing the equal shares method to the greedy method, which is the most frequently used method in citizen budgets. </p> -->
