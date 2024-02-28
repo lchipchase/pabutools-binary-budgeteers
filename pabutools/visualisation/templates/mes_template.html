@@ -448,8 +448,17 @@
                   },
                   "series": [{
                      "values": {{ round.effective_vote_count.values() | list }}, // Current votes values
+                     'hover-state': { /* Hover object */
+                        'background-color': "orange",
+                        // 'border-width':3,
+                        // 'border-color': "purple",
+                        // 'line-style': "dotted"
+                    }
                   }, ],
                   "plot": {
+                    "tooltip": {
+                        "text": "Project %scale-key-label has %v votes"
+                    },
                      "animation": {
                         "effect": "ANIMATION_SLIDE_BOTTOM",
                         "sequence": "ANIMATION_BY_PLOT_AND_NODE",
@@ -492,7 +501,7 @@
             },
             "plot": {
                 "tooltip": {
-                    "text": "%v votes"
+                    "text": "Project %scale-key-label has %v votes"
                 },
                 "animation": {
                     "effect": "ANIMATION_SLIDE_BOTTOM",
