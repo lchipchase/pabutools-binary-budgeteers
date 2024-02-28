@@ -198,7 +198,7 @@ Maybe implement page description?
         <div class='chart-budget'>
             {% for round in rounds %}
                 <div class='bar bar-blue bar-border'
-                    style='width: {{ round.cost_percent }}&#37;;'
+                    style='width: {{ round.cost_percent }}'
                     data-tippy-content="Project '{{ round.name }}' was voted in round {{ loop.index }}, costing {{ round.cost }} GBP. This is {{ round.cost_percent }}&#37; of the budget.">
                 </div>
             {% endfor %}
