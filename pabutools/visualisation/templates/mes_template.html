@@ -75,6 +75,10 @@
         p {
             text-align: center;
         }
+
+        #info {
+            cursor: pointer; /* Indicates interactivity */
+        }
     </style>
 </head>
 
@@ -139,11 +143,9 @@
                   <!-- Effective Vote Count -->
                   <div class="row mb-3 ">
                      <div class="col-3"></div>
-                     <div id="shapeTooltip" style="display: none; position: absolute; padding: 10px; background: #fff; border: 1px solid #ddd; z-index: 100;">
-    Tooltip content here.
-</div>
+                     
                      <div class="col-6" style="height: 300px;">
-                        <div id="{{ round.id }}BarChart" style="height: 100%; width: 100%;">
+                        <div id="{{ round.id }}BarChart" style="height: 100%; width: 100%;" data-tippy-content= "Effective vote count: For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">
 
                         </div>
 
@@ -173,8 +175,8 @@
 
                   <!-- Pie Charts Carousels -->
                   <div id="secondCarousel" style="height: 500px;" class="carousel slide mb-3 border-black" data-ride="carousel" data-interval="false">
-                     <div class="carousel-inner carousel-inner-pie" style="height: 500px;">
-
+                     <div class="carousel-inner carousel-inner-pie" style="height: 500px;"  data-tippy-content= "Effective vote count: For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">
+                    
                         {% for triplet in round.pie_chart_items%}
                             {% set carouselNum = loop.index %}
                             {% set carouselClass = "carousel-item" %}
@@ -453,9 +455,6 @@
                             "border-width": 1,
                             "line-style": "dotted",
                             "padding": "15%",
-                            //with sticky tooltip feature
-                            "sticky": true,
-                            "timeout": 30000,
                         },
                         label: {
                             text: 'i', // Text inside the shape
@@ -1002,5 +1001,8 @@
             width: "100%"
         });
     </script> #}
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script>tippy('[data-tippy-content]', { allowHTML: true, maxWidth: 1000});</script>
 </body>
 </html>
