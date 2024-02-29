@@ -116,18 +116,22 @@
                 </div>
                 <div class="carousel-item">
                     <div class="d-block w-100 border-black justify-content-center" style="height:200px;">
-                    The projects and their descriptions are as follows:<br>
-                    {% for project in projects %}
-                        {{ project.name}}: {{ project.description}} 
-                    {% endfor %}
+                        <p>
+                            The projects and their descriptions are as follows:<br>
+                            {% for project in projects %}
+                                {{ project.name}}: {{ project.description}},
+                            {% endfor %}
+                        </p>
                     </div>
                 </div>
                 <div class="carousel-item">
                     <div class="d-block w-100 border-black justify-content-center" style="height:200px;">
-                        {% set voter_budget = budget / total_votes %}
-                        Each of the voters had a budget of ${{ voter_budget }} to allocate to the projects.<br>
-                        The projects were elected using the Method of Equal Shares, where the total budget is virtually divided equally among the voters. <br>
-                        The following web-page outlines the process of the election and the step by step process of how each project was chosen.
+                        <p>
+                            {% set voter_budget = budget / total_votes %}
+                            Each of the voters had a budget of ${{ voter_budget }} to allocate to the projects.<br>
+                            The projects were elected using the Method of Equal Shares, where the total budget is virtually divided equally among the voters. <br>
+                            The following web-page outlines the process of the election and the step by step process of how each project was chosen.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -207,7 +211,7 @@
                                                     </div>
                                                     <div class="spacer"></div>
                                                     <div class="border-black ">
-                                                        This resulted in 
+                                                        This resulted in an average reduction of $ per voter for the {{ data.project }} voters who also voted for {{ round.name }}.
                                                     </div>
                                                 </div>
                                             {% endfor %}
@@ -384,18 +388,34 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <!-- Dropdown functionality -->
+    <!-- Dropdown functionality -->
     <script>
-        function onClickDropdown(element) {
-            var dropdownItems = document.querySelectorAll('.dropdown-item');
-            dropdownItems.forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
-            document.getElementById('projectDropdown').innerText = element.innerText;
+    // Object to store rendered charts for each round
+    var renderedCharts = {};
 
-            // Show the corresponding section and hide others
-            var sections = document.querySelectorAll('section');
-            sections.forEach(section => section.style.display = 'none');
-            document.getElementById(element.getAttribute("item")).style.display = 'block';
+    function onClickDropdown(element) {
+        var dropdownItems = document.querySelectorAll('.dropdown-item');
+        dropdownItems.forEach(item => item.classList.remove('active'));
+        element.classList.add('active');
+        document.getElementById('projectDropdown').innerText = element.innerText;
+
+        // Show the corresponding section and hide others
+        var sections = document.querySelectorAll('section');
+        sections.forEach(section => section.style.display = 'none');
+        var selectedSection = document.getElementById(element.getAttribute("item"));
+        selectedSection.style.display = 'block';
+
+        // Check if chart has been rendered for the selected round
+        var roundId = element.getAttribute("data-round-id"); // Ensure your round button has a data-round-id attribute
+        if (!renderedCharts[roundId]) {
+            // If not, render the chart
+            renderChart(roundId);
+            renderedCharts[roundId] = true; // Mark this round's chart as rendered
+        } else {
+            // Optional: Handle cases where the chart is already rendered (e.g., re-render, show/hide, etc.)
+            // This part depends on how you want to handle already rendered charts.
         }
+    }
     </script>
     {% for round in rounds %}
         <!-- Chord chart -->
@@ -430,10 +450,25 @@
                                 {% for projTo in top_projects %}
                                 {{ round.voter_flow[projFrom].get(projTo, 0) }},
                                 {% endfor %}
+                                {% if projFrom == selected_project %}
+                                {{ round.voter_flow[projFrom].get(projFrom, 0) }},
+                                {% endif %}
                             ],
                             "text": "{{ projFrom }}"
                         },
                         {% endfor %}
+                        {% if selected_project not in top_projects %}
+                        // Add a series for the selected project if it's not in the top_projects list
+                        {
+                            "values": [
+                                {% for projTo in top_projects %}
+                                {{ round.voter_flow[selected_project].get(projTo, 0) }},
+                                {% endfor %}
+                                {{ round.voter_flow[selected_project].get(selected_project, 0) }},
+                            ],
+                            "text": "{{ selected_project }}"
+                        },
+                        {% endif %}
                     ]
 
                   },
@@ -514,7 +549,7 @@
                      "animation": {
                         "effect": "ANIMATION_SLIDE_BOTTOM",
                         "sequence": "ANIMATION_BY_PLOT_AND_NODE",
-                        "speed": 10000
+                        "speed": 0
                      }
                   }
             },
@@ -621,7 +656,7 @@
                 "animation": {
                     "effect": "ANIMATION_SLIDE_BOTTOM",
                     "sequence": 1,
-                    "speed": 10000
+                    "speed": 0
                 }
             },
             "scale-x": {
@@ -740,7 +775,7 @@
                             "animation": {
                                 "effect": "ANIMATION_EXPAND_VERTICAL",
                                 "sequence": "ANIMATION_BY_PLOT",
-                                "speed": 10000
+                                "speed": 0
                             }
                         },
                         "series": [{
@@ -789,7 +824,7 @@
                 "animation": {
                     "effect": "ANIMATION_EXPAND_VERTICAL",
                     "sequence": "ANIMATION_BY_PLOT",
-                    "speed": 10000
+                    "speed": 0
                 }
             },
             "series": [{
@@ -833,7 +868,7 @@
                 "animation": {
                     "effect": "ANIMATION_EXPAND_VERTICAL",
                     "sequence": "ANIMATION_BY_PLOT",
-                    "speed": 10000
+                    "speed": 0
                 }
             },
             "series": [{
@@ -870,7 +905,7 @@
                 "animation": {
                     "effect": "ANIMATION_EXPAND_VERTICAL",
                     "sequence": "ANIMATION_BY_PLOT",
-                    "speed": 10000
+                    "speed": 0
                 }
             },
             "legend": {
@@ -923,7 +958,7 @@
                 "animation": {
                     "effect": "ANIMATION_EXPAND_VERTICAL",
                     "sequence": "ANIMATION_BY_PLOT",
-                    "speed": 10000
+                    "speed": 0
                 }
             },
             "series": [{
@@ -967,7 +1002,7 @@
                 "animation": {
                     "effect": "ANIMATION_EXPAND_VERTICAL",
                     "sequence": "ANIMATION_BY_PLOT",
-                    "speed": 10000
+                    "speed": 0
                 }
             },
             "series": [{
@@ -1004,7 +1039,7 @@
                 "animation": {
                     "effect": "ANIMATION_EXPAND_VERTICAL",
                     "sequence": "ANIMATION_BY_PLOT",
-                    "speed": 10000
+                    "speed": 0
                 }
             },
             "legend": {
