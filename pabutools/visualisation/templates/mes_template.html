@@ -155,7 +155,7 @@
                      <div class="col-3"></div>
                      
                      <div class="col-6" style="height: 300px;">
-                        <div id="{{ round.id }}BarChart" style="height: 100%; width: 100%;" data-tippy-content= "Effective vote count: For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">
+                        <div id="{{ round.id }}BarChart" style="height: 100%; width: 100%;" data-tippy-content= "<b>Effective Vote Count:</b><br> For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">
 
                         </div>
 
@@ -170,13 +170,13 @@
                   </div>
                   <div class="row">
                      <div class="col-5" style="display: grid;">
-                        <div class="d-flex align-items-center justify-content-center">
+                        <div class="d-flex align-items-center justify-content-center" data-tippy-content="<b>Sankey Diagram</b><br>The provided Sankey diagram offers a visual representation of voting patterns among a set of participants with the option to vote for multiple projects. The individual bands flowing from this singular left bar to various bars on the right-hand side illustrate the distribution of voters who have also voted for other projects. Each band's thickness corresponds to the number of voters who voted for both the project on the left and the project on the right. The graph is designed to show the overlap in voting behaviour, making it clear which projects share a common voter base with the project displayed on the right-hand side. ">
                               <div id="{{ round.id }}SankeyChart"></div>
                         </div>
                      </div>
 
                      <div class="col-2"></div>
-                     <div class="col-5 chord-wrapper">
+                     <div class="col-5 chord-wrapper" data-tippy-content="<b>Chord Diagram:</b><br> The chord diagram shows the voter flows between the project selected this round {{ round.id }}. Due to the nature of MES, if a project is selected, the voters who voted for it will have a reduction in their budget. Therefore, showing how {{ round.id }} voters’ voted shows which other projects will have had their support cut. ">
                         <div id='{{ round.id }}ChordChart'></div>
 
                      </div>
@@ -185,7 +185,7 @@
 
                   <!-- Pie Charts Carousels -->
                   <div id="secondCarousel" style="height: 500px;" class="carousel slide mb-3 border-black" data-ride="carousel" data-interval="false">
-                     <div class="carousel-inner carousel-inner-pie" style="height: 500px;"  data-tippy-content= "Effective vote count: For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">
+                     <div class="carousel-inner carousel-inner-pie" style="height: 500px;" >
                     
                         {% for triplet in round.pie_chart_items%}
                             {% set carouselNum = loop.index %}
@@ -218,48 +218,6 @@
                                 </div>
                             </div>
                         {% endfor %}
-
-                        <!-- (OLD) dummy data for pie charts -->
-                        {# <div class="carousel-item active">
-                              <div class="wrapper" style="height:300px">
-                                 <div class="d-block w-100">
-                                    <div class="row">
-                                          <!-- First Pie Chart -->
-                                          <div class="col-md-4 nested">
-                                             <div>
-                                                <div id='myPieChart1A'></div>
-                                             </div>
-                                             <div class="spacer"></div>
-                                             <div class="border-black ">
-                                                This resulted in a $12.32 reduction in the average funds available to the B voter
-                                             </div>
-
-                                          </div>
-                                          <!-- Second Pie Chart -->
-                                          <div class="col-md-4 nested">
-                                             <div>
-                                                <div id='myPieChart1B'></div>
-
-                                             </div>
-                                             <div class="spacer"></div>
-                                             <div class="border-black ">
-                                                This resulted in a $9.11 reduction in the average funds available to the C voter
-                                             </div>
-                                          </div>
-                                          <!-- Third Pie Chart -->
-                                          <div class="col-md-4 nested">
-                                             <div>
-                                                <div id='myPieChart1C'></div>
-                                             </div>
-                                             <div class="spacer"></div>
-                                             <div class="border-black ">
-                                                This resulted in a $9.11 reduction in the average funds available to the C voter
-                                             </div>
-                                          </div>
-                                    </div>
-                                 </div>
-                              </div>
-                        </div>
 
                         <div class="carousel-item">
                               <div class="wrapper">
@@ -356,7 +314,7 @@
                      <div class="col-2">
                      </div>
                      <div class="col-8 container" style="height: 300px;">
-                        <div id="{{ round.id }}AfterRoundBarChart" style="height: 100%; width: 100%;"></div>
+                        <div id="{{ round.id }}AfterRoundBarChart" style="height: 100%; width: 100%;" data-tippy-content= "<b>Reduced Effective Vote Count</b><br>Voters who still have money left but not enough money to pay for the project when its cost is equally divided will count as a fraction. We do not count voters if they have already spent their entire budget share. This graph visualises the current vote count after some of the voters' budgets have already been allocated against original vote count for the project. "></div>
                      </div>
                      <div class="col-2">
 
@@ -1030,6 +988,7 @@
     </script> #}
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
-    <script>tippy('[data-tippy-content]', { allowHTML: true, maxWidth: 1000});</script>
+    <script>tippy('[data-tippy-content]', { allowHTML: true, maxWidth: 1000});
+    </script>
 </body>
 </html>
