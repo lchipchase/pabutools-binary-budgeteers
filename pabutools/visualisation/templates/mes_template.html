@@ -521,29 +521,58 @@
             data: {
             "type": "hbar",
             gui: {
-            contextMenu: {
-                button: {
-                visible: true,
-                lineColor: "#2D66A4",
-                backgroundColor: "#2D66A4"
-                },
-                gear: {
-                alpha: 1,
-                backgroundColor: "#2D66A4"
-                },
-                position: "right",
-                backgroundColor: "#306EAA",
-                /*sets background for entire contextMenu*/
-                docked: true,
-                item: {
-                backgroundColor: "#306EAA",
-                borderColor: "#306EAA",
-                borderWidth: 0,
-                fontFamily: "Lato",
-                color: "#fff"
+                contextMenu: {
+                    button: {
+                    visible: true,
+                    lineColor: "#2D66A4",
+                    backgroundColor: "#2D66A4"
+                    },
+                    gear: {
+                    alpha: 1,
+                    backgroundColor: "#2D66A4"
+                    },
+                    position: "right",
+                    backgroundColor: "#306EAA",
+                    /*sets background for entire contextMenu*/
+                    docked: true,
+                    item: {
+                    backgroundColor: "#306EAA",
+                    borderColor: "#306EAA",
+                    borderWidth: 0,
+                    fontFamily: "Lato",
+                    color: "#fff"
+                    }
                 }
-            }
             },
+            shapes: [
+                {
+                    "type": "circle",
+                    "background-color": "#5297b6",
+                    "size": 20,
+                    "x": 35,
+                    "y": 25,
+                    "tooltip": {
+                        "text": "Voters who still have money left but not enough money to pay for the project when <br> its cost is equally divided will count as a fraction. We do not count voters if they <br> have already spent their entire budget share. This graph visualises the current vote <br> count after some of the voters' budgets have already been allocated against the  <br> original vote count for the project. ",
+                        "background-color": "white",
+                        "font-color": "gray",
+                        "font-family": "Georgia",
+                        "background-color": "white",
+                        "border-color": "gray",
+                        "border-width": 1,
+                        "line-style": "dotted",
+                        "padding": "15%",
+                        //with sticky tooltip feature
+                        "sticky": true,
+                        "timeout": 30000,
+                    },
+                    label: {
+                        text: 'i', // Text inside the shape
+                        fontSize: 28,
+                        fontWeight: 'bold',
+                        fontColor: '#fff'
+                    }
+                  }
+            ],
             "stacked": true,
             "title": {
                 "text": "Reduced Effective Vote Count {% if loop.index in range(rounds|length) %} (Next Winner: {{ rounds[loop.index].name }}) {% endif %}",
