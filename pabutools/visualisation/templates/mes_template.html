@@ -139,7 +139,9 @@
                   <!-- Effective Vote Count -->
                   <div class="row mb-3 ">
                      <div class="col-3"></div>
-
+                     <div id="shapeTooltip" style="display: none; position: absolute; padding: 10px; background: #fff; border: 1px solid #ddd; z-index: 100;">
+    Tooltip content here.
+</div>
                      <div class="col-6" style="height: 300px;">
                         <div id="{{ round.id }}BarChart" style="height: 100%; width: 100%;">
 
@@ -345,6 +347,7 @@
                         <div id="{{ round.id }}AfterRoundBarChart" style="height: 100%; width: 100%;"></div>
                      </div>
                      <div class="col-2">
+
                      </div>
                   </div>
             </section>
@@ -429,6 +432,39 @@
                   "title": {
                      "text": "Effective Vote Count (Winner: {{ round.name }})"
                   },
+                  shapes: [
+                    {
+                        "type": "circle",
+                        "background-color": "#5297b6",
+                        "size": 20,
+                        "x": 35,
+                        "y": 25,
+                        "tooltip": {
+                            "text": "For a vote to count towards a project, the person who made the vote <br> must have some of their budget remaining so they can contribute <br> towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their <br> entire budget on previous projects, the effective vote count will be 15. <br> This graph shows the effective vote counts for all projects.",
+                            // "text" : function(p) {
+                            //     const tooltipText = "For a vote to count towards a project, the person who made the vote <br> must have some of their budget remaining so they can contribute <br> towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their <br> entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all <br >projects.";
+                            //     return insertLineBreaks(tooltipText, 20); // Adjust the maxChars parameter as needed
+                            // },
+                            "background-color": "white",
+                            "font-color": "gray",
+                            "font-family": "Georgia",
+                            "background-color": "white",
+                            "border-color": "gray",
+                            "border-width": 1,
+                            "line-style": "dotted",
+                            "padding": "15%",
+                            //with sticky tooltip feature
+                            "sticky": true,
+                            "timeout": 30000,
+                        },
+                        label: {
+                            text: 'i', // Text inside the shape
+                            fontSize: 28,
+                            fontWeight: 'bold',
+                            fontColor: '#fff'
+                        }
+                      }
+                ],
                   "scale-x": {
                     
                      "labels": {{ round.effective_vote_count.keys() | list }}, // Label that identifies each project in the round
@@ -450,9 +486,6 @@
                      "values": {{ round.effective_vote_count.values() | list }}, // Current votes values
                      'hover-state': { /* Hover object */
                         'background-color': "orange",
-                        // 'border-width':3,
-                        // 'border-color': "purple",
-                        // 'line-style': "dotted"
                     }
                   }, ],
                   "plot": {
@@ -469,6 +502,16 @@
                   height: '100%',
                   width: '100%'
             });
+
+            {/* zingchart.bind('{{ round.id }}BarChart', 'shape_click', function(e) {
+                if (e.shapeid === 'custom-cm-button') {
+                    zingchart.exec('{{ round.id }}BarChart', 'showmenu', {
+                    x: 55,
+                    y: 35
+                    });
+                }
+            }) */}
+
         </script>
         <!-- Effective vote count reduction bar chart -->
         <script>
@@ -477,6 +520,30 @@
             id: '{{round.id}}AfterRoundBarChart',
             data: {
             "type": "hbar",
+            gui: {
+            contextMenu: {
+                button: {
+                visible: true,
+                lineColor: "#2D66A4",
+                backgroundColor: "#2D66A4"
+                },
+                gear: {
+                alpha: 1,
+                backgroundColor: "#2D66A4"
+                },
+                position: "right",
+                backgroundColor: "#306EAA",
+                /*sets background for entire contextMenu*/
+                docked: true,
+                item: {
+                backgroundColor: "#306EAA",
+                borderColor: "#306EAA",
+                borderWidth: 0,
+                fontFamily: "Lato",
+                color: "#fff"
+                }
+            }
+            },
             "stacked": true,
             "title": {
                 "text": "Reduced Effective Vote Count {% if loop.index in range(rounds|length) %} (Next Winner: {{ rounds[loop.index].name }}) {% endif %}",
@@ -513,7 +580,12 @@
                 "labels": {{ round.effective_vote_count_reduction.keys() | list }}, // Label that identifies each project in the round
                 "title": {
                     "text": "Projects"
-                }
+                },
+                "item": { // Explicitly control the appearance of the scale labels
+                        "font-size": 14, // Adjust font size as needed
+                        "offset-x": 0, // Adjust to move the label left or right if needed
+                        "offset-y": 0 // Adjust to move the label up or down if needed
+                     }
             },
             "scale-y": {
                 "title": {
