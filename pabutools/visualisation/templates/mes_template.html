@@ -96,18 +96,18 @@
                     <div class="d-block w-100 border-black justify-content-center" style="height:200px;">
                         <!-- Fix issue where extra comma appears on final item in list. -->
                         <p>
-                            Summary statistics for the election - how many total votes, projects elected, and budget spent.<br>
-                            {% for project in projects %}
+                            {{ election_name}} had a total of {{ total_votes }} voters participating.<br>
+                            Between these voters there was a total of ${{ budget }} available, of which ${{ spent }} was spent.<br>
+
+                            <!-- {% for project in projects %}
                                 {{ project.name}}: {{project.totalvotes}} votes,
                             {% endfor %}
-                            <br>
+                            <br> -->
 
-                            {{ number_of_elected_projects }} projects elected, {{ number_of_unelected_projects }} projects not elected.<br>
-
-                            ${{ spent }} out of ${{ budget }} budget spent.<br>
-
+                            In total, there were {{ number_of_elected_projects }} projects elected, and {{ number_of_unelected_projects }} projects not elected.<br>
+                            The elected projects were:<br>
                             {% for project in projects %}
-                                {{ project.name}}: {{project.description}}
+                                {{ project.name}},
                             {% endfor %}
                             <br>
 
@@ -115,10 +115,20 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <div class="d-block w-100 border-black" style="height:200px;">DIV 2</div>
+                    <div class="d-block w-100 border-black justify-content-center" style="height:200px;">
+                    The projects and their descriptions are as follows:<br>
+                    {% for project in projects %}
+                        {{ project.name}}: {{ project.description}} 
+                    {% endfor %}
+                    </div>
                 </div>
                 <div class="carousel-item">
-                    <div class="d-block w-100 border-black" style="height:200px;">DIV 3</div>
+                    <div class="d-block w-100 border-black justify-content-center" style="height:200px;">
+                        {% set voter_budget = budget / total_votes %}
+                        Each of the voters had a budget of ${{ voter_budget }} to allocate to the projects.<br>
+                        The projects were elected using the Method of Equal Shares, where the total budget is virtually divided equally among the voters. <br>
+                        The following web-page outlines the process of the election and the step by step process of how each project was chosen.
+                    </div>
                 </div>
             </div>
             <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -406,17 +416,26 @@
                      "plotarea": {
                         "margin": "dynamic"
                      },
-                     "series": [
-                     {% for projFrom in round.voter_flow %}
-                        {"values":[
-                        {% for projTo in round.voter_flow[projFrom] %}
-                            {{ round.voter_flow[projFrom][projTo] }},
-                        {% endfor %}
-                        ],
-                        "text": "{{ projFrom }}"
+                     {% set selected_project = round.name %}
+                    {% set project_votes = round.voter_flow[selected_project] | dictsort(by='value', reverse=True) %}
+                    {% set top_projects = project_votes[:6] | map(attribute=0) | list %}
+                    {% if selected_project not in top_projects %}
+                        {% set top_projects = [selected_project] + top_projects %}
+                    {% endif %}
+
+                    "series": [
+                        {% for projFrom in top_projects %}
+                        {
+                            "values":[
+                                {% for projTo in top_projects %}
+                                {{ round.voter_flow[projFrom].get(projTo, 0) }},
+                                {% endfor %}
+                            ],
+                            "text": "{{ projFrom }}"
                         },
-                     {% endfor %}
-                      ]
+                        {% endfor %}
+                    ]
+
                   },
                   height: "60%",
                   width: "100%",
@@ -495,7 +514,7 @@
                      "animation": {
                         "effect": "ANIMATION_SLIDE_BOTTOM",
                         "sequence": "ANIMATION_BY_PLOT_AND_NODE",
-                        "speed": 800
+                        "speed": 10000
                      }
                   }
             },
@@ -602,7 +621,7 @@
                 "animation": {
                     "effect": "ANIMATION_SLIDE_BOTTOM",
                     "sequence": 1,
-                    "speed": 1200
+                    "speed": 10000
                 }
             },
             "scale-x": {
@@ -660,12 +679,20 @@
                     
                     // Adding data from render.py
 
+                    {% set data_items = round.voter_flow[round.id].items() | sort(attribute='1', reverse=True) %}
+                    {% set top_items = data_items[:6] %}
+                    {% set other_items = data_items[6:] %}
+                    {% set other_total = other_items | map(attribute='1') | sum %}
+
                     data.addRows([
-                        {% for key in round.voter_flow[round.id].keys() %}
-                            {% if key != round.id%}
-                                ['{{ round.id }}', '{{ key }}', {{ round.voter_flow[round.id][key]}}],
+                        {% for key, value in top_items %}
+                            {% if key != round.id %}
+                                ['{{ round.id }}', '{{ key }}', {{ value }}],
                             {% endif %}
-                        {% endfor %}    
+                        {% endfor %}
+                        {% if other_items %}
+                            ['{{ round.id }}', 'Other', {{ other_total }}],
+                        {% endif %}
                     ])
 
                     // Sets chart options.
@@ -713,7 +740,7 @@
                             "animation": {
                                 "effect": "ANIMATION_EXPAND_VERTICAL",
                                 "sequence": "ANIMATION_BY_PLOT",
-                                "speed": 500
+                                "speed": 10000
                             }
                         },
                         "series": [{
@@ -762,7 +789,7 @@
                 "animation": {
                     "effect": "ANIMATION_EXPAND_VERTICAL",
                     "sequence": "ANIMATION_BY_PLOT",
-                    "speed": 500
+                    "speed": 10000
                 }
             },
             "series": [{
@@ -806,7 +833,7 @@
                 "animation": {
                     "effect": "ANIMATION_EXPAND_VERTICAL",
                     "sequence": "ANIMATION_BY_PLOT",
-                    "speed": 500
+                    "speed": 10000
                 }
             },
             "series": [{
@@ -843,7 +870,7 @@
                 "animation": {
                     "effect": "ANIMATION_EXPAND_VERTICAL",
                     "sequence": "ANIMATION_BY_PLOT",
-                    "speed": 500
+                    "speed": 10000
                 }
             },
             "legend": {
@@ -896,7 +923,7 @@
                 "animation": {
                     "effect": "ANIMATION_EXPAND_VERTICAL",
                     "sequence": "ANIMATION_BY_PLOT",
-                    "speed": 500
+                    "speed": 10000
                 }
             },
             "series": [{
@@ -940,7 +967,7 @@
                 "animation": {
                     "effect": "ANIMATION_EXPAND_VERTICAL",
                     "sequence": "ANIMATION_BY_PLOT",
-                    "speed": 500
+                    "speed": 10000
                 }
             },
             "series": [{
@@ -977,7 +1004,7 @@
                 "animation": {
                     "effect": "ANIMATION_EXPAND_VERTICAL",
                     "sequence": "ANIMATION_BY_PLOT",
-                    "speed": 500
+                    "speed": 10000
                 }
             },
             "legend": {

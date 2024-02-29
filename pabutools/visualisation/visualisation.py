@@ -64,12 +64,13 @@ class MESVisualiser(Visualiser):
             print(self.rounds)
         rendered_output = MESVisualiser.template.render( # TODO: Some redudant data is being passed to the template that can be calculated within template directly
             election_name=self.instance.meta["description"] if "description" in self.instance.meta else "No description provided.", 
+            total_votes=sum(votes_count_by_project(self.profile).values()),
             rounds=self.rounds, 
             projects=list(self.instance),
             number_of_elected_projects=len(outcome),
             number_of_unelected_projects=len(self.instance) - len(outcome),
             spent=total_cost(p for p in self.instance if p.name in outcome),
-            budget=self.instance.meta["budget"]
+            budget=int(self.instance.meta["budget"])
         )
         with open(output_file_path, "w") as o:
             o.write(rendered_output)
