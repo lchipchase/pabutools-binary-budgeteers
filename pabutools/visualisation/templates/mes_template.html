@@ -400,65 +400,67 @@
         }
     }
     </script>
-    {% for round in rounds %}
-        <!-- Chord chart -->
-        <script>
-            //   ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
-            zingchart.render({
-                  id: '{{round.id}}ChordChart',
-                  data: {
-                     "type": "chord",
-                     // "title": {
-                     //     "text": "Project Relationships",
-                     //     "offset-y": -10
-                     //     // "adjust-layout": true,
-                     // },
-                     "options": {
-                        "radius": "80%"
-                     },
-                     "plotarea": {
-                        "margin": "dynamic"
-                     },
-                     {% set selected_project = round.name %}
-                    {% set project_votes = round.voter_flow[selected_project] | dictsort(by='value', reverse=True) %}
-                    {% set top_projects = project_votes[:6] | map(attribute=0) | list %}
-                    {% if selected_project not in top_projects %}
-                        {% set top_projects = [selected_project] + top_projects %}
-                    {% endif %}
+    <script>
+        chord_chart_dictionary = {};
+        {% for round in rounds %}
+            {% set selected_project = round.name %}
+            {% set project_votes = round.voter_flow[selected_project] | dictsort(by='value', reverse=True) %}
+            {% set top_projects = project_votes[:6] | map(attribute=0) | list %}
+            {% if selected_project not in top_projects %}
+                {% set top_projects = [selected_project] + top_projects %}
+            {% endif %}
 
-                    "series": [
-                        {% for projFrom in top_projects %}
-                        {
-                            "values":[
-                                {% for projTo in top_projects %}
-                                {{ round.voter_flow[projFrom].get(projTo, 0) }},
-                                {% endfor %}
-                                {% if projFrom == selected_project %}
-                                {{ round.voter_flow[projFrom].get(projFrom, 0) }},
-                                {% endif %}
-                            ],
-                            "text": "{{ projFrom }}"
-                        },
+            chord_chart_dictionary["{{round.id}}"] = [
+                {% for projFrom in top_projects %}
+                {
+                    "values":[
+                        {% for projTo in top_projects %}
+                        {{ round.voter_flow[projFrom].get(projTo, 0) }},
                         {% endfor %}
-                        {% if selected_project not in top_projects %}
-                        // Add a series for the selected project if it's not in the top_projects list
-                        {
-                            "values": [
-                                {% for projTo in top_projects %}
-                                {{ round.voter_flow[selected_project].get(projTo, 0) }},
-                                {% endfor %}
-                                {{ round.voter_flow[selected_project].get(selected_project, 0) }},
-                            ],
-                            "text": "{{ selected_project }}"
-                        },
+                        {% if projFrom == selected_project %}
+                        {{ round.voter_flow[projFrom].get(projFrom, 0) }},
                         {% endif %}
-                    ]
-
-                  },
-                  height: "60%",
-                  width: "100%",
-               });
-        </script>
+                    ],
+                    "text": "{{ projFrom }}"
+                },
+                {% endfor %}
+                {% if selected_project not in top_projects %}
+                // Add a series for the selected project if it's not in the top_projects list
+                {
+                    "values": [
+                        {% for projTo in top_projects %}
+                        {{ round.voter_flow[selected_project].get(projTo, 0) }},
+                        {% endfor %}
+                        {{ round.voter_flow[selected_project].get(selected_project, 0) }},
+                    ],
+                    "text": "{{ selected_project }}"
+                },
+                {% endif %}
+            ]
+        {% endfor %}
+    </script>
+    <script>
+        function renderChordChart(roundId) {
+            zingchart.render({
+                id: roundId + 'ChordChart',
+                data: {
+                    "type": "chord",
+                    "options": {
+                        "radius": "80%"
+                    },
+                    "plotarea": {
+                        "margin": "dynamic"
+                    },
+                    "series": chord_chart_dictionary[roundId]
+                
+                },
+                height: "60%",
+                width: "100%",
+            });
+        }
+        renderChordChart({{rounds[0].name}});
+    </script>
+    {% for round in rounds %}
         <!-- Effective vote count bar chart -->
         <script>
                 //   ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
