@@ -93,25 +93,67 @@
         .info-button:hover {
             background-color: #0056b3;
         }
+
+        .spacer-2{
+            padding: 2rem;
+        }
+        .spacer-1{
+            padding: 1rem;
+        }
+
+        .upper-page{
+            background-color: gray;
+            color: white;
+        }
     </style>
 </head>
 
 <body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+          <a class="navbar-brand" href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Pabutools</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Pabutools <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Pabutools</a>
+              </li>
+              <li class="nav-item">
+            </ul>
+            <form class="form-inline mt-2 mt-md-0" data-dashlane-rid="586d21bb200ad9fc" data-form-type="">
+              <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" data-dashlane-rid="ebb02837c4029767" data-form-type="">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit" data-dashlane-label="true" data-dashlane-rid="c66944f310795772" data-form-type="">Search</button>
+            </form>
+          </div>
+        </nav>
+      </header>
+
+    <main role="main">
+    
+    
+
     <div class="container my-4">
         <!-- General Explanations -->
-        <div class="row mb-3">
-            <div class="col-12  justify-content-center">
-                <h1>
-                    {{ election_name }}
-                </h1>
+        <div class="upper-page">
+            <div class="spacer-2"></div>
+            <div class="row mb-3">
+                <div class="col-12  justify-content-center">
+                    <h1>
+                        {{ election_name }}
+                    </h1>
+                </div>
             </div>
-        </div>
-
-        <!-- Carousel for general graphs -->
-        <div id="carouselExampleControls" class="carousel slide mb-3 border-black" data-ride="carousel" data-interval="false">
+        <div class="spacer-1"></div>
+            <!-- Carousel for general graphs -->
+        <div id="carouselExampleControls" class="carousel slide mb-3" data-ride="carousel" data-interval="false">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <div class="d-block w-100 border-black justify-content-center" style="height:200px;">
+                    <div class="d-block w-100 justify-content-center" style="height:200px;">
                         <!-- Fix issue where extra comma appears on final item in list. -->
                         <p>
                             {{ election_name}} had a total of {{ total_votes }} voters participating.<br>
@@ -133,7 +175,7 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <div class="d-block w-100 border-black justify-content-center" style="height:200px;">
+                    <div class="d-block w-100 justify-content-center" style="height:200px;">
                         <p>
                             The projects and their descriptions are as follows:<br>
                             {% for project in projects %}
@@ -143,27 +185,30 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <div class="d-block w-100 border-black justify-content-center" style="height:200px;">
+                    <div class="d-block w-100 justify-content-center" style="height:200px;">
                         <p>
                             {% set voter_budget = budget / total_votes %}
-                            Each of the voters had a budget of ${{ voter_budget }} to allocate to the projects.<br>
-                            The projects were elected using the Method of Equal Shares, where the total budget is virtually divided equally among the voters. <br>
+                            Each of the voters had a budget of ${{ voter_budget }} to allocate to the projects.
+                            The projects were elected using the Method of Equal Shares, where the total budget is virtually divided equally among the voters.
                             The following web-page outlines the process of the election and the step by step process of how each project was chosen.
                         </p>
                     </div>
                 </div>
             </div>
             <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                <span class="carousel-control-next-icon" aria-hidden="true">&lt;
+                <span class="carousel-control-prev-icon" aria-hidden="true">
             </span>
                 <span class="sr-only">Previous</span>
             </a>
             <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true">&gt;
-            </span>
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
             </a>
         </div>
+
+
+        </div>
+        
 
         <!-- Round specific visualisations -->
          {% for round in rounds %}
@@ -244,83 +289,7 @@
                             </div>
                         {% endfor %}
 
-                        <div class="carousel-item">
-                              <div class="wrapper">
-                                 <div class="d-block w-100" style="height:200px;">
-                                    <div class="row">
-                                          <div class="col-md-4 nested">
-                                             <div class="border-black ">
-                                                Pie Chart (A)
-                                             </div>
-                                             <div class="spacer"></div>
-                                             <div class="border-black ">
-                                                Pie Chart (A)
-                                             </div>
-                                          </div>
-                                          <div class="col-md-4 nested">
-                                             <div class="border-black ">
-                                                Pie Chart (A)
-                                             </div>
-                                             <div class="spacer"></div>
-                                             <div class="border-black ">
-                                                Text (A)
-                                             </div>
-                                          </div>
-                                          <div class="col-md-4 nested">
-                                             <div class="border-black ">
-                                                Text (A)
-                                             </div>
-                                             <div class="spacer"></div>
-                                             <div class="border-black ">
-                                                Text (A)
-                                             </div>
-                                          </div>
-                                    </div>
-                                 </div>
-                              </div>
-                        </div>
 
-                        <div class="carousel-item">
-                              <div class="wrapper">
-                                 <div class="d-block w-100" style="height:200px;">
-                                    <div class="row">
-                                          <div class="col-md-4 nested">
-                                             <div class="border-black ">
-                                                Pie Chart (A)
-
-                                             </div>
-                                             <div class="spacer"></div>
-                                             <div class="border-black ">
-                                                Pie Chart (A)
-
-
-                                             </div>
-                                          </div>
-                                          <div class="col-md-4 nested">
-                                             <div class="border-black ">
-                                                Pie Chart (A)
-
-
-                                             </div>
-                                             <div class="spacer"></div>
-                                             <div class="border-black ">
-                                                Text (A)
-                                             </div>
-                                          </div>
-                                          <div class="col-md-4 nested">
-                                             <div class="border-black ">
-                                                Text (A)
-                                             </div>
-                                             <div class="spacer"></div>
-                                             <div class="border-black ">
-                                                Text (A)
-                                             </div>
-                                          </div>
-                                    </div>
-                                 </div>
-                              </div>
-                        </div>
-                     </div>
 
                      <a class="carousel-control-prev" href="#secondCarousel" role="button" data-slide="prev">
                         <span class="carousel-control-next-icon" aria-hidden="true">&lt;
@@ -350,6 +319,7 @@
             </section>
          {% endfor %}
         
+        <div class="spacer-2"></div> 
         <!-- Dropdown UI -->
         <div class="row my-4 justify-content-center">
             <div class="dropdown">
@@ -365,6 +335,13 @@
             </div>
         </div>
     </div>
+
+    <!-- FOOTER -->
+    <footer class="container">
+        <p>© Pabutools. · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Privacy</a> · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Terms</a></p>
+      </footer>
+
+    </main>
     <!-- Bootstrap JS and its dependencies -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
