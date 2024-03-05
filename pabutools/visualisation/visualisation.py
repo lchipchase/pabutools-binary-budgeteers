@@ -47,8 +47,8 @@ class MESVisualiser(Visualiser):
                     pie_chart_items.append(pie_chart_item)
 
             pie_chart_items = sorted(pie_chart_items, key=lambda x: x["roundVoters"], reverse=True)
-            if len(pie_chart_items) > 3:
-                pie_chart_items = pie_chart_items[:3]
+            # if len(pie_chart_items) > 3:
+            #     pie_chart_items = pie_chart_items[:3]
             round["pie_chart_items"] = [pie_chart_items]
 
     def _calculate(self):

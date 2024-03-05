@@ -56,16 +56,6 @@
             height: 100%;
         }
         
-        #myChordChart {
-            height: 100%;
-            width: 100%;
-        }
-        
-        #myBarChart1,
-        #myStackedBarChart1 {
-            height: 100%;
-            width: 100%;
-        }
         /* zing-grid[loading] {
             height: 800px;
             width: 100%;
@@ -109,6 +99,7 @@
         .upper-page{
             background-color: gray;
             color: white;
+            
         }
     </style>
 </head>
@@ -142,9 +133,9 @@
 
     <main role="main">
 
-        <div class="container">
+        <div class="container-fluid upper-page">
             <!-- General Explanations -->
-            <div class="upper-page">
+            <div class="container">
                 <div class="spacer-2"></div>
                 <div class="spacer-2"></div>
 
@@ -163,6 +154,8 @@
                 </div>
                 <div class="spacer-1"></div>
             </div>
+        </div>
+        <div class="container">
             <div class="spacer-1"></div>
             <hr>
             <div class="spacer-1"></div>
@@ -171,6 +164,7 @@
             <!-- Round specific visualisations -->
             {% for round in rounds %}
                 <section id="{{round.id}}" class="{% if loop.index != 1 %}hidden-section{% endif %}">
+
                     <!-- Effective Vote Count -->
                     <div class="row featurette">
                         <div class="col-5">
@@ -182,7 +176,7 @@
                                 <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Effective Vote Count:</b><br> For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">i</button>
                             </div>
                         </div>
-                      </div>
+                    </div>
 
                     <div class="spacer-1"></div>
                     <hr>
@@ -269,16 +263,15 @@
                     <div class="spacer-1"></div>
 
                     <!-- Reduced Effective Vote Count Graph (Centred Div) -->
-                    <div class="row">
-                        <div class="col-2">
+                    <div class="row featurette">
+                        <div class="col-5">
+                          <h2 class="featurette-heading">Reduce Effective Vote Count</h2>
+                          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
                         </div>
-                        <div class="col-8 container" style="height: 300px;">
+                        <div class="col-7" style="min-height: 400px;">
                             <div id="{{ round.id }}AfterRoundBarChart" style="height: 100%; width: 100%;" >
                                 <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Reduced Effective Vote Count</b><br>Voters who still have money left but not enough money to pay for the project when its cost is equally divided will count as a fraction. We do not count voters if they have already spent their entire budget share. This graph visualises the current vote count after some of the voters' budgets have already been allocated against original vote count for the project.">i</button>
                             </div>
-                        </div>
-                        <div class="col-2">
-
                         </div>
                     </div>
                 </section>
@@ -302,6 +295,7 @@
                 </div>
             </div>
         </div>
+
         <div class="spacer-1"></div>
         <hr>
         <div class="spacer-1"></div>
@@ -339,7 +333,7 @@
         var roundId = element.getAttribute("data-round-id"); // Ensure your round button has a data-round-id attribute
         if (!renderedCharts[roundId]) {
             // If not, render the chart
-            renderChart(roundId);
+            renderChordChart(roundId);
             renderedCharts[roundId] = true; // Mark this round's chart as rendered
         } else {
             // Optional: Handle cases where the chart is already rendered (e.g., re-render, show/hide, etc.)
@@ -387,7 +381,11 @@
         {% endfor %}
     </script>
     <script>
+        counter = 0;
         function renderChordChart(roundId) {
+            counter++;
+            console.log(chord_chart_dictionary[roundId]);
+            console.log(counter);
             zingchart.render({
                 id: roundId + 'ChordChart',
                 data: {
@@ -433,7 +431,8 @@
                   "scale-y": {
                      "title": {
                         "text": "Number of Votes"
-                     }
+                     },
+                     "items-overlap": true,
                   },
                   "series": [{
                      "values": {{ round.effective_vote_count.values() | list }}, // Current votes values
