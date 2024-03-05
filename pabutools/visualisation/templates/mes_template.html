@@ -76,8 +76,22 @@
             text-align: center;
         }
 
-        #info {
-            cursor: pointer; /* Indicates interactivity */
+        .info-button {
+            padding: 12px 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            text-align: center;
+            line-height: 1; /* Align the icon vertically */
+            display: inline-block;
+        }
+
+        /* Optional: add a hover effect */
+        .info-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -158,10 +172,11 @@
                   <div class="row mb-3 ">
                      <div class="col-3"></div>
                      
-                     <div class="col-6" style="height: 300px;">
-                        <div id="{{ round.id }}BarChart" style="height: 100%; width: 100%;" data-tippy-content= "<b>Effective Vote Count:</b><br> For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">
-
+                     <div class="col-6" style="height: 500px;">
+                        <div id="{{ round.id }}BarChart" style="height: 60%; width: 100%;">
+                            <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Effective Vote Count:</b><br> For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">i</button>
                         </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
                      </div>
                      <div class="col-3"></div>
@@ -170,17 +185,21 @@
 
                   <!-- Sankey and Chord side by side -->
                   <div class="row" style="display: grid;">
-                     <h5 style="text-align: center; font-weight: bold;">{{ round.name }} Voter Flows</h5>
+                     <h5 style="text-align: center; font-weight: bold;">'{{ round.name }}' Voter Flows</h5>
                   </div>
                   <div class="row">
                      <div class="col-5" style="display: grid;">
-                        <div class="d-flex align-items-center justify-content-center" data-tippy-content="<b>Sankey Diagram</b><br>The provided Sankey diagram offers a visual representation of voting patterns among a set of participants with the option to vote for multiple projects. The individual bands flowing from this singular left bar to various bars on the right-hand side illustrate the distribution of voters who have also voted for other projects. Each band's thickness corresponds to the number of voters who voted for both the project on the left and the project on the right. The graph is designed to show the overlap in voting behaviour, making it clear which projects share a common voter base with the project displayed on the right-hand side. ">
-                              <div id="{{ round.id }}SankeyChart"></div>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <button class = "info-button" style = "position: absolute; z-index: 2000; left: 10px; top: 30px" data-tippy-content="<b>Sankey Diagram</b><br>The provided Sankey diagram offers a visual representation of voting patterns among a set of participants with the option to vote for multiple projects. The individual bands flowing from this singular left bar to various bars on the right-hand side illustrate the distribution of voters who have also voted for other projects. Each band's thickness corresponds to the number of voters who voted for both the project on the left and the project on the right. The graph is designed to show the overlap in voting behaviour, making it clear which projects share a common voter base with the project displayed on the right-hand side.">i</button>
+                              <div id="{{ round.id }}SankeyChart">
+
+                              </div>
                         </div>
                      </div>
 
                      <div class="col-2"></div>
-                     <div class="col-5 chord-wrapper" data-tippy-content="<b>Chord Diagram:</b><br> The chord diagram shows the voter flows between the project selected this round {{ round.id }}. Due to the nature of MES, if a project is selected, the voters who voted for it will have a reduction in their budget. Therefore, showing how {{ round.id }} voters’ voted shows which other projects will have had their support cut. ">
+                     <div class="col-5 chord-wrapper"">
+                        <button class = "info-button" style = "position: absolute; z-index: 2000; right: 10px; top: 30px" data-tippy-content="<b>Chord Diagram:</b><br> The chord diagram shows the voter flows between the project selected this round {{ round.id }}. Due to the nature of MES, if a project is selected, the voters who voted for it will have a reduction in their budget. Therefore, showing how {{ round.id }} voters’ voted shows which other projects will have had their support cut.">i</button>
                         <div id='{{ round.id }}ChordChart'></div>
 
                      </div>
@@ -189,7 +208,9 @@
 
                   <!-- Pie Charts Carousels -->
                   <div id="secondCarousel" style="height: 500px;" class="carousel slide mb-3 border-black" data-ride="carousel" data-interval="false">
-                     <div class="carousel-inner carousel-inner-pie" style="height: 500px;" >
+                    <button class = "info-button" style = "position: absolute; z-index: 2000; right: 30px; top: 30px" data-tippy-content="<b>Pie Chart:</b><br> TODO">i</button>
+                         
+                    <div class="carousel-inner carousel-inner-pie" style="height: 500px;" >
                     
                         {% for triplet in round.pie_chart_items%}
                             {% set carouselNum = loop.index %}
@@ -213,7 +234,7 @@
                                                     </div>
                                                     <div class="spacer"></div>
                                                     <div class="border-black ">
-                                                        This resulted in an average reduction of $ per voter for the {{ data.project }} voters who also voted for {{ round.name }}.
+                                                        This resulted in an average reduction of $ per voter for the '{{ data.project }}' voters who also voted for '{{ round.name }}'.
                                                     </div>
                                                 </div>
                                             {% endfor %}
@@ -318,7 +339,9 @@
                      <div class="col-2">
                      </div>
                      <div class="col-8 container" style="height: 300px;">
-                        <div id="{{ round.id }}AfterRoundBarChart" style="height: 100%; width: 100%;" data-tippy-content= "<b>Reduced Effective Vote Count</b><br>Voters who still have money left but not enough money to pay for the project when its cost is equally divided will count as a fraction. We do not count voters if they have already spent their entire budget share. This graph visualises the current vote count after some of the voters' budgets have already been allocated against original vote count for the project. "></div>
+                        <div id="{{ round.id }}AfterRoundBarChart" style="height: 100%; width: 100%;" >
+                            <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Reduced Effective Vote Count</b><br>Voters who still have money left but not enough money to pay for the project when its cost is equally divided will count as a fraction. We do not count voters if they have already spent their entire budget share. This graph visualises the current vote count after some of the voters' budgets have already been allocated against original vote count for the project.">i</button>
+                        </div>
                      </div>
                      <div class="col-2">
 
@@ -335,7 +358,7 @@
                </button>
                 <div class="dropdown-menu" aria-labelledby="projectDropdown">
                   {% for round in rounds %}
-                     <a class="dropdown-item {% if loop.index == 1 %}active{% endif %}" item="{{ round.id }}" onclick="onClickDropdown(this)">{{ round.name }}</a>
+                     <a class="dropdown-item {% if loop.index == 1 %}active{% endif %}" item="{{ round.id }}" onclick="onClickDropdown(this)">'{{ round.name }}'</a>
                   {% endfor %}
    
                 </div>
@@ -444,38 +467,8 @@
                   data: {
                   "type": "hbar",
                   "title": {
-                     "text": "Effective Vote Count (Winner: {{ round.name }})"
+                     "text": "Effective Vote Count (Winner: '{{ round.name }}')"
                   },
-                  shapes: [
-                    {
-                        "type": "circle",
-                        "background-color": "#5297b6",
-                        "size": 20,
-                        "x": 35,
-                        "y": 25,
-                        "tooltip": {
-                            "text": "For a vote to count towards a project, the person who made the vote <br> must have some of their budget remaining so they can contribute <br> towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their <br> entire budget on previous projects, the effective vote count will be 15. <br> This graph shows the effective vote counts for all projects.",
-                            // "text" : function(p) {
-                            //     const tooltipText = "For a vote to count towards a project, the person who made the vote <br> must have some of their budget remaining so they can contribute <br> towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their <br> entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all <br >projects.";
-                            //     return insertLineBreaks(tooltipText, 20); // Adjust the maxChars parameter as needed
-                            // },
-                            "background-color": "white",
-                            "font-color": "gray",
-                            "font-family": "Georgia",
-                            "background-color": "white",
-                            "border-color": "gray",
-                            "border-width": 1,
-                            "line-style": "dotted",
-                            "padding": "15%",
-                        },
-                        label: {
-                            text: 'i', // Text inside the shape
-                            fontSize: 28,
-                            fontWeight: 'bold',
-                            fontColor: '#fff'
-                        }
-                      }
-                ],
                   "scale-x": {
                     
                      "labels": {{ round.effective_vote_count.keys() | list }}, // Label that identifies each project in the round
@@ -531,59 +524,6 @@
             id: '{{round.id}}AfterRoundBarChart',
             data: {
             "type": "hbar",
-            gui: {
-                contextMenu: {
-                    button: {
-                    visible: true,
-                    lineColor: "#2D66A4",
-                    backgroundColor: "#2D66A4"
-                    },
-                    gear: {
-                    alpha: 1,
-                    backgroundColor: "#2D66A4"
-                    },
-                    position: "right",
-                    backgroundColor: "#306EAA",
-                    /*sets background for entire contextMenu*/
-                    docked: true,
-                    item: {
-                    backgroundColor: "#306EAA",
-                    borderColor: "#306EAA",
-                    borderWidth: 0,
-                    fontFamily: "Lato",
-                    color: "#fff"
-                    }
-                }
-            },
-            shapes: [
-                {
-                    "type": "circle",
-                    "background-color": "#5297b6",
-                    "size": 20,
-                    "x": 35,
-                    "y": 25,
-                    "tooltip": {
-                        "text": "Voters who still have money left but not enough money to pay for the project when <br> its cost is equally divided will count as a fraction. We do not count voters if they <br> have already spent their entire budget share. This graph visualises the current vote <br> count after some of the voters' budgets have already been allocated against the  <br> original vote count for the project. ",
-                        "background-color": "white",
-                        "font-color": "gray",
-                        "font-family": "Georgia",
-                        "background-color": "white",
-                        "border-color": "gray",
-                        "border-width": 1,
-                        "line-style": "dotted",
-                        "padding": "15%",
-                        //with sticky tooltip feature
-                        "sticky": true,
-                        "timeout": 30000,
-                    },
-                    label: {
-                        text: 'i', // Text inside the shape
-                        fontSize: 28,
-                        fontWeight: 'bold',
-                        fontColor: '#fff'
-                    }
-                  }
-            ],
             "stacked": true,
             "title": {
                 "text": "Reduced Effective Vote Count {% if loop.index in range(rounds|length) %} (Next Winner: {{ rounds[loop.index].name }}) {% endif %}",
@@ -712,7 +652,7 @@
                     var myConfig = {
                         "type": "pie",
                         "title": {
-                            "text": "{{ data.project}} Voters"
+                            "text": "'{{ data.project}}' Voters"
                         },
                         "legend": {
                             "toggle-action": "remove",
@@ -737,10 +677,10 @@
                         },
                         "series": [{
                             "values": [{{ data.roundVoters }}],
-                            "text": "{{ round.name }} Voters",
+                            "text": "'{{ round.name }}' Voters",
                         }, {
                             "values": [{{ data.nonRoundVoters }}],
-                            "text": "Non {{ round.name }} Voters",
+                            "text": "Non '{{ round.name }}' Voters",
                         }]
                     };
 
