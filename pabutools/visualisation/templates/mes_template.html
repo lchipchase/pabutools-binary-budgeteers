@@ -93,7 +93,12 @@
         .info-button:hover {
             background-color: #0056b3;
         }
-
+        .spacer-8{
+            padding: 8rem;
+        }
+        .spacer-4{
+            padding: 4rem;
+        }
         .spacer-2{
             padding: 2rem;
         }
@@ -111,19 +116,21 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-          <a class="navbar-brand" href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Pabutools</a>
+          <a class="navbar-brand" href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Summary</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
               <li class="nav-item active">
-                <a class="nav-link" href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Pabutools <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Round By Round <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Pabutools</a>
               </li>
               <li class="nav-item">
+                <a class="nav-link" href="https://getbootstrap.com/docs/4.0/examples/carousel/#">MES</a>
+              </li>
             </ul>
             <form class="form-inline mt-2 mt-md-0" data-dashlane-rid="586d21bb200ad9fc" data-form-type="">
               <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" data-dashlane-rid="ebb02837c4029767" data-form-type="">
@@ -134,212 +141,175 @@
       </header>
 
     <main role="main">
-    
-    
 
-    <div class="container my-4">
-        <!-- General Explanations -->
-        <div class="upper-page">
-            <div class="spacer-2"></div>
-            <div class="row mb-3">
-                <div class="col-12  justify-content-center">
-                    <h1>
-                        {{ election_name }}
-                    </h1>
+        <div class="container">
+            <!-- General Explanations -->
+            <div class="upper-page">
+                <div class="spacer-2"></div>
+                <div class="spacer-2"></div>
+
+                <div class="row mb-3">
+                    <div class="col-12  justify-content-center">
+                        <h1>
+                            {{ election_name }}
+                        </h1>
+                        <div class="spacer-1"><hr></div>
+                        <p>
+                            This is the round-by-round explanations for the results of this participatory budgeting election decided by the Method of Equal Shares (MES). For each round,
+                            we provide visualisations to help you understand why each particular project was selected or not. The visualisations include effective vote counts, voter flows, and pie charts.
+                            If you hover over the 'i' buttons, you will see more detailed explanations of each visualisation.
+                        </p>
+                    </div>
                 </div>
+                <div class="spacer-1"></div>
             </div>
-        <div class="spacer-1"></div>
-            <!-- Carousel for general graphs -->
-        <div id="carouselExampleControls" class="carousel slide mb-3" data-ride="carousel" data-interval="false">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="d-block w-100 justify-content-center" style="height:200px;">
-                        <!-- Fix issue where extra comma appears on final item in list. -->
-                        <p>
-                            {{ election_name}} had a total of {{ total_votes }} voters participating.<br>
-                            Between these voters there was a total of ${{ budget }} available, of which ${{ spent }} was spent.<br>
+            <div class="spacer-1"></div>
+            <hr>
+            <div class="spacer-1"></div>
+            
 
-                            <!-- {% for project in projects %}
-                                {{ project.name}}: {{project.totalvotes}} votes,
-                            {% endfor %}
-                            <br> -->
-
-                            In total, there were {{ number_of_elected_projects }} projects elected, and {{ number_of_unelected_projects }} projects not elected.<br>
-                            The elected projects were:<br>
-                            {% for project in projects %}
-                                {{ project.name}},
-                            {% endfor %}
-                            <br>
-
-                        </p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="d-block w-100 justify-content-center" style="height:200px;">
-                        <p>
-                            The projects and their descriptions are as follows:<br>
-                            {% for project in projects %}
-                                {{ project.name}}: {{ project.description}},
-                            {% endfor %}
-                        </p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="d-block w-100 justify-content-center" style="height:200px;">
-                        <p>
-                            {% set voter_budget = budget / total_votes %}
-                            Each of the voters had a budget of ${{ voter_budget }} to allocate to the projects.
-                            The projects were elected using the Method of Equal Shares, where the total budget is virtually divided equally among the voters.
-                            The following web-page outlines the process of the election and the step by step process of how each project was chosen.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true">
-            </span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
-
-
-        </div>
-        
-
-        <!-- Round specific visualisations -->
-         {% for round in rounds %}
-            <section id="{{round.id}}" class="{% if loop.index != 1 %}hidden-section{% endif %}">
-                  <!-- Effective Vote Count -->
-                  <div class="row mb-3 ">
-                     <div class="col-3"></div>
-                     
-                     <div class="col-6" style="height: 500px;">
-                        <div id="{{ round.id }}BarChart" style="height: 60%; width: 100%;">
-                            <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Effective Vote Count:</b><br> For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">i</button>
+            <!-- Round specific visualisations -->
+            {% for round in rounds %}
+                <section id="{{round.id}}" class="{% if loop.index != 1 %}hidden-section{% endif %}">
+                    <!-- Effective Vote Count -->
+                    <div class="row featurette">
+                        <div class="col-5">
+                          <h2 class="featurette-heading">Effective Vote Count</h2>
+                          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
                         </div>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-                     </div>
-                     <div class="col-3"></div>
-
-                  </div>
-
-                  <!-- Sankey and Chord side by side -->
-                  <div class="row" style="display: grid;">
-                     <h5 style="text-align: center; font-weight: bold;">'{{ round.name }}' Voter Flows</h5>
-                  </div>
-                  <div class="row">
-                     <div class="col-5" style="display: grid;">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <button class = "info-button" style = "position: absolute; z-index: 2000; left: 10px; top: 30px" data-tippy-content="<b>Sankey Diagram</b><br>The provided Sankey diagram offers a visual representation of voting patterns among a set of participants with the option to vote for multiple projects. The individual bands flowing from this singular left bar to various bars on the right-hand side illustrate the distribution of voters who have also voted for other projects. Each band's thickness corresponds to the number of voters who voted for both the project on the left and the project on the right. The graph is designed to show the overlap in voting behaviour, making it clear which projects share a common voter base with the project displayed on the right-hand side.">i</button>
-                              <div id="{{ round.id }}SankeyChart">
-
-                              </div>
+                        <div class="col-7" style="min-height: 400px;">
+                            <div id="{{ round.id }}BarChart" style="height: 100%; width: 100%;">
+                                <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Effective Vote Count:</b><br> For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">i</button>
+                            </div>
                         </div>
-                     </div>
+                      </div>
 
-                     <div class="col-2"></div>
-                     <div class="col-5 chord-wrapper"">
-                        <button class = "info-button" style = "position: absolute; z-index: 2000; right: 10px; top: 30px" data-tippy-content="<b>Chord Diagram:</b><br> The chord diagram shows the voter flows between the project selected this round {{ round.id }}. Due to the nature of MES, if a project is selected, the voters who voted for it will have a reduction in their budget. Therefore, showing how {{ round.id }} voters’ voted shows which other projects will have had their support cut.">i</button>
-                        <div id='{{ round.id }}ChordChart'></div>
+                    <div class="spacer-1"></div>
+                    <hr>
+                    <div class="spacer-1"></div>
 
-                     </div>
-                  </div>
-                  <div class="spacer"></div>
+                    <!-- Sankey and Chord side by side -->
+                    <div class="row" style="display: grid;">
+                        <h5 style="text-align: center; font-weight: bold;">'{{ round.name }}' Voter Flows</h5>
+                    </div>
+                    <div class="row">
+                        <div class="col-5" style="display: grid;">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <button class = "info-button" style = "position: absolute; z-index: 2000; left: 10px; top: 30px" data-tippy-content="<b>Sankey Diagram</b><br>The provided Sankey diagram offers a visual representation of voting patterns among a set of participants with the option to vote for multiple projects. The individual bands flowing from this singular left bar to various bars on the right-hand side illustrate the distribution of voters who have also voted for other projects. Each band's thickness corresponds to the number of voters who voted for both the project on the left and the project on the right. The graph is designed to show the overlap in voting behaviour, making it clear which projects share a common voter base with the project displayed on the right-hand side.">i</button>
+                                <div id="{{ round.id }}SankeyChart">
 
-                  <!-- Pie Charts Carousels -->
-                  <div id="secondCarousel" style="height: 500px;" class="carousel slide mb-3 border-black" data-ride="carousel" data-interval="false">
-                    <button class = "info-button" style = "position: absolute; z-index: 2000; right: 30px; top: 30px" data-tippy-content="<b>Pie Chart:</b><br> TODO">i</button>
-                         
-                    <div class="carousel-inner carousel-inner-pie" style="height: 500px;" >
-                    
-                        {% for triplet in round.pie_chart_items%}
-                            {% set carouselNum = loop.index %}
-                            {% set carouselClass = "carousel-item" %}
+                                </div>
+                            </div>
+                        </div>
 
-                            {% if loop.first %}
-                                {% set carouselClass = "carousel-item active" %}
-                            {% endif %}
+                        <div class="col-2"></div>
+                        <div class="col-5 chord-wrapper"">
+                            <button class = "info-button" style = "position: absolute; z-index: 2000; right: 10px; top: 30px" data-tippy-content="<b>Chord Diagram:</b><br> The chord diagram shows the voter flows between the project selected this round {{ round.id }}. Due to the nature of MES, if a project is selected, the voters who voted for it will have a reduction in their budget. Therefore, showing how {{ round.id }} voters’ voted shows which other projects will have had their support cut.">i</button>
+                            <div id='{{ round.id }}ChordChart'></div>
 
-                            <div class="{{ carouselClass }}">
-                                <div class="wrapper" style="height:300px">
-                                    <div class="d-block w-100">
-                                        <div class="row">
+                        </div>
+                    </div>
+                    <div class="spacer-1"></div>
+                    <hr>
+                    <div class="spacer-1"></div>
 
-                                            <!-- Single Pie Chart Carousel -->
-                                            {% for data in triplet%}
-                                                <!-- Individual Pie Chart -->
-                                                <div class="col-md-4 nested">
-                                                    <div>
-                                                        <div id='{{ round.id }}PieChart{{ carouselNum }}-{{ loop.index }}'></div>
+                    <!-- Pie Charts Carousels -->
+                    <div id="secondCarousel" style="height: 500px;" class="carousel slide mb-3 border-black" data-ride="carousel" data-interval="false">
+                        <button class = "info-button" style = "position: absolute; z-index: 2000; right: 30px; top: 30px" data-tippy-content="<b>Pie Chart:</b><br> TODO">i</button>
+                            
+                        <div class="carousel-inner carousel-inner-pie" style="height: 500px;" >
+                        
+                            {% for triplet in round.pie_chart_items%}
+                                {% set carouselNum = loop.index %}
+                                {% set carouselClass = "carousel-item" %}
+
+                                {% if loop.first %}
+                                    {% set carouselClass = "carousel-item active" %}
+                                {% endif %}
+
+                                <div class="{{ carouselClass }}">
+                                    <div class="wrapper" style="height:300px">
+                                        <div class="d-block w-100">
+                                            <div class="row">
+
+                                                <!-- Single Pie Chart Carousel -->
+                                                {% for data in triplet%}
+                                                    <!-- Individual Pie Chart -->
+                                                    <div class="col-md-4 nested">
+                                                        <div>
+                                                            <div id='{{ round.id }}PieChart{{ carouselNum }}-{{ loop.index }}'></div>
+                                                        </div>
+                                                        <div class="spacer"></div>
+                                                        <div class="border-black ">
+                                                            This resulted in an average reduction of $ per voter for the '{{ data.project }}' voters who also voted for '{{ round.name }}'.
+                                                        </div>
                                                     </div>
-                                                    <div class="spacer"></div>
-                                                    <div class="border-black ">
-                                                        This resulted in an average reduction of $ per voter for the '{{ data.project }}' voters who also voted for '{{ round.name }}'.
-                                                    </div>
-                                                </div>
-                                            {% endfor %}
+                                                {% endfor %}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
 
 
 
-                     <a class="carousel-control-prev" href="#secondCarousel" role="button" data-slide="prev">
-                        <span class="carousel-control-next-icon" aria-hidden="true">&lt;
-                     </span>
-                        <span class="sr-only">Previous</span>
-                     </a>
-                     <a class="carousel-control-next" href="#secondCarousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true">&gt;
-                     </span>
-                        <span class="sr-only">Next</span>
-                     </a>
-                  </div>
+                        <a class="carousel-control-prev" href="#secondCarousel" role="button" data-slide="prev">
+                            <span class="carousel-control-next-icon" aria-hidden="true">&lt;
+                        </span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#secondCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true">&gt;
+                        </span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <div class="spacer-1"></div>
+                    <hr>
+                    <div class="spacer-1"></div>
 
-                  <!-- Reduced Effective Vote Count Graph (Centred Div) -->
-                  <div class="row">
-                     <div class="col-2">
-                     </div>
-                     <div class="col-8 container" style="height: 300px;">
-                        <div id="{{ round.id }}AfterRoundBarChart" style="height: 100%; width: 100%;" >
-                            <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Reduced Effective Vote Count</b><br>Voters who still have money left but not enough money to pay for the project when its cost is equally divided will count as a fraction. We do not count voters if they have already spent their entire budget share. This graph visualises the current vote count after some of the voters' budgets have already been allocated against original vote count for the project.">i</button>
+                    <!-- Reduced Effective Vote Count Graph (Centred Div) -->
+                    <div class="row">
+                        <div class="col-2">
                         </div>
-                     </div>
-                     <div class="col-2">
+                        <div class="col-8 container" style="height: 300px;">
+                            <div id="{{ round.id }}AfterRoundBarChart" style="height: 100%; width: 100%;" >
+                                <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Reduced Effective Vote Count</b><br>Voters who still have money left but not enough money to pay for the project when its cost is equally divided will count as a fraction. We do not count voters if they have already spent their entire budget share. This graph visualises the current vote count after some of the voters' budgets have already been allocated against original vote count for the project.">i</button>
+                            </div>
+                        </div>
+                        <div class="col-2">
 
-                     </div>
-                  </div>
-            </section>
-         {% endfor %}
-        
-        <div class="spacer-2"></div> 
-        <!-- Dropdown UI -->
-        <div class="row my-4 justify-content-center">
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="projectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  {{ rounds[0].name }}
-               </button>
-                <div class="dropdown-menu" aria-labelledby="projectDropdown">
-                  {% for round in rounds %}
-                     <a class="dropdown-item {% if loop.index == 1 %}active{% endif %}" item="{{ round.id }}" onclick="onClickDropdown(this)">'{{ round.name }}'</a>
-                  {% endfor %}
-   
+                        </div>
+                    </div>
+                </section>
+            {% endfor %}
+            
+            <div class="spacer-8"></div>
+            <div class="spacer-8"></div>
+
+            <!-- Dropdown UI -->
+            <div class="row my-4 justify-content-center">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="projectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ rounds[0].name }}
+                </button>
+                    <div class="dropdown-menu" aria-labelledby="projectDropdown">
+                    {% for round in rounds %}
+                        <a class="dropdown-item {% if loop.index == 1 %}active{% endif %}" item="{{ round.id }}" onclick="onClickDropdown(this)">'{{ round.name }}'</a>
+                    {% endfor %}
+    
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="spacer-1"></div>
+        <hr>
+        <div class="spacer-1"></div>
 
-    <!-- FOOTER -->
-    <footer class="container">
-        <p>© Pabutools. · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Privacy</a> · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Terms</a></p>
-      </footer>
+        <!-- FOOTER -->
+        <footer class="container">
+            <p>© Pabutools. · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Privacy</a> · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Terms</a></p>
+        </footer>
 
     </main>
     <!-- Bootstrap JS and its dependencies -->
