@@ -84,12 +84,33 @@
 
         .carousel-control-prev{
             background-color: gray;
+            width: 20px;
         }
 
         .carousel-control-next{
             background-color: gray;
+            width: 20px;
         }
 
+        .carousel-inner{
+            margin: 20px;
+        }
+
+        .pie-chart-text {
+            background-color: #f0f0f0; /* Light grey background */
+            border-radius: 15px; /* Rounded corners */
+            padding: 20px; /* Space inside the box */
+            max-width: 600px; /* Maximum width of the div */
+            margin: 20px auto; /* Centering the div */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            font-family: 'Arial', sans-serif; /* Font style */
+            line-height: 1.6; /* Line spacing */
+        }
+
+        .pie-chart-text p {
+            color: #333; /* Dark grey text color */
+            font-size: 16px; /* Size of the text */
+        }
     
 
     </style>
@@ -199,10 +220,10 @@
                     <div class="spacer-1"></div>
 
                     <!-- Pie Charts Carousels -->
-                    <div id="secondCarousel-{{round.id}}" style="height: 500px;" class="carousel slide" data-ride="carousel" data-interval="false">
+                    <div id="secondCarousel-{{round.id}}" style="height: 500px; width: 100%;" class="carousel slide" data-ride="carousel" data-interval="false">
                         <button class = "info-button" style = "position: absolute; z-index: 2000; right: 30px; top: 30px" data-tippy-content="<b>Pie Chart:</b><br> TODO">i</button>
                             
-                        <div class="carousel-inner" style="height: 500px;" >
+                        <div class="carousel-inner" style="height: 500px; width: calc(100% - 40px);" >
                            
                             {% for triplet in round.pie_chart_triplet %}
                                 {% set carouselNum = loop.index %}
@@ -214,18 +235,20 @@
 
                                 <div class="{{ carouselClass }}">
                                     <div class="wrapper" style="height:300px">
-                                        <div class="d-block w-100">
-                                            <div class="row">
+                                        <!-- <div class="d-block w-100"> -->
+                                        <div class="container"> 
+                                            <div class="row" style = "width: 100%; padding: 0px;">
 
                                                 <!-- Single Pie Chart Carousel -->
                                                 {% for data in triplet%}
                                                     <!-- Individual Pie Chart -->
-                                                    <div class="col-md-4 nested">
+                                                    <div class="col-sm-4" style = "margin: 0px">
                                                         <div>
                                                             <div id='{{ round.id }}PieChart{{ carouselNum }}-{{ loop.index }}' style="height: 100%; width: 100%;"></div>
                                                         </div>
                                                         <div class="spacer"></div>
-                                                        <div class="border-black ">
+                                                        <div class="pie-chart-text">
+                                                            <!-- TODO: What does this mean??? -->
                                                             This resulted in an average reduction of $ per voter for the '{{ data.project }}' voters who also voted for '{{ round.name }}'.
                                                         </div>
                                                     </div>
