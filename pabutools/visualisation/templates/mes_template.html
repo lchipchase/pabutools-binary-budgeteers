@@ -82,6 +82,14 @@
             color: white;
         }
 
+        .carousel-control-prev{
+            background-color: gray;
+        }
+
+        .carousel-control-next{
+            background-color: gray;
+        }
+
     
 
     </style>
@@ -191,7 +199,7 @@
                     <div class="spacer-1"></div>
 
                     <!-- Pie Charts Carousels -->
-                    <div id="secondCarousel" style="height: 500px;" class="carousel slide" data-ride="carousel" data-interval="false">
+                    <div id="secondCarousel-{{round.id}}" style="height: 500px;" class="carousel slide" data-ride="carousel" data-interval="false">
                         <button class = "info-button" style = "position: absolute; z-index: 2000; right: 30px; top: 30px" data-tippy-content="<b>Pie Chart:</b><br> TODO">i</button>
                             
                         <div class="carousel-inner" style="height: 500px;" >
@@ -229,11 +237,11 @@
                             {% endfor %}
                         </div>
 
-                        <a class="carousel-control-prev" href="#secondCarousel" role="button" data-slide="prev">
+                        <a class="carousel-control-prev" href="#secondCarousel-{{round.id}}" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
                           </a>
-                          <a class="carousel-control-next" href="#secondCarousel" role="button" data-slide="next">
+                          <a class="carousel-control-next" href="#secondCarousel-{{round.id}}" role="button" data-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="sr-only">Next</span>
                           </a>
