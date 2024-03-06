@@ -29,25 +29,6 @@
             padding: 1rem;
         }
         
-        .carousel-control-prev-icon,
-        .carousel-control-next-icon {
-            font-size: 24px;
-            /* Adjust the size as needed */
-            color: black;
-            /* Adjust the color as needed */
-        }
-        
-        .carousel-inner {
-            padding: 1rem;
-            padding-left: 7rem;
-            padding-right: 7rem;
-        }
-        
-        .carousel-inner-pie {
-            padding-top: 0.5rem;
-            height: 400px;
-        }
-        
         .hidden-section {
             display: none;
         }
@@ -99,8 +80,10 @@
         .upper-page{
             background-color: gray;
             color: white;
-            
         }
+
+    
+
     </style>
 </head>
 
@@ -208,12 +191,12 @@
                     <div class="spacer-1"></div>
 
                     <!-- Pie Charts Carousels -->
-                    <div id="secondCarousel" style="height: 500px;" class="carousel slide mb-3 border-black" data-ride="carousel" data-interval="false">
+                    <div id="secondCarousel" style="height: 500px;" class="carousel slide" data-ride="carousel" data-interval="false">
                         <button class = "info-button" style = "position: absolute; z-index: 2000; right: 30px; top: 30px" data-tippy-content="<b>Pie Chart:</b><br> TODO">i</button>
                             
-                        <div class="carousel-inner carousel-inner-pie" style="height: 500px;" >
-                        
-                            {% for triplet in round.pie_chart_items%}
+                        <div class="carousel-inner" style="height: 500px;" >
+                           
+                            {% for triplet in round.pie_chart_triplet %}
                                 {% set carouselNum = loop.index %}
                                 {% set carouselClass = "carousel-item" %}
 
@@ -231,7 +214,7 @@
                                                     <!-- Individual Pie Chart -->
                                                     <div class="col-md-4 nested">
                                                         <div>
-                                                            <div id='{{ round.id }}PieChart{{ carouselNum }}-{{ loop.index }}'></div>
+                                                            <div id='{{ round.id }}PieChart{{ carouselNum }}-{{ loop.index }}' style="height: 100%; width: 100%;"></div>
                                                         </div>
                                                         <div class="spacer"></div>
                                                         <div class="border-black ">
@@ -244,20 +227,18 @@
                                     </div>
                                 </div>
                             {% endfor %}
-
-
+                        </div>
 
                         <a class="carousel-control-prev" href="#secondCarousel" role="button" data-slide="prev">
-                            <span class="carousel-control-next-icon" aria-hidden="true">&lt;
-                        </span>
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#secondCarousel" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true">&gt;
-                        </span>
+                          </a>
+                          <a class="carousel-control-next" href="#secondCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="sr-only">Next</span>
-                        </a>
+                          </a>
                     </div>
+                    
                     <div class="spacer-1"></div>
                     <hr>
                     <div class="spacer-1"></div>
@@ -589,7 +570,7 @@
             });
         </script>
         <!-- List of Pie Chart Carousels -->
-        {% for dataList in round.pie_chart_items%}
+        {% for dataList in round.pie_chart_triplet %}
             {% set carouselNum = loop.index %}
 
             <!-- Pie Chart Carousel -->

@@ -50,6 +50,7 @@ class MESVisualiser(Visualiser):
             # if len(pie_chart_items) > 3:
             #     pie_chart_items = pie_chart_items[:3]
             round["pie_chart_items"] = [pie_chart_items]
+            round["pie_chart_triplet"] = [pie_chart_items[i:i + 3] for i in range(0, len(pie_chart_items), 3)]
 
     def _calculate(self):
         del self.rounds[-1] # Remove the last round, as it is just empty
