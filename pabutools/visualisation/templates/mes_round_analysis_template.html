@@ -163,7 +163,7 @@
 
                     <!-- Sankey and Chord side by side -->
                     <div class="row" style="display: grid;">
-                        <h5 style="text-align: center; font-weight: bold;">'{{ projects[round.id]['name'][:15] }}' Voter Flows</h5>
+                        <h5 style="text-align: center; font-weight: bold;">'{{ projects[round.id]['name'] }}' Voter Flows</h5>
                     </div>
                     <div class="row">
                         <div class="col-5" style="display: grid;">
@@ -338,7 +338,7 @@
     <script>
         chord_chart_dictionary = {};
         {% for round in rounds %}
-            {% set project_name = projects[round.id]['name'][:15] %}
+            {% set project_name = projects[round.id]['name'] %}
             {% set selected_project = round.name %}
             {% set project_votes = round.voter_flow[selected_project] | dictsort(by='value', reverse=True) %}
             {% set top_projects = project_votes[:6] | map(attribute=0) | list %}
@@ -357,7 +357,7 @@
                         {{ round.voter_flow[projFrom].get(projFrom, 0) }},
                         {% endif %}
                     ],
-                    "text": "{{ projects[projFrom]['name'][:15]|replace('\"', '\\\"') }}"
+                    "text": "{{ projects[projFrom]['name']|replace('\"', '\\\"') }}"
                 },
                 {% endfor %}
                 {% if selected_project not in top_projects %}
@@ -404,7 +404,7 @@
                   data: {
                   "type": "hbar",
                   "title": {
-                     "text": "Effective Vote Count (Winner: '{{ projects[round.id]['name'][:15]|replace('\"', '\\\"')}}')"
+                     "text": "Effective Vote Count (Winner: '{{ projects[round.id]['name']|replace('\"', '\\\"')}}')"
                   },
                   "plotarea": {
                     "marginLeft":'dynamic',
@@ -413,7 +413,7 @@
                   "scaleX": {
                     "labels": [
                         {% for roundID in round.effective_vote_count.keys()%}
-                            '{{ projects[roundID]['name'][:15]|replace('\"', '\\\"') }}',
+                            '{{ projects[roundID]['name']|replace('\"', '\\\"') }}',
                         {% endfor %}
                     ], // Label that identifies each project in the round
                      "title": {
@@ -484,7 +484,7 @@
                 "type": "hbar",
                 "stacked": true,
                 "title": {
-                    "text": "Reduced Effective Vote Count {% if loop.index in range(rounds|length) %} (Next Winner: {{ projects[rounds[loop.index].id]['name'][:15]|replace('\"', '\\\"') }}) {% endif %}",
+                    "text": "Reduced Effective Vote Count {% if loop.index in range(rounds|length) %} (Next Winner: {{ projects[rounds[loop.index].id]['name']|replace('\"', '\\\"') }}) {% endif %}",
                     "adjust-layout": true,
                 },
                 "legend": {
@@ -521,7 +521,7 @@
                 "scale-x": {
                     "labels": [
                         {% for roundID in round.effective_vote_count_reduction.keys()%}
-                            '{{ projects[roundID]['name'][:15]|replace('\"', '\\\"') }}',
+                            '{{ projects[roundID]['name']|replace('\"', '\\\"') }}',
                         {% endfor %}
                     ], // Label that identifies each project in the round
                     "title": {
@@ -600,11 +600,11 @@
                     data.addRows([
                         {% for key, value in top_items %}
                             {% if key != round.id %}
-                                ['{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}', '{{ projects[key]['name'][:15]|replace('\"', '\\\"') }}', {{ value }}],
+                                ['{{ projects[round.id]['name']|replace('\"', '\\\"') }}', '{{ projects[key]['name']|replace('\"', '\\\"') }}', {{ value }}],
                             {% endif %}
                         {% endfor %}
                         {% if other_items %}
-                            ['{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}', 'Other', {{ other_total }}],
+                            ['{{ projects[round.id]['name']|replace('\"', '\\\"') }}', 'Other', {{ other_total }}],
                         {% endif %}
                     ])
 
@@ -633,7 +633,7 @@
                     var myConfig = {
                         "type": "pie",
                         "title": {
-                            "text": "'{{ projects[data.project]['name'][:15]|replace('\"', '\\\"')}}' Voters"
+                            "text": "'{{ projects[data.project]['name']|replace('\"', '\\\"')}}' Voters"
                         },
                         "legend": {
                             "toggle-action": "remove",
@@ -658,10 +658,10 @@
                         },
                         "series": [{
                             "values": [{{ data.roundVoters }}],
-                            "text": "'{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}' Voters",
+                            "text": "'{{ projects[round.id]['name']|replace('\"', '\\\"') }}' Voters",
                         }, {
                             "values": [{{ data.nonRoundVoters }}],
-                            "text": "Non '{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}' Voters",
+                            "text": "Non '{{ projects[round.id]['name']|replace('\"', '\\\"') }}' Voters",
                         }]
                     };
 
