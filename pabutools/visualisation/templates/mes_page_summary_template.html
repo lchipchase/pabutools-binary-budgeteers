@@ -470,16 +470,18 @@
                                         {% if loop.index0 < 3 %}
                                             <li>
                                                 <b>Project {{ rounds[r].id }} - {{ projects[rounds[r].id]["name"] }}:</b> {{ round.funding_lost_per_round[r] | int }} GBP
-                                                <hr style="width: {{ (round.funding_lost_per_round[r] / (round.initial_voter_funding - round.final_voter_funding)) * 100 }}&#37;;
-                                                    height: 10px;
-                                                    color: #f6c8c8;
-                                                    background-color: #f6c8c8;
-                                                    text-align: left;
-                                                    margin-left: 0;
-                                                    margin-right: 5px;
-                                                    margin-bottom: 7px;
-                                                    margin-top: 3px">
-                                                </hr>
+                                                {% if (round.initial_voter_funding - round.final_voter_funding) != 0 %}
+                                                    <hr style="width: {{ (round.funding_lost_per_round[r] / (round.initial_voter_funding - round.final_voter_funding)) * 100 }}&#37;;
+                                                        height: 10px;
+                                                        color: #f6c8c8;
+                                                        background-color: #f6c8c8;
+                                                        text-align: left;
+                                                        margin-left: 0;
+                                                        margin-right: 5px;
+                                                        margin-bottom: 7px;
+                                                        margin-top: 3px">
+                                                    </hr>
+                                                {% endif %}
                                             </li>
                                         {% endif %}
                                     {% endfor %}
@@ -544,15 +546,17 @@
                                     {% for r in round.funding_lost_per_round %}
                                         <li>
                                             <b>Project {{ rounds[r].id }} - {{ projects[rounds[r].id]["name"] }}:</b> {{ round.funding_lost_per_round[r] | int }} GBP
-                                            <hr style="width: {{ (round.funding_lost_per_round[r] / (round.initial_voter_funding - round.final_voter_funding))  * 100 }}&#37;;
-                                                        height: 10px;
-                                                        color: #f6c8c8;
-                                                        background-color: #f6c8c8;
-                                                        text-align: left;
-                                                        margin-left: 0;
-                                                        margin-right: 5px;
-                                                        margin-bottom: 7px;
-                                                        margin-top: 3px">
+                                            {% if (round.initial_voter_funding - round.final_voter_funding) != 0 %}
+                                                <hr style="width: {{ (round.funding_lost_per_round[r] / (round.initial_voter_funding - round.final_voter_funding))  * 100 }}&#37;;
+                                                            height: 10px;
+                                                            color: #f6c8c8;
+                                                            background-color: #f6c8c8;
+                                                            text-align: left;
+                                                            margin-left: 0;
+                                                            margin-right: 5px;
+                                                            margin-bottom: 7px;
+                                                            margin-top: 3px">
+                                            {% endif %}
                                         </li>
                                     {% endfor %}
                                 </ul>
@@ -612,16 +616,18 @@
                                                 {% if loop.index0 < 3 %}
                                                     <li>
                                                         <b>Project {{ rounds[r].id }} - {{ projects[rounds[r].id]["name"] }}:</b> {{ rejected.funding_lost_per_round[r] | int }} GBP
-                                                        <hr style="width: {{ (rejected.funding_lost_per_round[r] / (rejected.initial_voter_funding - rejected.final_voter_funding))  * 100 }}&#37;;
-                                                            height: 10px;
-                                                            color: #f6c8c8;
-                                                            background-color: #f6c8c8;
-                                                            text-align: left;
-                                                            margin-left: 0px;
-                                                            margin-right: 5px;
-                                                            margin-bottom: 7px;
-                                                            margin-top: 3px">
-                                                        </hr>
+                                                        {% if (rejected.initial_voter_funding - rejected.final_voter_funding) != 0 %}
+                                                            <hr style="width: {{ (rejected.funding_lost_per_round[r] / (rejected.initial_voter_funding - rejected.final_voter_funding))  * 100 }}&#37;;
+                                                                height: 10px;
+                                                                color: #f6c8c8;
+                                                                background-color: #f6c8c8;
+                                                                text-align: left;
+                                                                margin-left: 0px;
+                                                                margin-right: 5px;
+                                                                margin-bottom: 7px;
+                                                                margin-top: 3px">
+                                                            </hr>
+                                                        {% endif %}
                                                     </li>
                                                 {% endif %}
                                             {% endfor %}
