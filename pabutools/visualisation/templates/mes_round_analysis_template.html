@@ -406,7 +406,11 @@
                   "title": {
                      "text": "Effective Vote Count (Winner: '{{ projects[round.id]['name'][:15]|replace('\"', '\\\"')}}')"
                   },
-                  "scale-x": {
+                  "plotarea": {
+                    "marginLeft":'dynamic',
+                    "marginRight":'dynamic'
+                },
+                  "scaleX": {
                     "labels": [
                         {% for roundID in round.effective_vote_count.keys()%}
                             '{{ projects[roundID]['name'][:15]|replace('\"', '\\\"') }}',
@@ -419,14 +423,27 @@
                         "font-size": 14, // Adjust font size as needed
                         "offset-x": 0, // Adjust to move the label left or right if needed
                         "offset-y": 0 // Adjust to move the label up or down if needed
-                     }
+                     },"zooming": true,
+                    "zoomTo": [0, 10]
                   },
-                  "scale-y": {
+
+
+                  "scaleY": {
                      "title": {
                         "text": "Number of Votes"
                      },
                      "items-overlap": true,
                   },
+
+                  "scrollX": {
+                        "bar": {
+                        "backgroundColor": '#2596be',
+                        "alpha": 0.5,
+                        },
+                        "handle": {
+                        "backgroundColor": '#2596be',
+                        }
+                    },
                   "series": [{
                      "values": {{ round.effective_vote_count.values() | list }}, // Current votes values
                      'hover-state': { /* Hover object */
@@ -487,6 +504,10 @@
                     "toggle-action": "remove",
                     "adjust-layout": true,
                 },
+                "plotarea": {
+                    "marginLeft":'dynamic',
+                    "marginRight":'dynamic'
+                },
                 "plot": {
                     "tooltip": {
                         "text": "Project %scale-key-label has %v votes"
@@ -510,7 +531,8 @@
                             "font-size": 14, // Adjust font size as needed
                             "offset-x": 0, // Adjust to move the label left or right if needed
                             "offset-y": 0 // Adjust to move the label up or down if needed
-                        }
+                        },"zooming": true,
+                    "zoomTo": [0, 10]
                 },
                 "scale-y": {
                     "title": {
@@ -520,6 +542,17 @@
                     "max-labels": 10, // Optional: Adjust the maximum number of labels displayed
                     "decimals": 0, // Optional: Adjust the number of decimal places
                 },
+
+                "scrollX": {
+                        "bar": {
+                        "backgroundColor": '#2596be',
+                        "alpha": 0.5,
+                        },
+                        "handle": {
+                        "backgroundColor": '#2596be',
+                        }
+                    },
+
                 "series": [{
                     "values":[ 
                         {% for key in round.effective_vote_count_reduction.keys() %}
