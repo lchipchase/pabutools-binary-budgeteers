@@ -156,12 +156,27 @@
                                     Round {{ loop.index }}
                                 </h3>
                                 <p>
-                                    Round Winner: '{{ projects[round.id]['name'] }}'
+                                    <b>Round Winner:</b> '{{ projects[round.id]['name'] }}'
                                     <br>
-                                    Project Cost: {{ projects[round.id]['cost'] }}
+                                    <b>Project Cost:</b> {{ projects[round.id]['cost'] }}
                                     <br>
-                                    Election Budget Remaining: {{ round['remaining_budget'] }}
+                                    <b>Election Budget Remaining:</b> {{ round['remaining_budget'] }}
                                 </p>
+                                {% set prev_index = loop.index0 - 1 %} {# loop.index0 is 0-indexed, so subtract 1 for previous index #}
+                                {% set next_index = loop.index0 + 1 %} {# Add 1 to the 0-indexed loop.index0 for next index #}
+                                
+                                <p>
+                                {% if prev_index >= 0 %}
+                                    <a href="#" class="btn btn-secondary my-2" onclick="onClickGetNext({{ rounds[prev_index].id }})">Previous Round</a>
+        
+                                {% endif %}
+
+                                {# Check if the next index is valid and print it #}
+                                {% if next_index < rounds|length %}
+                                    <a href="#" class="btn btn-primary my-2" onclick="onClickGetNext({{ rounds[next_index].id }})">Next Round</a>
+    
+                                {% endif %}
+                                  </p>
                             </div>
                         </div>
                     </div>
@@ -352,6 +367,30 @@
 
         // Check if chart has been rendered for the selected round
         var roundId = element.getAttribute("item"); // Ensure your round button has a data-round-id attribute
+        if (!renderedCharts[roundId]) {
+            // If not, render the chart
+            renderChordChart(roundId);
+            renderedCharts[roundId] = true; // Mark this round's chart as rendered
+        } else {
+            // Optional: Handle cases where the chart is already rendered (e.g., re-render, show/hide, etc.)
+            // This part depends on how you want to handle already rendered charts.
+        }
+    }
+
+    function onClickGetNext(roundId) {
+        var dropdownItems = document.querySelectorAll('.dropdown-item');
+        dropdownItems.forEach(item => item.classList.remove('active'));
+        element = document.getElementById("dropdown-item-" + roundId)
+        console.log(roundId)
+        element.classList.add('active');
+        document.getElementById('projectDropdown').innerText = element.innerText;
+        
+        // Show the corresponding section and hide others
+        var sections = document.querySelectorAll('section');
+        sections.forEach(section => section.style.display = 'none');
+        var selectedSection = document.getElementById(roundId);
+        selectedSection.style.display = 'block';
+
         if (!renderedCharts[roundId]) {
             // If not, render the chart
             renderChordChart(roundId);
