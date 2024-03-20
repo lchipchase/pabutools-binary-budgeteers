@@ -424,7 +424,8 @@
                         "offset-x": 0, // Adjust to move the label left or right if needed
                         "offset-y": 0 // Adjust to move the label up or down if needed
                      },"zooming": true,
-                    "zoomTo": [0, 10]
+                    "zoomTo": [0, 10],
+                    "mirrored": true,
                   },
 
 
@@ -442,7 +443,7 @@
                         },
                         "handle": {
                         "backgroundColor": '#2596be',
-                        }
+                        },
                     },
                   "series": [{
                      "values": {{ round.effective_vote_count.values() | list }}, // Current votes values
@@ -542,7 +543,6 @@
                     "max-labels": 10, // Optional: Adjust the maximum number of labels displayed
                     "decimals": 0, // Optional: Adjust the number of decimal places
                 },
-
                 "scrollX": {
                         "bar": {
                         "backgroundColor": '#2596be',
