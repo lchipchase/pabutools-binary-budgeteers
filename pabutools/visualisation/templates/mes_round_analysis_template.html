@@ -72,9 +72,15 @@
         } */
         
         h1,
+        h3,
         p {
             text-align: center;
         }
+
+      
+        main {
+            padding-top: 100px; /* Adjust based on the actual height of your header */
+            }
     </style>
 </head>
 
@@ -143,13 +149,34 @@
             <!-- Round specific visualisations -->
             {% for round in rounds %}
                 <section id="{{round.id}}" class="hidden-section">
-
+                    <div class="container">
+                        <div class="row mb-3">
+                            <div class="col-12  justify-content-center">
+                                <h3>
+                                    Round {{ loop.index }}
+                                </h3>
+                                <p>
+                                    Round Winner: '{{ projects[round.id]['name'] }}'
+                                    <br>
+                                    Project Cost: {{ projects[round.id]['cost'] }}
+                                    <br>
+                                    Election Budget Remaining: {{ round['remaining_budget'] }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Effective Vote Count -->
                     <div class="row featurette">
                         <div class="col-5">
                           <h2 class="featurette-heading">Effective Vote Count</h2>
-                          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-                        </div>
+                          <p class="lead">'{{ projects[round.id]['name'] }}' has the highest effective vote count, as there is enough budget to support this project the project will recieve funding. 
+                            This project costs {{ projects[round.id]['cost'] }}.
+                            {{ projects[round.id]['votes'] }} people voted for this project, at the time the project was elected it had an effective vote count of {{ round['effective_vote_count'][round.id] }}. 
+                            
+
+                            
+                 </div>
                         <div class="col-7" style="min-height: 400px;">
                             <div id="{{ round.id }}BarChart" style="height: 100%; width: 100%;">
                                 <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Effective Vote Count:</b><br> For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">i</button>
