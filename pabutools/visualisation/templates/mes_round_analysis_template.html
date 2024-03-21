@@ -72,7 +72,9 @@
         } */
         
         h1,
+        h2,
         h3,
+        h4,
         p {
             text-align: center;
         }
@@ -81,6 +83,11 @@
         main {
             padding-top: 100px; /* Adjust based on the actual height of your header */
             }
+
+        .info-button {
+            margin-top: 25px;
+            /* padding-top: 100px; */
+        }
     </style>
 </head>
 
@@ -150,48 +157,50 @@
             {% for round in rounds %}
                 <section id="{{round.id}}" class="hidden-section">
                     <div class="container">
-                        <div class="row mb-3">
-                            <div class="col-12  justify-content-center">
-                                <h3>
-                                    Round {{ loop.index }}
-                                </h3>
-                                <p>
-                                    <b>Round Winner:</b> '{{ projects[round.id]['name'] }}'
-                                    <br>
-                                    <b>Project Cost:</b> {{ projects[round.id]['cost'] }}
-                                    <br>
-                                    <b>Election Budget Remaining:</b> {{ round['remaining_budget'] }}
-                                </p>
-                                {% set prev_index = loop.index0 - 1 %} {# loop.index0 is 0-indexed, so subtract 1 for previous index #}
-                                {% set next_index = loop.index0 + 1 %} {# Add 1 to the 0-indexed loop.index0 for next index #}
-                                
-                                <p>
-                                {% if prev_index >= 0 %}
-                                    <a href="#" class="btn btn-secondary my-2" onclick="onClickGetNext({{ rounds[prev_index].id }})">Previous Round</a>
-        
-                                {% endif %}
-
-                                {# Check if the next index is valid and print it #}
-                                {% if next_index < rounds|length %}
-                                    <a href="#" class="btn btn-primary my-2" onclick="onClickGetNext({{ rounds[next_index].id }})">Next Round</a>
+                      
+                        <div class="col-12  justify-content-center">
+                            <h3>
+                                Round {{ loop.index }}: 
+                            </h3>
+                            <h4>
+                                Winner - {{ projects[round.id]['name'] }}
+                            </h4>
+                            <p>
+                                <b>Description:</b> {{ projects[round.id]["description"] }}
+                                <br>
+                                <b>Project Cost:</b> {{ projects[round.id]['cost'] }}
+                                <br>
+                                <b>Election Budget Remaining:</b> {{ round['remaining_budget'] }}
+                            </p>
+                            {% set prev_index = loop.index0 - 1 %} {# loop.index0 is 0-indexed, so subtract 1 for previous index #}
+                            {% set next_index = loop.index0 + 1 %} {# Add 1 to the 0-indexed loop.index0 for next index #}
+                            
+                            <p>
+                            {% if prev_index >= 0 %}
+                                <a href="#" class="btn btn-secondary my-2" onclick="onClickGetNext({{ rounds[prev_index].id }})">Previous Round</a>
     
-                                {% endif %}
-                                  </p>
-                            </div>
+                            {% endif %}
+
+                            {# Check if the next index is valid and print it #}
+                            {% if next_index < rounds|length %}
+                                <a href="#" class="btn btn-primary my-2" onclick="onClickGetNext({{ rounds[next_index].id }})">Next Round</a>
+
+                            {% endif %}
+                                </p>
                         </div>
+                        
                     </div>
-                    
+                    <div class="spacer-1"></div>
+                    <hr>
+                    <div class="spacer-1"></div>
                     <!-- Effective Vote Count -->
                     <div class="row featurette">
                         <div class="col-5">
                           <h2 class="featurette-heading">Effective Vote Count</h2>
                           <p class="lead">'{{ projects[round.id]['name'] }}' has the highest effective vote count, as there is enough budget to support this project the project will recieve funding. 
                             This project costs {{ projects[round.id]['cost'] }}.
-                            {{ projects[round.id]['votes'] }} people voted for this project, at the time the project was elected it had an effective vote count of {{ round['effective_vote_count'][round.id] }}. 
-                            
-
-                            
-                 </div>
+                            {{ projects[round.id]['votes'] }} people voted for this project, at the time the project was elected it had an effective vote count of {{ round['effective_vote_count'][round.id] }}.     
+                        </div>
                         <div class="col-7" style="min-height: 400px;">
                             <div id="{{ round.id }}BarChart" style="height: 100%; width: 100%;">
                                 <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Effective Vote Count:</b><br> For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">i</button>
@@ -206,6 +215,7 @@
                     <!-- Sankey and Chord side by side -->
                     <div class="row" style="display: grid;">
                         <h5 style="text-align: center; font-weight: bold;">'{{ projects[round.id]['name'] }}' Voter Flows</h5>
+                        <p>The following graphs demonstrate how voters of '{{ projects[round.id]['name'] }}' voted for other projects, highlighting where funding may be lost for certain projects in future rounds as voters funds have been allocated to '{{ projects[round.id]['name'] }}'. </p>
                     </div>
                     <div class="row">
                         <div class="col-5" style="display: grid;">
@@ -470,7 +480,9 @@
                   data: {
                   "type": "hbar",
                   "title": {
-                     "text": "Effective Vote Count (Winner: '{{ projects[round.id]['name']|replace('\"', '\\\"')}}')"
+                     "text": "Effective Vote Count (Winner: '{{ projects[round.id]['name']|replace('\"', '\\\"')}}')",
+                    "fontSize": 16, // Smaller font size to ensure it fits
+                    "adjustLayout": true // ZingChart will try to adjust the layout 
                   },
                   "plotarea": {
                     "marginLeft":'dynamic',
@@ -552,7 +564,8 @@
                 "stacked": true,
                 "title": {
                     "text": "Reduced Effective Vote Count {% if loop.index in range(rounds|length) %} (Next Winner: {{ projects[rounds[loop.index].id]['name']|replace('\"', '\\\"') }}) {% endif %}",
-                    "adjust-layout": true,
+                    "fontSize": 15, // Smaller font size to ensure it fits
+                    "adjustLayout": true // ZingChart will try to adjust the layout 
                 },
                 "legend": {
                     "layout": "x4",
