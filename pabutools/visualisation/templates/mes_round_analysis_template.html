@@ -188,8 +188,31 @@
                             {% endif %}
                                 </p>
                         </div>
-                        
                     </div>
+                </section>
+                {% endfor %}
+                <!-- Dropdown UI -->
+
+                <div class="row my-4 justify-content-center hidden-section" id="dropdown-container">
+                    <div>
+                        <h4>Select Round:  </h4>
+                    </div>
+                    <div class="spacer-1"></div>
+                    <div class="spacer-1"></div>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="projectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Round 1: {{ projects[rounds[0].id]['name'] }}
+                    </button>
+                        <div class="dropdown-menu" aria-labelledby="projectDropdown">
+                        {% for round in rounds %}
+                            <a id="dropdown-item-{{ round.id }}" class="dropdown-item {% if loop.index == 1 %}active{% endif %}" item="{{ round.id }}" onclick="onClickDropdown(this)">Round {{loop.index}}: '{{ projects[round.id]['name'] }}'</a>
+                        {% endfor %}
+        
+                        </div>
+                    </div>
+                </div>
+                {% for round in rounds %}
+                <section id="second-{{round.id}}" class="hidden-section">
                     <div class="spacer-1"></div>
                     <hr>
                     <div class="spacer-1"></div>
@@ -311,20 +334,7 @@
             <div class="spacer-8"></div>
             <div class="spacer-8"></div>
 
-            <!-- Dropdown UI -->
-            <div class="row my-4 justify-content-center hidden-section" id="dropdown-container">
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="projectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ projects[rounds[0].id]['name'] }}
-                </button>
-                    <div class="dropdown-menu" aria-labelledby="projectDropdown">
-                    {% for round in rounds %}
-                        <a id="dropdown-item-{{ round.id }}" class="dropdown-item {% if loop.index == 1 %}active{% endif %}" item="{{ round.id }}" onclick="onClickDropdown(this)">'{{ projects[round.id]['name'] }}'</a>
-                    {% endfor %}
-    
-                    </div>
-                </div>
-            </div>
+
         </div>
 
         <div class="spacer-1"></div>
@@ -373,6 +383,8 @@
         var sections = document.querySelectorAll('section');
         sections.forEach(section => section.style.display = 'none');
         var selectedSection = document.getElementById(element.getAttribute("item"));
+        selectedSection.style.display = 'block';
+        var selectedSection = document.getElementById("second-".concat(element.getAttribute("item")));
         selectedSection.style.display = 'block';
 
         // Check if chart has been rendered for the selected round
