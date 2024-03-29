@@ -1,8 +1,6 @@
 from __future__ import annotations
 import os
 
-from pabutools.rules.mes.mes_details import MESAllocationDetails
-
 try:
     import jinja2
 except ImportError:
@@ -10,6 +8,8 @@ except ImportError:
 
 from pabutools.analysis.profileproperties import votes_count_by_project, voter_flow_matrix
 from pabutools.election.instance import total_cost
+from pabutools.rules.greedywelfare.greedywelfare_details import GreedyWelfareAllocationDetails
+from pabutools.rules.mes.mes_details import MESAllocationDetails
 
 ENV = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(os.path.abspath(__file__))))
 
@@ -200,3 +200,70 @@ class MESVisualiser(Visualiser):
             o.write(round_analysis_page_output)
         with open(f"{output_folder_path}/summary.html", "w", encoding="utf-8") as o:
             o.write(summary_page_output)
+
+class GreedyWelfareVisualiser(Visualiser):
+    template = ENV.get_template('./templates/greedy_round_analysis_template.html') 
+
+    def __init__(self, profile, instance, greedy_details: GreedyWelfareAllocationDetails, verbose=False):
+        self.profile = profile
+        self.instance = instance
+        self.verbose = verbose
+        self.greedy_iterations = greedy_details.iterations
+        self.rounds = [{
+                "id": 1,
+                "remaining_budget": 20000,
+                "rejected_projects" : [{
+                    "id": 1,
+                    "name": "Project 1",
+                    "cost": 30000,
+                    "votes" : 2000
+                },
+                {
+                    "id": 2,
+                    "name": "Project 2",
+                    "cost": 25000,
+                    "votes" : 1800
+                },
+                {
+                    "id": 3,
+                    "name": "Project 3",
+                    "cost": 22000,
+                    "votes" : 1700
+                }],
+                "max_cost": 30000,
+                "selected_project": {
+                    "id": 4,
+                    "name": "Project 4",
+                    "cost": 20000,
+                    "votes": 1500
+                }
+            }]
+    
+    def _calculate(self):
+        rounds = []
+        for greedy_iteration in self.greedy_iterations:
+            pass
+
+
+    def render(self, outcome, output_folder_path):
+        self._calculate()
+        if self.verbose:
+            print(self.rounds)
+
+        # Round by Round
+        round_analysis_page_output = GreedyWelfareVisualiser.template.render( # TODO: Some redudant data is being passed to the template that can be calculated within template directly
+            election_name=self.instance.meta["description"] if "description" in self.instance.meta else "No description provided.", 
+            # total_votes=sum(votes_count_by_project(self.profile).values()),
+            rounds=self.rounds, 
+            projects=self.instance.project_meta,
+            number_of_elected_projects=len(outcome),
+            number_of_unelected_projects=len(self.instance) - len(outcome),
+            spent=total_cost(p for p in self.instance if p.name in outcome),
+            budget=self.instance.meta["budget"],
+            total_votes=self.instance.meta["num_votes"]
+        )
+        if not os.path.exists(output_folder_path):
+            os.makedirs(output_folder_path)
+        with open(f"{output_folder_path}/round_analysis.html", "w", encoding="utf-8") as o:
+            o.write(round_analysis_page_output)
+    

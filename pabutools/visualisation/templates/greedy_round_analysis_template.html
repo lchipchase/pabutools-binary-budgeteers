@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> {{ election_name}}</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <script nonce="undefined" src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <style>
+        /* Custom CSS to color the borders black */
+        .budget-container {
+            position: relative;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .bar {
+            position: relative;
+            height: 30px;
+            margin: 10px 0;
+            background-color: #ddd;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+        }
+        .bar-inner {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: absolute;
+            left: 0;
+            top: 0;
+            overflow: hidden; /* Ensures text does not overflow the colored bar */
+        }
+        .dashed-line {
+    position: absolute;
+    top: 0;
+    height: 600%;
+    border-left: 2px dashed black;
+}
+        .green {
+            background-color: #4CAF50;
+        }
+        .red {
+            background-color: #F44336;
+        }
+        .rejected-mark {
+            position: absolute;
+            right: -50px;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: black;
+            background-color: white;
+            border-radius: 15px; /* Circular */
+        }
+        .border-black {
+            border: 1px solid black;
+        }
+        
+        .nested {
+            padding: 1rem;
+        }
+        
+        .wrapper {
+            padding: 0rem;
+        }
+        
+        .spacer {
+            padding: 1rem;
+        }
+        
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            font-size: 24px;
+            /* Adjust the size as needed */
+            color: black;
+            /* Adjust the color as needed */
+        }
+        
+        .carousel-inner {
+            padding: 1rem;
+            padding-left: 7rem;
+            padding-right: 7rem;
+        }
+        
+        .carousel-inner-pie {
+            padding-top: 0.5rem;
+            height: 400px;
+        }
+        
+        .hidden-section {
+            display: none;
+        }
+        
+        .chord-wrapper {
+            height: 100%;
+        }
+        
+        #myChordChart {
+            height: 100%;
+            width: 100%;
+        }
+        
+        #myBarChart1,
+        #myStackedBarChart1 {
+            height: 100%;
+            width: 100%;
+        }
+        /* zing-grid[loading] {
+            height: 800px;
+            width: 100%;
+        } */
+        
+        h1,
+        p {
+            text-align: center;
+        }
+    </style>
+</head>
+<!-- onload="loadRound()" -->
+<body > 
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+          <a class="navbar-brand" href="./summary.html">Summary</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="./round_analysis.html">Round By Round <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="">Pabutools</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="">MES</a>
+              </li>
+            </ul>
+            <form class="form-inline mt-2 mt-md-0" data-dashlane-rid="586d21bb200ad9fc" data-form-type="">
+              <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" data-dashlane-rid="ebb02837c4029767" data-form-type="">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit" data-dashlane-label="true" data-dashlane-rid="c66944f310795772" data-form-type="">Search</button>
+            </form>
+          </div>
+        </nav>
+      </header>
+
+      <main role="main">
+    
+        <div class="container-fluid upper-page">
+            <!-- General Explanations -->
+            <div class="container">
+                <div class="spacer-2"></div>
+                <div class="spacer-2"></div>
+
+                <div class="row mb-3">
+                    <div class="col-12  justify-content-center">
+                        <h1>
+                            {{ election_name }}
+                        </h1>
+                        <div class="spacer-1"><hr></div>
+                        <p>
+                            This is the explanation for the outcome of the participatory budgeting election decided using the Greedy Utalitarian Welfare algorithm.
+                        </p>
+                    </div>
+                </div>
+                <div class="spacer-1"></div>
+            </div>
+        </div>
+        <!-- <center>
+            <div id="spinner" class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </center> -->
+        <div class="container">
+            <div class="spacer-1"></div>
+            <hr>
+            <div class="spacer-1"></div>
+            
+
+            <!-- Round specific visualisations -->
+                <section id="1">
+
+                    <!-- Effective Vote Count -->
+                    <div class="row featurette">
+                        <div class="col-1"></div>
+                        <div class="col-10" style="min-height: 600px;">
+                            {% for round in rounds %}
+                            <div id="{{ round.id }}SortableBarChart" style="height: 100%; width: 100%;">
+                                <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Project Vote Counts:</b><br> The following graphs shows the votes for each of the projects along with the corresponding budget.">i</button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+
+                    <!-- Just some space -->
+                    <div class="spacer-1"></div>
+                    <hr>
+                    <div class="spacer-1"></div>
+
+                    {% for round in rounds %}
+                    <!-- Budget Bar and Table -->
+                    <div class="container">
+
+                        <!-- Budget Breakdown -->
+                        <div class="row">
+                            <div class="col-2"></div>
+                            <div class="col-8">
+                                <div class="row">
+                                    <div class="budget-container">
+                                        <!-- Remaining Budget Bar -->
+                                        <div class="bar" style="background-color: #ccc; width: {{ round.remaining_budget / round.max_cost * 90 }}%;">
+                                            <div class="bar-inner">£{{ round.remaining_budget }}</div>
+                                            <div class="dashed-line" style="left: {{ round.remaining_budget / round.max_cost * 100 }}%;"></div>
+                                        </div>
+                                    
+                                        <!-- Project Bars -->
+                                        {% for proj in round.rejected_projects %}
+                                        <div class="bar red" style="width: {{ proj.cost / round.max_cost * 90 }}%;">
+                                            <div class="bar-inner">{{proj.name}} - £{{ proj.cost }}</div>
+                                            <div class="rejected-mark">✘</div>
+                                        </div>
+                                        {% endfor %}
+
+                                        <!-- Selected Project Bar -->
+                                        <div class="bar green"  style="width: {{ round.selected_project.cost / round.max_cost * 90 }}%;">
+                                            <div class="bar-inner">{{round.selected_project.name}} - £{{ round.selected_project.cost }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <p>
+                                        The chart above shows the current budget of {{round.remaining_budget}}. Projects {% for proj in round.rejected_projects %} {{ proj.name }}, {% endfor %} were rejected in this round, even though they had more votes than the selected project.  
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-2"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="spacer-1"></div>
+                    <hr>
+                    <div class="spacer-1"></div>
+
+                    <!-- Green and Red Painted Chart -->
+                    <div class="row featurette">
+                        <div class="col-2"></div>
+                        <div class="col-8" style="min-height: 600px;">
+                            {% for round in rounds %}
+                            <div id="{{ round.id }}RGBarChart" style="height: 100%; width: 100%;">
+                                <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "EXAMPLE">i</button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-2"></div>
+                    </div>
+                </section>
+            
+            <div class="spacer-8"></div>
+        </div>
+
+        <div class="spacer-1"></div>
+        <hr>
+        <div class="spacer-1"></div>
+
+        <!-- FOOTER -->
+        <footer class="container">
+            <p>© Pabutools. · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Privacy</a> · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Terms</a></p>
+        </footer>
+
+    </main>
+    <!-- Bootstrap JS and its dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Dropdown functionality -->
+    <!-- <script>
+        function loadRound() {
+            const urlParams = new URLSearchParams(window.location.search);
+            projectId = urlParams.get('projectId');
+            if (projectId === null) {
+                projectId = "{{ rounds[0].id }}";
+            }
+            // Display the round requested
+            onClickDropdown(document.getElementById("dropdown-item-".concat(projectId)));
+            document.getElementById("spinner").style.display = "none";
+            
+            // Display the dropdown
+            document.getElementById("dropdown-container").classList.add('active');
+            document.getElementById("dropdown-container").style.display = 'flex';
+        }
+    </script> -->
+    <!-- <script>
+    // Object to store rendered charts for each round
+    var renderedCharts = {};
+
+    function onClickDropdown(element) {
+        var dropdownItems = document.querySelectorAll('.dropdown-item');
+        dropdownItems.forEach(item => item.classList.remove('active'));
+        element.classList.add('active');
+        document.getElementById('projectDropdown').innerText = element.innerText;
+
+        // Show the corresponding section and hide others
+        var sections = document.querySelectorAll('section');
+        sections.forEach(section => section.style.display = 'none');
+        var selectedSection = document.getElementById(element.getAttribute("item"));
+        selectedSection.style.display = 'block';
+
+        // Check if chart has been rendered for the selected round
+        var roundId = element.getAttribute("item"); // Ensure your round button has a data-round-id attribute
+        if (!renderedCharts[roundId]) {
+            // If not, render the chart
+            renderChordChart(roundId);
+            renderedCharts[roundId] = true; // Mark this round's chart as rendered
+        } else {
+            // Optional: Handle cases where the chart is already rendered (e.g., re-render, show/hide, etc.)
+            // This part depends on how you want to handle already rendered charts.
+        }
+    }
+    </script> -->
+       
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script>tippy('[data-tippy-content]', { allowHTML: true, maxWidth: 1000});</script>
+    <script type="text/javascript" src="https://unpkg.com/default-passive-events"></script>
+</body>
+</html>
