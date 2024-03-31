@@ -31,16 +31,17 @@ class MESVisualiser(Visualiser):
 
     def _calculate_rounds_dictinary(self):
         initial_budget_per_voter = float(self.instance.meta["budget"]) / float(self.instance.meta["num_votes"])
-
+        budgetSpent = 0 
         for i in range(len(self.mes_iterations)-1):
             round = dict()
             current_iteration = self.mes_iterations[i]
             next_iteration = self.mes_iterations[i+1]
             round["id"] = current_iteration.selected_project.name
             round["name"] = current_iteration.selected_project.name # TODO Remove this and keep round["id"]
-            round["effective_vote_count"] = {
+            data = {
                 p.name: float(1/p.affordability) for p in current_iteration.get_all_projects()
             }
+            round["effective_vote_count"] =  dict(sorted(data.items(), key=lambda item: item[1], reverse=True))
             round["effective_vote_count_reduction"] = {
                 p.name: float(round["effective_vote_count"][p]-1/p.affordability) for p in next_iteration.get_all_projects()
             }
@@ -87,6 +88,8 @@ class MESVisualiser(Visualiser):
                     }
                     dropped_projects.append(rejected)
             round["dropped_projects"] = dropped_projects
+            budgetSpent += current_iteration.selected_project.cost
+            round["remaining_budget"] = float(self.instance.meta["budget"]) - budgetSpent
             self.rounds.append(round)
 
         # Final round
@@ -106,7 +109,7 @@ class MESVisualiser(Visualiser):
                         - float(sum(self.mes_iterations[r+1].voters_budget[p] for p in p.project.supporter_indices))
                     ) for r in range(0, len(self.mes_iterations) - 1)
                 }
-                        
+                
                 rejected = {
                     "id": p.project.name,
                     "cost": p.project.cost,
@@ -118,18 +121,22 @@ class MESVisualiser(Visualiser):
                 }
                 dropped_projects.append(rejected)
         
+        budgetSpent += self.mes_iterations[-1].selected_project.cost
+        data = {
+                p.name: float(1/p.affordability) for p in self.mes_iterations[-1].get_all_projects()
+            }
         self.rounds.append({
             "name": self.mes_iterations[-1].selected_project.name,
-            "effective_vote_count": {
-                p.name: float(1/p.affordability) for p in self.mes_iterations[-1].get_all_projects()
-            },
+            "effective_vote_count": dict(sorted(data.items(), key=lambda item: item[1], reverse=True))
+            ,
             "effective_vote_count_reduction": {p.name: 0 for p in self.mes_iterations[-1].get_all_projects()},
             "cost": self.mes_iterations[-1].selected_project.cost,
             "totalvotes": len(self.mes_iterations[-1].selected_project.supporter_indices),
             "initial_voter_funding": initial_budget_per_voter * len(self.mes_iterations[-1].selected_project.supporter_indices),
             "funding_lost_per_round": dict(sorted(unsorted_funding_lost_per_round.items(), key = lambda x: x[1], reverse = True)),
             "final_voter_funding": float(sum(self.mes_iterations[-1].voters_budget[p] for p in self.mes_iterations[-1].selected_project.supporter_indices)),
-            "dropped_projects": dropped_projects
+            "dropped_projects": dropped_projects,
+            "remaining_budget": float(self.instance.meta["budget"]) - budgetSpent
         })
 
     def _calculate_pie_charts(self, projectVotes):

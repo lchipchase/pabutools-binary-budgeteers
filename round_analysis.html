@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Experimental PB on Mechanical Turk | Knapsack_7</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <script nonce="undefined" src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <style>
+        /* Custom CSS to color the borders black */
+        
+        .border-black {
+            border: 1px solid black;
+        }
+        
+        .nested {
+            padding: 1rem;
+        }
+        
+        .wrapper {
+            padding: 0rem;
+        }
+        
+        .spacer {
+            padding: 1rem;
+        }
+        
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            font-size: 24px;
+            /* Adjust the size as needed */
+            color: black;
+            /* Adjust the color as needed */
+        }
+        
+        .carousel-inner {
+            padding: 1rem;
+            padding-left: 7rem;
+            padding-right: 7rem;
+        }
+        
+        .carousel-inner-pie {
+            padding-top: 0.5rem;
+            height: 400px;
+        }
+        
+        .hidden-section {
+            display: none;
+        }
+        
+        .chord-wrapper {
+            height: 100%;
+        }
+        
+        #myChordChart {
+            height: 100%;
+            width: 100%;
+        }
+        
+        #myBarChart1,
+        #myStackedBarChart1 {
+            height: 100%;
+            width: 100%;
+        }
+        /* zing-grid[loading] {
+            height: 800px;
+            width: 100%;
+        } */
+        
+        h1,
+        h2,
+        h3,
+        h4,
+        p {
+            text-align: center;
+        }
+
+      
+        main {
+            padding-top: 100px; /* Adjust based on the actual height of your header */
+            }
+
+        .info-button {
+            margin-top: 25px;
+            /* padding-top: 100px; */
+        }
+    </style>
+    <script>
+    window.addEventListener('load', (event) => {
+        console.log('The page has fully loaded');
+        loadRound();
+    });
+    </script>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+          <a class="navbar-brand" href="./summary.html">Summary</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="./round_analysis.html">Round By Round <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="">Pabutools</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="">MES</a>
+              </li>
+            </ul>
+            <form class="form-inline mt-2 mt-md-0" data-dashlane-rid="586d21bb200ad9fc" data-form-type="">
+              <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" data-dashlane-rid="ebb02837c4029767" data-form-type="">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit" data-dashlane-label="true" data-dashlane-rid="c66944f310795772" data-form-type="">Search</button>
+            </form>
+          </div>
+        </nav>
+    </header>
+
+    <main role="main">
+    
+        <div class="container-fluid upper-page">
+            <!-- General Explanations -->
+            <div class="container">
+                <div class="spacer-2"></div>
+                <div class="spacer-2"></div>
+
+                <div class="row mb-3">
+                    <div class="col-12  justify-content-center">
+                        <h1>
+                            Experimental PB on Mechanical Turk | Knapsack_7
+                        </h1>
+                        <div class="spacer-1"><hr></div>
+                        <p>
+                            This is the round-by-round explanations for the results of this participatory budgeting election decided by the Method of Equal Shares (MES). For each round,
+                            we provide visualisations to help you understand why each particular project was selected or not. The visualisations include effective vote counts, voter flows, and pie charts.
+                            If you hover over the 'i' buttons, you will see more detailed explanations of each visualisation.
+                        </p>
+                    </div>
+                </div>
+                <div class="spacer-1"></div>
+            </div>
+        </div>
+        <center>
+            <div id="spinner" class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </center>
+        <div class="container">
+                      
+            <div class="col-12  justify-content-center">
+                <h3>
+                    Round <span class="round_number"></span>
+                </h3>
+                <h4>
+                    Winner - <span class="project_name"></span>
+                </h4>
+                <p>
+                    <b>Description:</b> <span class="description"></span>
+                    <br>
+                    <b>Project Cost:</b> <span class="project_cost"></span>
+                    <br>
+                    <b>Election Budget Remaining:</b> <span class="budget_remaining"></span>
+                </p>
+               
+                
+                <p>
+              
+                    <a href="#" class="btn btn-secondary my-2" onclick="renderRoundPrev()">Previous Round</a>
+                    <a href="#" class="btn btn-primary my-2" onclick="renderRoundNext()">Next Round</a>
+
+                </p>
+            </div>
+            <div class="row my-4 justify-content-center hidden-section" id="dropdown-container">
+                <div>
+                    <h4>Select Round:  </h4>
+                </div>
+                <div class="spacer-1"></div>
+                <div class="spacer-1"></div>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="projectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Round 1: Computers for the community learning center
+                </button>
+                    <div class="dropdown-menu" aria-labelledby="projectDropdown">
+                    
+                        <a id="dropdown-item-3" class="dropdown-item active" item="3" onclick="renderRound(3, this)">Round 1: 'Computers for the community learning center'</a>
+                    
+                        <a id="dropdown-item-14" class="dropdown-item " item="14" onclick="renderRound(14, this)">Round 2: 'Benches for a Walkable City'</a>
+                    
+                        <a id="dropdown-item-13" class="dropdown-item " item="13" onclick="renderRound(13, this)">Round 3: 'Real-Time Bus Arrival Monitors in bus stations'</a>
+                    
+                        <a id="dropdown-item-12" class="dropdown-item " item="12" onclick="renderRound(12, this)">Round 4: 'Separate Bike Lanes from Traffic'</a>
+                    
+                        <a id="dropdown-item-2" class="dropdown-item " item="2" onclick="renderRound(2, this)">Round 5: 'Little (book exchange) libraries'</a>
+                    
+                        <a id="dropdown-item-31" class="dropdown-item " item="31" onclick="renderRound(31, this)">Round 6: 'Fire Hydrant Markers'</a>
+                    
+                        <a id="dropdown-item-21" class="dropdown-item " item="21" onclick="renderRound(21, this)">Round 7: 'Planting trees in the city'</a>
+                    
+                        <a id="dropdown-item-23" class="dropdown-item " item="23" onclick="renderRound(23, this)">Round 8: '5 Water Bottle Refill Stations'</a>
+                    
+                        <a id="dropdown-item-15" class="dropdown-item " item="15" onclick="renderRound(15, this)">Round 9: 'Urban Bicycle Wash Stations'</a>
+                    
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="container">
+            <div class="spacer-1"></div>
+            <hr>
+            <div class="spacer-1"></div>
+            <!-- Round specific visualisations -->
+                <section>
+
+                    <!-- Effective Vote Count -->
+                    <div class="row featurette">
+                        <div class="col-5">
+                          <h2 class="featurette-heading">Effective Vote Count</h2>
+                          <p class="lead">'<span class="project_name"></span>' has the highest effective vote count, as there is enough budget to support this project the project will recieve funding. 
+                            This project costs <span class="project_cost"></span> .
+                            <span class="project_votes"></span> people voted for this project, at the time the project was elected it had an effective vote count of <span class="effective_vote_count"></span>.     </p>
+                        </div>
+                        <div class="col-7" style="min-height: 400px;">
+                            <div id="BarChart" style="height: 100%; width: 100%;">
+                                <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Effective Vote Count:</b><br> For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">i</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="spacer-1"></div>
+                    <hr>
+                    <div class="spacer-1"></div>
+
+                    <!-- Sankey and Chord side by side -->
+                    <div class="row" style="display: grid;">
+                        <h5 style="text-align: center; font-weight: bold;">Voter Flows</h5>
+                        <p>The following graphs demonstrate how voters of '<span class="project_name"></span>' voted for other projects, highlighting where funding may be lost for certain projects in future rounds as voters funds have been allocated to '<span class="project_name"></span>'. </p>
+                    </div>
+                    <div class="row">
+                        <div class="col-5" style="display: grid;">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <button class = "info-button" style = "position: absolute; z-index: 2000; left: 10px; top: 30px" data-tippy-content="<b>Sankey Diagram</b><br>The provided Sankey diagram offers a visual representation of voting patterns among a set of participants with the option to vote for multiple projects. The individual bands flowing from this singular left bar to various bars on the right-hand side illustrate the distribution of voters who have also voted for other projects. Each band's thickness corresponds to the number of voters who voted for both the project on the left and the project on the right. The graph is designed to show the overlap in voting behaviour, making it clear which projects share a common voter base with the project displayed on the right-hand side.">i</button>
+                                <div id="SankeyChart">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-2"></div>
+                        <div class="col-5 chord-wrapper">
+                            <button class = "info-button" style = "position: absolute; z-index: 2000; right: 10px; top: 30px" data-tippy-content="<b>Chord Diagram:</b><br> The chord diagram shows the voter flows between the project selected this round. Due to the nature of MES, if a project is selected, the voters who voted for it will have a reduction in their budget. Therefore, showing how voters’ voted shows which other projects will have had their support cut.">i</button>
+                            <div id='ChordChart'></div>
+
+                        </div>
+                    </div>
+                    <div class="spacer-1"></div>
+                    <hr>
+                    <div class="spacer-1"></div>
+
+                    <!-- Pie Charts Carousels -->
+                    <div id="secondCarousel" style="height: 500px; width: 100%;" class="carousel slide" data-ride="carousel" data-interval="false">
+                        <button class = "info-button" style = "position: absolute; z-index: 2000; right: 30px; top: 30px" data-tippy-content="<b>Pie Chart:</b><br> TODO">i</button>
+                            
+                        <div id="pieChartsCarousel" class="carousel-inner" style="height: 500px; width: calc(100% - 40px);" >
+                        </div>
+
+                        <a class="carousel-control-prev" href="#secondCarousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                          </a>
+                          <a class="carousel-control-next" href="#secondCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                          </a>
+                    </div>
+
+
+
+                    <div class="spacer-1"></div>
+                    <hr>
+                    <div class="spacer-1"></div>
+
+                    <!-- Reduced Effective Vote Count Graph (Centred Div) -->
+                    <div class="row featurette">
+                        <div class="col-5">
+                          <h2 class="featurette-heading">Reduced Effective Vote Count</h2>
+                          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+                        </div>
+                        <div class="col-7" style="min-height: 400px;">
+                            <div id="StackedBarChart" style="height: 100%; width: 100%;" >
+                                <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Reduced Effective Vote Count</b><br>Voters who still have money left but not enough money to pay for the project when its cost is equally divided will count as a fraction. We do not count voters if they have already spent their entire budget share. This graph visualises the current vote count after some of the voters' budgets have already been allocated against original vote count for the project.">i</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+        </div>
+
+        <div class="spacer-1"></div>
+        <hr>
+        <div class="spacer-1"></div>
+
+        <!-- FOOTER -->
+        <footer class="container">
+            <p>© Pabutools. · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Privacy</a> · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Terms</a></p>
+        </footer>
+
+    </main>
+    <!-- Bootstrap JS and its dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Effective vote count bar chart -->
+    <script>
+        zingchart.render({
+            id: 'BarChart',
+            data: {
+            "type": "hbar",
+            "title": {
+                "text": "Effective Vote Count",
+            "fontSize": 16, // Smaller font size to ensure it fits
+            "adjustLayout": true // ZingChart will try to adjust the layout 
+            },
+            "plotarea": {
+            "marginLeft":'dynamic',
+            "marginRight":'dynamic'
+        },
+            "scaleX": {
+            "labels": [], // Label that identifies each project in the round
+                "title": {
+                "text": "Project"
+                },
+                "item": { // Explicitly control the appearance of the scale labels
+                "font-size": 14, // Adjust font size as needed
+                "offset-x": 0, // Adjust to move the label left or right if needed
+                "offset-y": 0 // Adjust to move the label up or down if needed
+                },"zooming": true,
+            "zoomTo": [0, 10],
+            "mirrored": true,
+            },
+
+
+            "scaleY": {
+                "title": {
+                "text": "Number of Votes"
+                },
+                "items-overlap": true,
+            },
+
+            "scrollX": {
+                "bar": {
+                "backgroundColor": '#2596be',
+                "alpha": 0.5,
+                },
+                "handle": {
+                "backgroundColor": '#2596be',
+                },
+            },
+            "series": [{
+                "values": [], // Current votes values
+                'hover-state': { /* Hover object */
+                'background-color': "orange",
+            }
+            }, ],
+            "plot": {
+            "tooltip": {
+                "text": "Project %scale-key-label has %v votes"
+            },
+                "animation": {
+                "effect": "ANIMATION_SLIDE_BOTTOM",
+                "sequence": "ANIMATION_BY_PLOT_AND_NODE",
+                "speed": 0
+                }
+            }
+        },
+        height: '100%',
+        width: '100%'
+    });
+    </script>
+    <!-- Effective vote count reduction bar chart -->
+    <script>
+
+    zingchart.render({
+        id: 'StackedBarChart',
+        data: {
+        "type": "hbar",
+        "stacked": true,
+        "title": {
+            "text": "Reduced Effective Vote Count",
+            "fontSize": 15, // Smaller font size to ensure it fits
+            "adjustLayout": true // ZingChart will try to adjust the layout 
+        },
+        "legend": {
+            "layout": "x4",
+            "background-color": "none",
+            "shadow": 0,
+            "align": "center",
+            "adjust-layout": true,
+            "item": {
+                "font-color": "#333"
+            },
+            "marker": {
+                "type": "square",
+                "border-width": 0,
+                "size": 5
+            },
+            "toggle-action": "remove",
+            "adjust-layout": true,
+        },
+        "plotarea": {
+            "marginLeft":'dynamic',
+            "marginRight":'dynamic'
+        },
+        "plot": {
+            "tooltip": {
+                "text": "Project %scale-key-label has %v votes"
+            },
+            "animation": {
+                "effect": "ANIMATION_SLIDE_BOTTOM",
+                "sequence": 1,
+                "speed": 0
+            }
+        },
+        "scale-x": {
+            "labels": [], // Label that identifies each project in the round
+            "title": {
+                "text": "Projects"
+            },
+            "item": { // Explicitly control the appearance of the scale labels
+                    "font-size": 14, // Adjust font size as needed
+                    "offset-x": 0, // Adjust to move the label left or right if needed
+                    "offset-y": 0 // Adjust to move the label up or down if needed
+                },"zooming": true,
+            "zoomTo": [0, 6]
+        },
+        "scale-y": {
+            "title": {
+                "text": "Votes"
+            },
+            "min-value": 0, // Set the minimum value to 0
+            "max-labels": 10, // Optional: Adjust the maximum number of labels displayed
+            "decimals": 0, // Optional: Adjust the number of decimal places
+        },
+        "scrollX": {
+                "bar": {
+                "backgroundColor": '#2596be',
+                "alpha": 0.5,
+                },
+                "handle": {
+                "backgroundColor": '#2596be',
+                }
+            },
+
+        "series": [{
+            "values":[], // Effective votes for next round
+            "background-color": "#0070C0",
+            "text": "Current Votes",
+            'hover-state': { /* Hover object */
+                    'background-color': "orange",
+                    // 'border-width':3,
+                    // 'border-color': "purple",
+                    // 'line-style': "dotted"
+                }
+        }, {
+            "values": [], // Effective votes lost this round
+            "background-color": "#FF0000",
+            "text": "Previous Votes"
+        }]
+    },
+    height: '100%',
+    width: '100%'
+});
+    </script>
+    <!-- Rounds data -->
+    <script>
+        var myJsArray = [{'id': '3', 'name': '3', 'effective_vote_count': {'3': 48.0, '14': 41.0, '13': 40.0, '2': 39.0, '12': 39.0, '31': 38.0, '21': 37.0, '41': 32.0, '23': 29.037389276309845, '15': 14.840668302976171, '50': 14.0, '42': 13.0, '43': 13.0, '33': 12.193089917753575, '47': 11.0, '22': 9.0, '5': 9.0, '36': 9.0, '37': 3.0, '8': 3.0}, 'effective_vote_count_reduction': {'42': 0.0, '47': 0.0, '22': 0.0, '15': -1.7763568394002505e-15, '21': 0.0, '5': 0.0, '2': 0.0, '13': 0.0, '43': 0.0, '37': 0.0, '12': 0.0, '31': 0.0, '50': 0.0, '33': 0.0, '8': 0.0, '14': 0.0, '41': 0.0, '36': 0.0, '23': -3.552713678800501e-15}, 'cost': 27000, 'totalvotes': 48, 'initial_voter_funding': 347826.0869565217, 'funding_lost_per_round': {}, 'final_voter_funding': 347826.0869565217, 'dropped_projects': [], 'remaining_budget': 473000.0, 'voter_flow': {'42': {'42': 0, '47': 2, '22': 1, '21': 7, '5': 1, '2': 8, '13': 4, '12': 5, '33': 3, '36': 1, '23': 4, '15': 2, '43': 1, '37': 0, '31': 2, '50': 1, '8': 0, '14': 7, '41': 6, '3': 8}, '47': {'42': 2, '47': 0, '22': 0, '21': 2, '5': 0, '2': 4, '13': 5, '12': 3, '33': 2, '36': 0, '23': 7, '15': 1, '43': 1, '37': 0, '31': 5, '50': 2, '8': 0, '14': 3, '41': 7, '3': 6}, '22': {'42': 1, '47': 0, '22': 0, '21': 2, '5': 1, '2': 4, '13': 6, '12': 6, '33': 2, '36': 0, '23': 0, '15': 2, '43': 0, '37': 0, '31': 5, '50': 0, '8': 0, '14': 4, '41': 3, '3': 3}, '21': {'42': 7, '47': 2, '22': 2, '21': 0, '5': 3, '2': 22, '13': 22, '12': 23, '33': 20, '36': 4, '23': 22, '15': 12, '43': 7, '37': 1, '31': 23, '50': 3, '8': 2, '14': 27, '41': 18, '3': 32}, '5': {'42': 1, '47': 0, '22': 1, '21': 3, '5': 0, '2': 4, '13': 5, '12': 4, '33': 5, '36': 3, '23': 4, '15': 7, '43': 2, '37': 0, '31': 7, '50': 2, '8': 1, '14': 5, '41': 3, '3': 4}, '2': {'42': 8, '47': 4, '22': 4, '21': 22, '5': 4, '2': 0, '13': 25, '12': 27, '33': 22, '36': 6, '23': 25, '15': 13, '43': 7, '37': 3, '31': 23, '50': 7, '8': 0, '14': 29, '41': 17, '3': 33}, '13': {'42': 4, '47': 5, '22': 6, '21': 22, '5': 5, '2': 25, '13': 0, '12': 26, '33': 21, '36': 5, '23': 24, '15': 13, '43': 7, '37': 1, '31': 27, '50': 7, '8': 0, '14': 29, '41': 20, '3': 30}, '12': {'42': 5, '47': 3, '22': 6, '21': 23, '5': 4, '2': 27, '13': 26, '12': 0, '33': 22, '36': 6, '23': 23, '15': 14, '43': 9, '37': 1, '31': 27, '50': 5, '8': 0, '14': 32, '41': 18, '3': 34}, '33': {'42': 3, '47': 2, '22': 2, '21': 20, '5': 5, '2': 22, '13': 21, '12': 22, '33': 0, '36': 6, '23': 23, '15': 11, '43': 4, '37': 1, '31': 22, '50': 8, '8': 2, '14': 24, '41': 12, '3': 26}, '36': {'42': 1, '47': 0, '22': 0, '21': 4, '5': 3, '2': 6, '13': 5, '12': 6, '33': 6, '36': 0, '23': 5, '15': 5, '43': 1, '37': 1, '31': 6, '50': 1, '8': 1, '14': 7, '41': 4, '3': 7}, '23': {'42': 4, '47': 7, '22': 0, '21': 22, '5': 4, '2': 25, '13': 24, '12': 23, '33': 23, '36': 5, '23': 0, '15': 11, '43': 5, '37': 1, '31': 20, '50': 9, '8': 1, '14': 25, '41': 17, '3': 29}, '15': {'42': 2, '47': 1, '22': 2, '21': 12, '5': 7, '2': 13, '13': 13, '12': 14, '33': 11, '36': 5, '23': 11, '15': 0, '43': 5, '37': 1, '31': 14, '50': 2, '8': 2, '14': 14, '41': 9, '3': 15}, '43': {'42': 1, '47': 1, '22': 0, '21': 7, '5': 2, '2': 7, '13': 7, '12': 9, '33': 4, '36': 1, '23': 5, '15': 5, '43': 0, '37': 0, '31': 7, '50': 3, '8': 0, '14': 6, '41': 5, '3': 9}, '37': {'42': 0, '47': 0, '22': 0, '21': 1, '5': 0, '2': 3, '13': 1, '12': 1, '33': 1, '36': 1, '23': 1, '15': 1, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 2, '41': 0, '3': 2}, '31': {'42': 2, '47': 5, '22': 5, '21': 23, '5': 7, '2': 23, '13': 27, '12': 27, '33': 22, '36': 6, '23': 20, '15': 14, '43': 7, '37': 2, '31': 0, '50': 4, '8': 2, '14': 29, '41': 19, '3': 31}, '50': {'42': 1, '47': 2, '22': 0, '21': 3, '5': 2, '2': 7, '13': 7, '12': 5, '33': 8, '36': 1, '23': 9, '15': 2, '43': 3, '37': 0, '31': 4, '50': 0, '8': 0, '14': 6, '41': 3, '3': 8}, '8': {'42': 0, '47': 0, '22': 0, '21': 2, '5': 1, '2': 0, '13': 0, '12': 0, '33': 2, '36': 1, '23': 1, '15': 2, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 0, '41': 1, '3': 1}, '14': {'42': 7, '47': 3, '22': 4, '21': 27, '5': 5, '2': 29, '13': 29, '12': 32, '33': 24, '36': 7, '23': 25, '15': 14, '43': 6, '37': 2, '31': 29, '50': 6, '8': 0, '14': 0, '41': 18, '3': 35}, '41': {'42': 6, '47': 7, '22': 3, '21': 18, '5': 3, '2': 17, '13': 20, '12': 18, '33': 12, '36': 4, '23': 17, '15': 9, '43': 5, '37': 0, '31': 19, '50': 3, '8': 1, '14': 18, '41': 0, '3': 24}, '3': {'42': 8, '47': 6, '22': 3, '21': 32, '5': 4, '2': 33, '13': 30, '12': 34, '33': 26, '36': 7, '23': 29, '15': 15, '43': 9, '37': 2, '31': 31, '50': 8, '8': 1, '14': 35, '41': 24, '3': 0}}, 'pie_chart_items': [[{'project': '14', 'roundVoters': 35, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '12', 'roundVoters': 34, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '2', 'roundVoters': 33, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '21', 'roundVoters': 32, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '31', 'roundVoters': 31, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '13', 'roundVoters': 30, 'nonRoundVoters': 10, 'reduction': 0.0}, {'project': '23', 'roundVoters': 29, 'nonRoundVoters': 7, 'reduction': -3.552713678800501e-15}, {'project': '33', 'roundVoters': 26, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '41', 'roundVoters': 24, 'nonRoundVoters': 8, 'reduction': 0.0}, {'project': '15', 'roundVoters': 15, 'nonRoundVoters': 6, 'reduction': -1.7763568394002505e-15}, {'project': '43', 'roundVoters': 9, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '42', 'roundVoters': 8, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '50', 'roundVoters': 8, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '36', 'roundVoters': 7, 'nonRoundVoters': 2, 'reduction': 0.0}, {'project': '47', 'roundVoters': 6, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '5', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '22', 'roundVoters': 3, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '37', 'roundVoters': 2, 'nonRoundVoters': 1, 'reduction': 0.0}, {'project': '8', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0.0}]], 'pie_chart_triplet': [[{'project': '14', 'roundVoters': 35, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '12', 'roundVoters': 34, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '2', 'roundVoters': 33, 'nonRoundVoters': 6, 'reduction': 0.0}], [{'project': '21', 'roundVoters': 32, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '31', 'roundVoters': 31, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '13', 'roundVoters': 30, 'nonRoundVoters': 10, 'reduction': 0.0}], [{'project': '23', 'roundVoters': 29, 'nonRoundVoters': 7, 'reduction': -3.552713678800501e-15}, {'project': '33', 'roundVoters': 26, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '41', 'roundVoters': 24, 'nonRoundVoters': 8, 'reduction': 0.0}], [{'project': '15', 'roundVoters': 15, 'nonRoundVoters': 6, 'reduction': -1.7763568394002505e-15}, {'project': '43', 'roundVoters': 9, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '42', 'roundVoters': 8, 'nonRoundVoters': 5, 'reduction': 0.0}], [{'project': '50', 'roundVoters': 8, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '36', 'roundVoters': 7, 'nonRoundVoters': 2, 'reduction': 0.0}, {'project': '47', 'roundVoters': 6, 'nonRoundVoters': 5, 'reduction': 0.0}], [{'project': '5', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '22', 'roundVoters': 3, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '37', 'roundVoters': 2, 'nonRoundVoters': 1, 'reduction': 0.0}], [{'project': '8', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0.0}]]}, {'id': '14', 'name': '14', 'effective_vote_count': {'14': 41.0, '13': 40.0, '2': 39.0, '12': 39.0, '31': 38.0, '21': 37.0, '41': 32.0, '23': 29.037389276309845, '15': 14.840668302976171, '50': 14.0, '42': 13.0, '43': 13.0, '33': 12.193089917753575, '47': 11.0, '22': 9.0, '5': 9.0, '36': 9.0, '37': 3.0, '8': 3.0}, 'effective_vote_count_reduction': {'42': 0.0, '47': 0.0, '22': 0.0, '15': -1.7763568394002505e-15, '21': 0.0, '5': 0.0, '2': 0.0, '13': 0.0, '43': 0.0, '37': 0.0, '12': 0.0, '31': 0.0, '50': 0.0, '33': 0.0, '8': 0.0, '41': 0.0, '36': 0.0, '23': -3.552713678800501e-15}, 'cost': 25000, 'totalvotes': 41, 'initial_voter_funding': 297101.4492753623, 'funding_lost_per_round': {0: 19687.5}, 'final_voter_funding': 277413.9492753623, 'dropped_projects': [], 'remaining_budget': 448000.0, 'voter_flow': {'42': {'42': 0, '47': 2, '22': 1, '21': 7, '5': 1, '2': 8, '13': 4, '12': 5, '33': 3, '36': 1, '23': 4, '15': 2, '43': 1, '37': 0, '31': 2, '50': 1, '8': 0, '14': 7, '41': 6, '3': 8}, '47': {'42': 2, '47': 0, '22': 0, '21': 2, '5': 0, '2': 4, '13': 5, '12': 3, '33': 2, '36': 0, '23': 7, '15': 1, '43': 1, '37': 0, '31': 5, '50': 2, '8': 0, '14': 3, '41': 7, '3': 6}, '22': {'42': 1, '47': 0, '22': 0, '21': 2, '5': 1, '2': 4, '13': 6, '12': 6, '33': 2, '36': 0, '23': 0, '15': 2, '43': 0, '37': 0, '31': 5, '50': 0, '8': 0, '14': 4, '41': 3, '3': 3}, '21': {'42': 7, '47': 2, '22': 2, '21': 0, '5': 3, '2': 22, '13': 22, '12': 23, '33': 20, '36': 4, '23': 22, '15': 12, '43': 7, '37': 1, '31': 23, '50': 3, '8': 2, '14': 27, '41': 18, '3': 32}, '5': {'42': 1, '47': 0, '22': 1, '21': 3, '5': 0, '2': 4, '13': 5, '12': 4, '33': 5, '36': 3, '23': 4, '15': 7, '43': 2, '37': 0, '31': 7, '50': 2, '8': 1, '14': 5, '41': 3, '3': 4}, '2': {'42': 8, '47': 4, '22': 4, '21': 22, '5': 4, '2': 0, '13': 25, '12': 27, '33': 22, '36': 6, '23': 25, '15': 13, '43': 7, '37': 3, '31': 23, '50': 7, '8': 0, '14': 29, '41': 17, '3': 33}, '13': {'42': 4, '47': 5, '22': 6, '21': 22, '5': 5, '2': 25, '13': 0, '12': 26, '33': 21, '36': 5, '23': 24, '15': 13, '43': 7, '37': 1, '31': 27, '50': 7, '8': 0, '14': 29, '41': 20, '3': 30}, '12': {'42': 5, '47': 3, '22': 6, '21': 23, '5': 4, '2': 27, '13': 26, '12': 0, '33': 22, '36': 6, '23': 23, '15': 14, '43': 9, '37': 1, '31': 27, '50': 5, '8': 0, '14': 32, '41': 18, '3': 34}, '33': {'42': 3, '47': 2, '22': 2, '21': 20, '5': 5, '2': 22, '13': 21, '12': 22, '33': 0, '36': 6, '23': 23, '15': 11, '43': 4, '37': 1, '31': 22, '50': 8, '8': 2, '14': 24, '41': 12, '3': 26}, '36': {'42': 1, '47': 0, '22': 0, '21': 4, '5': 3, '2': 6, '13': 5, '12': 6, '33': 6, '36': 0, '23': 5, '15': 5, '43': 1, '37': 1, '31': 6, '50': 1, '8': 1, '14': 7, '41': 4, '3': 7}, '23': {'42': 4, '47': 7, '22': 0, '21': 22, '5': 4, '2': 25, '13': 24, '12': 23, '33': 23, '36': 5, '23': 0, '15': 11, '43': 5, '37': 1, '31': 20, '50': 9, '8': 1, '14': 25, '41': 17, '3': 29}, '15': {'42': 2, '47': 1, '22': 2, '21': 12, '5': 7, '2': 13, '13': 13, '12': 14, '33': 11, '36': 5, '23': 11, '15': 0, '43': 5, '37': 1, '31': 14, '50': 2, '8': 2, '14': 14, '41': 9, '3': 15}, '43': {'42': 1, '47': 1, '22': 0, '21': 7, '5': 2, '2': 7, '13': 7, '12': 9, '33': 4, '36': 1, '23': 5, '15': 5, '43': 0, '37': 0, '31': 7, '50': 3, '8': 0, '14': 6, '41': 5, '3': 9}, '37': {'42': 0, '47': 0, '22': 0, '21': 1, '5': 0, '2': 3, '13': 1, '12': 1, '33': 1, '36': 1, '23': 1, '15': 1, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 2, '41': 0, '3': 2}, '31': {'42': 2, '47': 5, '22': 5, '21': 23, '5': 7, '2': 23, '13': 27, '12': 27, '33': 22, '36': 6, '23': 20, '15': 14, '43': 7, '37': 2, '31': 0, '50': 4, '8': 2, '14': 29, '41': 19, '3': 31}, '50': {'42': 1, '47': 2, '22': 0, '21': 3, '5': 2, '2': 7, '13': 7, '12': 5, '33': 8, '36': 1, '23': 9, '15': 2, '43': 3, '37': 0, '31': 4, '50': 0, '8': 0, '14': 6, '41': 3, '3': 8}, '8': {'42': 0, '47': 0, '22': 0, '21': 2, '5': 1, '2': 0, '13': 0, '12': 0, '33': 2, '36': 1, '23': 1, '15': 2, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 0, '41': 1, '3': 1}, '14': {'42': 7, '47': 3, '22': 4, '21': 27, '5': 5, '2': 29, '13': 29, '12': 32, '33': 24, '36': 7, '23': 25, '15': 14, '43': 6, '37': 2, '31': 29, '50': 6, '8': 0, '14': 0, '41': 18, '3': 35}, '41': {'42': 6, '47': 7, '22': 3, '21': 18, '5': 3, '2': 17, '13': 20, '12': 18, '33': 12, '36': 4, '23': 17, '15': 9, '43': 5, '37': 0, '31': 19, '50': 3, '8': 1, '14': 18, '41': 0, '3': 24}, '3': {'42': 8, '47': 6, '22': 3, '21': 32, '5': 4, '2': 33, '13': 30, '12': 34, '33': 26, '36': 7, '23': 29, '15': 15, '43': 9, '37': 2, '31': 31, '50': 8, '8': 1, '14': 35, '41': 24, '3': 0}}, 'pie_chart_items': [[{'project': '12', 'roundVoters': 32, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '2', 'roundVoters': 29, 'nonRoundVoters': 10, 'reduction': 0.0}, {'project': '13', 'roundVoters': 29, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '31', 'roundVoters': 29, 'nonRoundVoters': 9, 'reduction': 0.0}, {'project': '21', 'roundVoters': 27, 'nonRoundVoters': 10, 'reduction': 0.0}, {'project': '23', 'roundVoters': 25, 'nonRoundVoters': 11, 'reduction': -3.552713678800501e-15}, {'project': '33', 'roundVoters': 24, 'nonRoundVoters': 9, 'reduction': 0.0}, {'project': '41', 'roundVoters': 18, 'nonRoundVoters': 14, 'reduction': 0.0}, {'project': '15', 'roundVoters': 14, 'nonRoundVoters': 7, 'reduction': -1.7763568394002505e-15}, {'project': '42', 'roundVoters': 7, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '36', 'roundVoters': 7, 'nonRoundVoters': 2, 'reduction': 0.0}, {'project': '43', 'roundVoters': 6, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '50', 'roundVoters': 6, 'nonRoundVoters': 8, 'reduction': 0.0}, {'project': '5', 'roundVoters': 5, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '22', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '47', 'roundVoters': 3, 'nonRoundVoters': 8, 'reduction': 0.0}, {'project': '37', 'roundVoters': 2, 'nonRoundVoters': 1, 'reduction': 0.0}, {'project': '8', 'roundVoters': 0, 'nonRoundVoters': 3, 'reduction': 0.0}]], 'pie_chart_triplet': [[{'project': '12', 'roundVoters': 32, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '2', 'roundVoters': 29, 'nonRoundVoters': 10, 'reduction': 0.0}, {'project': '13', 'roundVoters': 29, 'nonRoundVoters': 11, 'reduction': 0.0}], [{'project': '31', 'roundVoters': 29, 'nonRoundVoters': 9, 'reduction': 0.0}, {'project': '21', 'roundVoters': 27, 'nonRoundVoters': 10, 'reduction': 0.0}, {'project': '23', 'roundVoters': 25, 'nonRoundVoters': 11, 'reduction': -3.552713678800501e-15}], [{'project': '33', 'roundVoters': 24, 'nonRoundVoters': 9, 'reduction': 0.0}, {'project': '41', 'roundVoters': 18, 'nonRoundVoters': 14, 'reduction': 0.0}, {'project': '15', 'roundVoters': 14, 'nonRoundVoters': 7, 'reduction': -1.7763568394002505e-15}], [{'project': '42', 'roundVoters': 7, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '36', 'roundVoters': 7, 'nonRoundVoters': 2, 'reduction': 0.0}, {'project': '43', 'roundVoters': 6, 'nonRoundVoters': 7, 'reduction': 0.0}], [{'project': '50', 'roundVoters': 6, 'nonRoundVoters': 8, 'reduction': 0.0}, {'project': '5', 'roundVoters': 5, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '22', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}], [{'project': '47', 'roundVoters': 3, 'nonRoundVoters': 8, 'reduction': 0.0}, {'project': '37', 'roundVoters': 2, 'nonRoundVoters': 1, 'reduction': 0.0}, {'project': '8', 'roundVoters': 0, 'nonRoundVoters': 3, 'reduction': 0.0}]]}, {'id': '13', 'name': '13', 'effective_vote_count': {'13': 40.0, '2': 39.0, '12': 39.0, '31': 38.0, '21': 37.0, '41': 32.0, '23': 29.037389276309845, '15': 14.840668302976171, '50': 14.0, '42': 13.0, '43': 13.0, '33': 12.193089917753575, '47': 11.0, '22': 9.0, '5': 9.0, '36': 9.0, '37': 3.0, '8': 3.0}, 'effective_vote_count_reduction': {'42': 0.0, '47': 0.0, '22': 0.0, '15': -1.7763568394002505e-15, '21': 0.0, '5': 0.0, '2': 0.0, '43': 0.0, '37': 0.0, '12': 0.0, '31': 0.0, '50': 0.0, '33': 0.0, '8': 0.0, '41': 0.0, '36': 0.0, '23': -3.552713678800501e-15}, 'cost': 24000, 'totalvotes': 40, 'initial_voter_funding': 289855.0724637681, 'funding_lost_per_round': {1: 17682.926829268254, 0: 16875.0}, 'final_voter_funding': 255297.14563449982, 'dropped_projects': [], 'remaining_budget': 424000.0, 'voter_flow': {'42': {'42': 0, '47': 2, '22': 1, '21': 7, '5': 1, '2': 8, '13': 4, '12': 5, '33': 3, '36': 1, '23': 4, '15': 2, '43': 1, '37': 0, '31': 2, '50': 1, '8': 0, '14': 7, '41': 6, '3': 8}, '47': {'42': 2, '47': 0, '22': 0, '21': 2, '5': 0, '2': 4, '13': 5, '12': 3, '33': 2, '36': 0, '23': 7, '15': 1, '43': 1, '37': 0, '31': 5, '50': 2, '8': 0, '14': 3, '41': 7, '3': 6}, '22': {'42': 1, '47': 0, '22': 0, '21': 2, '5': 1, '2': 4, '13': 6, '12': 6, '33': 2, '36': 0, '23': 0, '15': 2, '43': 0, '37': 0, '31': 5, '50': 0, '8': 0, '14': 4, '41': 3, '3': 3}, '21': {'42': 7, '47': 2, '22': 2, '21': 0, '5': 3, '2': 22, '13': 22, '12': 23, '33': 20, '36': 4, '23': 22, '15': 12, '43': 7, '37': 1, '31': 23, '50': 3, '8': 2, '14': 27, '41': 18, '3': 32}, '5': {'42': 1, '47': 0, '22': 1, '21': 3, '5': 0, '2': 4, '13': 5, '12': 4, '33': 5, '36': 3, '23': 4, '15': 7, '43': 2, '37': 0, '31': 7, '50': 2, '8': 1, '14': 5, '41': 3, '3': 4}, '2': {'42': 8, '47': 4, '22': 4, '21': 22, '5': 4, '2': 0, '13': 25, '12': 27, '33': 22, '36': 6, '23': 25, '15': 13, '43': 7, '37': 3, '31': 23, '50': 7, '8': 0, '14': 29, '41': 17, '3': 33}, '13': {'42': 4, '47': 5, '22': 6, '21': 22, '5': 5, '2': 25, '13': 0, '12': 26, '33': 21, '36': 5, '23': 24, '15': 13, '43': 7, '37': 1, '31': 27, '50': 7, '8': 0, '14': 29, '41': 20, '3': 30}, '12': {'42': 5, '47': 3, '22': 6, '21': 23, '5': 4, '2': 27, '13': 26, '12': 0, '33': 22, '36': 6, '23': 23, '15': 14, '43': 9, '37': 1, '31': 27, '50': 5, '8': 0, '14': 32, '41': 18, '3': 34}, '33': {'42': 3, '47': 2, '22': 2, '21': 20, '5': 5, '2': 22, '13': 21, '12': 22, '33': 0, '36': 6, '23': 23, '15': 11, '43': 4, '37': 1, '31': 22, '50': 8, '8': 2, '14': 24, '41': 12, '3': 26}, '36': {'42': 1, '47': 0, '22': 0, '21': 4, '5': 3, '2': 6, '13': 5, '12': 6, '33': 6, '36': 0, '23': 5, '15': 5, '43': 1, '37': 1, '31': 6, '50': 1, '8': 1, '14': 7, '41': 4, '3': 7}, '23': {'42': 4, '47': 7, '22': 0, '21': 22, '5': 4, '2': 25, '13': 24, '12': 23, '33': 23, '36': 5, '23': 0, '15': 11, '43': 5, '37': 1, '31': 20, '50': 9, '8': 1, '14': 25, '41': 17, '3': 29}, '15': {'42': 2, '47': 1, '22': 2, '21': 12, '5': 7, '2': 13, '13': 13, '12': 14, '33': 11, '36': 5, '23': 11, '15': 0, '43': 5, '37': 1, '31': 14, '50': 2, '8': 2, '14': 14, '41': 9, '3': 15}, '43': {'42': 1, '47': 1, '22': 0, '21': 7, '5': 2, '2': 7, '13': 7, '12': 9, '33': 4, '36': 1, '23': 5, '15': 5, '43': 0, '37': 0, '31': 7, '50': 3, '8': 0, '14': 6, '41': 5, '3': 9}, '37': {'42': 0, '47': 0, '22': 0, '21': 1, '5': 0, '2': 3, '13': 1, '12': 1, '33': 1, '36': 1, '23': 1, '15': 1, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 2, '41': 0, '3': 2}, '31': {'42': 2, '47': 5, '22': 5, '21': 23, '5': 7, '2': 23, '13': 27, '12': 27, '33': 22, '36': 6, '23': 20, '15': 14, '43': 7, '37': 2, '31': 0, '50': 4, '8': 2, '14': 29, '41': 19, '3': 31}, '50': {'42': 1, '47': 2, '22': 0, '21': 3, '5': 2, '2': 7, '13': 7, '12': 5, '33': 8, '36': 1, '23': 9, '15': 2, '43': 3, '37': 0, '31': 4, '50': 0, '8': 0, '14': 6, '41': 3, '3': 8}, '8': {'42': 0, '47': 0, '22': 0, '21': 2, '5': 1, '2': 0, '13': 0, '12': 0, '33': 2, '36': 1, '23': 1, '15': 2, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 0, '41': 1, '3': 1}, '14': {'42': 7, '47': 3, '22': 4, '21': 27, '5': 5, '2': 29, '13': 29, '12': 32, '33': 24, '36': 7, '23': 25, '15': 14, '43': 6, '37': 2, '31': 29, '50': 6, '8': 0, '14': 0, '41': 18, '3': 35}, '41': {'42': 6, '47': 7, '22': 3, '21': 18, '5': 3, '2': 17, '13': 20, '12': 18, '33': 12, '36': 4, '23': 17, '15': 9, '43': 5, '37': 0, '31': 19, '50': 3, '8': 1, '14': 18, '41': 0, '3': 24}, '3': {'42': 8, '47': 6, '22': 3, '21': 32, '5': 4, '2': 33, '13': 30, '12': 34, '33': 26, '36': 7, '23': 29, '15': 15, '43': 9, '37': 2, '31': 31, '50': 8, '8': 1, '14': 35, '41': 24, '3': 0}}, 'pie_chart_items': [[{'project': '31', 'roundVoters': 27, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '12', 'roundVoters': 26, 'nonRoundVoters': 13, 'reduction': 0.0}, {'project': '2', 'roundVoters': 25, 'nonRoundVoters': 14, 'reduction': 0.0}, {'project': '23', 'roundVoters': 24, 'nonRoundVoters': 12, 'reduction': -3.552713678800501e-15}, {'project': '21', 'roundVoters': 22, 'nonRoundVoters': 15, 'reduction': 0.0}, {'project': '33', 'roundVoters': 21, 'nonRoundVoters': 12, 'reduction': 0.0}, {'project': '41', 'roundVoters': 20, 'nonRoundVoters': 12, 'reduction': 0.0}, {'project': '15', 'roundVoters': 13, 'nonRoundVoters': 8, 'reduction': -1.7763568394002505e-15}, {'project': '43', 'roundVoters': 7, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '50', 'roundVoters': 7, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '22', 'roundVoters': 6, 'nonRoundVoters': 3, 'reduction': 0.0}, {'project': '47', 'roundVoters': 5, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '5', 'roundVoters': 5, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '36', 'roundVoters': 5, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '42', 'roundVoters': 4, 'nonRoundVoters': 9, 'reduction': 0.0}, {'project': '37', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0.0}, {'project': '8', 'roundVoters': 0, 'nonRoundVoters': 3, 'reduction': 0.0}]], 'pie_chart_triplet': [[{'project': '31', 'roundVoters': 27, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '12', 'roundVoters': 26, 'nonRoundVoters': 13, 'reduction': 0.0}, {'project': '2', 'roundVoters': 25, 'nonRoundVoters': 14, 'reduction': 0.0}], [{'project': '23', 'roundVoters': 24, 'nonRoundVoters': 12, 'reduction': -3.552713678800501e-15}, {'project': '21', 'roundVoters': 22, 'nonRoundVoters': 15, 'reduction': 0.0}, {'project': '33', 'roundVoters': 21, 'nonRoundVoters': 12, 'reduction': 0.0}], [{'project': '41', 'roundVoters': 20, 'nonRoundVoters': 12, 'reduction': 0.0}, {'project': '15', 'roundVoters': 13, 'nonRoundVoters': 8, 'reduction': -1.7763568394002505e-15}, {'project': '43', 'roundVoters': 7, 'nonRoundVoters': 6, 'reduction': 0.0}], [{'project': '50', 'roundVoters': 7, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '22', 'roundVoters': 6, 'nonRoundVoters': 3, 'reduction': 0.0}, {'project': '47', 'roundVoters': 5, 'nonRoundVoters': 6, 'reduction': 0.0}], [{'project': '5', 'roundVoters': 5, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '36', 'roundVoters': 5, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '42', 'roundVoters': 4, 'nonRoundVoters': 9, 'reduction': 0.0}], [{'project': '37', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0.0}, {'project': '8', 'roundVoters': 0, 'nonRoundVoters': 3, 'reduction': 0.0}]]}, {'id': '12', 'name': '12', 'effective_vote_count': {'2': 39.0, '12': 39.0, '31': 38.0, '21': 37.0, '41': 32.0, '23': 29.037389276309845, '15': 14.840668302976171, '50': 14.0, '42': 13.0, '43': 13.0, '33': 12.193089917753575, '47': 11.0, '22': 9.0, '5': 9.0, '36': 9.0, '37': 3.0, '8': 3.0}, 'effective_vote_count_reduction': {'42': 0.0, '47': 0.0, '22': 0.0, '15': -1.7763568394002505e-15, '21': 0.0, '5': 0.0, '2': 0.0, '43': 0.0, '37': 0.0, '31': 0.0, '50': 0.0, '33': 0.0, '8': 0.0, '41': 0.0, '36': 0.0, '23': -3.552713678800501e-15}, 'cost': 50000, 'totalvotes': 39, 'initial_voter_funding': 282608.6956521739, 'funding_lost_per_round': {1: 19512.195121951198, 0: 19125.0, 2: 15600.0}, 'final_voter_funding': 228371.5005302227, 'dropped_projects': [], 'remaining_budget': 374000.0, 'voter_flow': {'42': {'42': 0, '47': 2, '22': 1, '21': 7, '5': 1, '2': 8, '13': 4, '12': 5, '33': 3, '36': 1, '23': 4, '15': 2, '43': 1, '37': 0, '31': 2, '50': 1, '8': 0, '14': 7, '41': 6, '3': 8}, '47': {'42': 2, '47': 0, '22': 0, '21': 2, '5': 0, '2': 4, '13': 5, '12': 3, '33': 2, '36': 0, '23': 7, '15': 1, '43': 1, '37': 0, '31': 5, '50': 2, '8': 0, '14': 3, '41': 7, '3': 6}, '22': {'42': 1, '47': 0, '22': 0, '21': 2, '5': 1, '2': 4, '13': 6, '12': 6, '33': 2, '36': 0, '23': 0, '15': 2, '43': 0, '37': 0, '31': 5, '50': 0, '8': 0, '14': 4, '41': 3, '3': 3}, '21': {'42': 7, '47': 2, '22': 2, '21': 0, '5': 3, '2': 22, '13': 22, '12': 23, '33': 20, '36': 4, '23': 22, '15': 12, '43': 7, '37': 1, '31': 23, '50': 3, '8': 2, '14': 27, '41': 18, '3': 32}, '5': {'42': 1, '47': 0, '22': 1, '21': 3, '5': 0, '2': 4, '13': 5, '12': 4, '33': 5, '36': 3, '23': 4, '15': 7, '43': 2, '37': 0, '31': 7, '50': 2, '8': 1, '14': 5, '41': 3, '3': 4}, '2': {'42': 8, '47': 4, '22': 4, '21': 22, '5': 4, '2': 0, '13': 25, '12': 27, '33': 22, '36': 6, '23': 25, '15': 13, '43': 7, '37': 3, '31': 23, '50': 7, '8': 0, '14': 29, '41': 17, '3': 33}, '13': {'42': 4, '47': 5, '22': 6, '21': 22, '5': 5, '2': 25, '13': 0, '12': 26, '33': 21, '36': 5, '23': 24, '15': 13, '43': 7, '37': 1, '31': 27, '50': 7, '8': 0, '14': 29, '41': 20, '3': 30}, '12': {'42': 5, '47': 3, '22': 6, '21': 23, '5': 4, '2': 27, '13': 26, '12': 0, '33': 22, '36': 6, '23': 23, '15': 14, '43': 9, '37': 1, '31': 27, '50': 5, '8': 0, '14': 32, '41': 18, '3': 34}, '33': {'42': 3, '47': 2, '22': 2, '21': 20, '5': 5, '2': 22, '13': 21, '12': 22, '33': 0, '36': 6, '23': 23, '15': 11, '43': 4, '37': 1, '31': 22, '50': 8, '8': 2, '14': 24, '41': 12, '3': 26}, '36': {'42': 1, '47': 0, '22': 0, '21': 4, '5': 3, '2': 6, '13': 5, '12': 6, '33': 6, '36': 0, '23': 5, '15': 5, '43': 1, '37': 1, '31': 6, '50': 1, '8': 1, '14': 7, '41': 4, '3': 7}, '23': {'42': 4, '47': 7, '22': 0, '21': 22, '5': 4, '2': 25, '13': 24, '12': 23, '33': 23, '36': 5, '23': 0, '15': 11, '43': 5, '37': 1, '31': 20, '50': 9, '8': 1, '14': 25, '41': 17, '3': 29}, '15': {'42': 2, '47': 1, '22': 2, '21': 12, '5': 7, '2': 13, '13': 13, '12': 14, '33': 11, '36': 5, '23': 11, '15': 0, '43': 5, '37': 1, '31': 14, '50': 2, '8': 2, '14': 14, '41': 9, '3': 15}, '43': {'42': 1, '47': 1, '22': 0, '21': 7, '5': 2, '2': 7, '13': 7, '12': 9, '33': 4, '36': 1, '23': 5, '15': 5, '43': 0, '37': 0, '31': 7, '50': 3, '8': 0, '14': 6, '41': 5, '3': 9}, '37': {'42': 0, '47': 0, '22': 0, '21': 1, '5': 0, '2': 3, '13': 1, '12': 1, '33': 1, '36': 1, '23': 1, '15': 1, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 2, '41': 0, '3': 2}, '31': {'42': 2, '47': 5, '22': 5, '21': 23, '5': 7, '2': 23, '13': 27, '12': 27, '33': 22, '36': 6, '23': 20, '15': 14, '43': 7, '37': 2, '31': 0, '50': 4, '8': 2, '14': 29, '41': 19, '3': 31}, '50': {'42': 1, '47': 2, '22': 0, '21': 3, '5': 2, '2': 7, '13': 7, '12': 5, '33': 8, '36': 1, '23': 9, '15': 2, '43': 3, '37': 0, '31': 4, '50': 0, '8': 0, '14': 6, '41': 3, '3': 8}, '8': {'42': 0, '47': 0, '22': 0, '21': 2, '5': 1, '2': 0, '13': 0, '12': 0, '33': 2, '36': 1, '23': 1, '15': 2, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 0, '41': 1, '3': 1}, '14': {'42': 7, '47': 3, '22': 4, '21': 27, '5': 5, '2': 29, '13': 29, '12': 32, '33': 24, '36': 7, '23': 25, '15': 14, '43': 6, '37': 2, '31': 29, '50': 6, '8': 0, '14': 0, '41': 18, '3': 35}, '41': {'42': 6, '47': 7, '22': 3, '21': 18, '5': 3, '2': 17, '13': 20, '12': 18, '33': 12, '36': 4, '23': 17, '15': 9, '43': 5, '37': 0, '31': 19, '50': 3, '8': 1, '14': 18, '41': 0, '3': 24}, '3': {'42': 8, '47': 6, '22': 3, '21': 32, '5': 4, '2': 33, '13': 30, '12': 34, '33': 26, '36': 7, '23': 29, '15': 15, '43': 9, '37': 2, '31': 31, '50': 8, '8': 1, '14': 35, '41': 24, '3': 0}}, 'pie_chart_items': [[{'project': '2', 'roundVoters': 27, 'nonRoundVoters': 12, 'reduction': 0.0}, {'project': '31', 'roundVoters': 27, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '21', 'roundVoters': 23, 'nonRoundVoters': 14, 'reduction': 0.0}, {'project': '23', 'roundVoters': 23, 'nonRoundVoters': 13, 'reduction': -3.552713678800501e-15}, {'project': '33', 'roundVoters': 22, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '41', 'roundVoters': 18, 'nonRoundVoters': 14, 'reduction': 0.0}, {'project': '15', 'roundVoters': 14, 'nonRoundVoters': 7, 'reduction': -1.7763568394002505e-15}, {'project': '43', 'roundVoters': 9, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '22', 'roundVoters': 6, 'nonRoundVoters': 3, 'reduction': 0.0}, {'project': '36', 'roundVoters': 6, 'nonRoundVoters': 3, 'reduction': 0.0}, {'project': '42', 'roundVoters': 5, 'nonRoundVoters': 8, 'reduction': 0.0}, {'project': '50', 'roundVoters': 5, 'nonRoundVoters': 9, 'reduction': 0.0}, {'project': '5', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '47', 'roundVoters': 3, 'nonRoundVoters': 8, 'reduction': 0.0}, {'project': '37', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0.0}, {'project': '8', 'roundVoters': 0, 'nonRoundVoters': 3, 'reduction': 0.0}]], 'pie_chart_triplet': [[{'project': '2', 'roundVoters': 27, 'nonRoundVoters': 12, 'reduction': 0.0}, {'project': '31', 'roundVoters': 27, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '21', 'roundVoters': 23, 'nonRoundVoters': 14, 'reduction': 0.0}], [{'project': '23', 'roundVoters': 23, 'nonRoundVoters': 13, 'reduction': -3.552713678800501e-15}, {'project': '33', 'roundVoters': 22, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '41', 'roundVoters': 18, 'nonRoundVoters': 14, 'reduction': 0.0}], [{'project': '15', 'roundVoters': 14, 'nonRoundVoters': 7, 'reduction': -1.7763568394002505e-15}, {'project': '43', 'roundVoters': 9, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '22', 'roundVoters': 6, 'nonRoundVoters': 3, 'reduction': 0.0}], [{'project': '36', 'roundVoters': 6, 'nonRoundVoters': 3, 'reduction': 0.0}, {'project': '42', 'roundVoters': 5, 'nonRoundVoters': 8, 'reduction': 0.0}, {'project': '50', 'roundVoters': 5, 'nonRoundVoters': 9, 'reduction': 0.0}], [{'project': '5', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '47', 'roundVoters': 3, 'nonRoundVoters': 8, 'reduction': 0.0}, {'project': '37', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0.0}], [{'project': '8', 'roundVoters': 0, 'nonRoundVoters': 3, 'reduction': 0.0}]]}, {'id': '2', 'name': '2', 'effective_vote_count': {'2': 39.0, '31': 38.0, '21': 37.0, '41': 32.0, '23': 29.037389276309845, '15': 14.840668302976171, '50': 14.0, '42': 13.0, '43': 13.0, '33': 12.193089917753575, '47': 11.0, '22': 9.0, '5': 9.0, '36': 9.0, '37': 3.0, '8': 3.0}, 'effective_vote_count_reduction': {'42': 0.0, '47': 0.0, '22': 0.0, '15': -1.7763568394002505e-15, '21': 0.0, '5': 0.0, '43': 0.0, '37': 0.0, '31': 0.0, '50': 0.0, '33': 0.0, '8': 0.0, '41': 0.0, '36': 0.0, '23': -3.552713678800501e-15}, 'cost': 13000, 'totalvotes': 39, 'initial_voter_funding': 282608.6956521739, 'funding_lost_per_round': {3: 34615.384615384624, 0: 18562.5, 1: 17682.926829268283, 2: 15000.0}, 'final_voter_funding': 196747.88420752098, 'dropped_projects': [], 'remaining_budget': 361000.0, 'voter_flow': {'42': {'42': 0, '47': 2, '22': 1, '21': 7, '5': 1, '2': 8, '13': 4, '12': 5, '33': 3, '36': 1, '23': 4, '15': 2, '43': 1, '37': 0, '31': 2, '50': 1, '8': 0, '14': 7, '41': 6, '3': 8}, '47': {'42': 2, '47': 0, '22': 0, '21': 2, '5': 0, '2': 4, '13': 5, '12': 3, '33': 2, '36': 0, '23': 7, '15': 1, '43': 1, '37': 0, '31': 5, '50': 2, '8': 0, '14': 3, '41': 7, '3': 6}, '22': {'42': 1, '47': 0, '22': 0, '21': 2, '5': 1, '2': 4, '13': 6, '12': 6, '33': 2, '36': 0, '23': 0, '15': 2, '43': 0, '37': 0, '31': 5, '50': 0, '8': 0, '14': 4, '41': 3, '3': 3}, '21': {'42': 7, '47': 2, '22': 2, '21': 0, '5': 3, '2': 22, '13': 22, '12': 23, '33': 20, '36': 4, '23': 22, '15': 12, '43': 7, '37': 1, '31': 23, '50': 3, '8': 2, '14': 27, '41': 18, '3': 32}, '5': {'42': 1, '47': 0, '22': 1, '21': 3, '5': 0, '2': 4, '13': 5, '12': 4, '33': 5, '36': 3, '23': 4, '15': 7, '43': 2, '37': 0, '31': 7, '50': 2, '8': 1, '14': 5, '41': 3, '3': 4}, '2': {'42': 8, '47': 4, '22': 4, '21': 22, '5': 4, '2': 0, '13': 25, '12': 27, '33': 22, '36': 6, '23': 25, '15': 13, '43': 7, '37': 3, '31': 23, '50': 7, '8': 0, '14': 29, '41': 17, '3': 33}, '13': {'42': 4, '47': 5, '22': 6, '21': 22, '5': 5, '2': 25, '13': 0, '12': 26, '33': 21, '36': 5, '23': 24, '15': 13, '43': 7, '37': 1, '31': 27, '50': 7, '8': 0, '14': 29, '41': 20, '3': 30}, '12': {'42': 5, '47': 3, '22': 6, '21': 23, '5': 4, '2': 27, '13': 26, '12': 0, '33': 22, '36': 6, '23': 23, '15': 14, '43': 9, '37': 1, '31': 27, '50': 5, '8': 0, '14': 32, '41': 18, '3': 34}, '33': {'42': 3, '47': 2, '22': 2, '21': 20, '5': 5, '2': 22, '13': 21, '12': 22, '33': 0, '36': 6, '23': 23, '15': 11, '43': 4, '37': 1, '31': 22, '50': 8, '8': 2, '14': 24, '41': 12, '3': 26}, '36': {'42': 1, '47': 0, '22': 0, '21': 4, '5': 3, '2': 6, '13': 5, '12': 6, '33': 6, '36': 0, '23': 5, '15': 5, '43': 1, '37': 1, '31': 6, '50': 1, '8': 1, '14': 7, '41': 4, '3': 7}, '23': {'42': 4, '47': 7, '22': 0, '21': 22, '5': 4, '2': 25, '13': 24, '12': 23, '33': 23, '36': 5, '23': 0, '15': 11, '43': 5, '37': 1, '31': 20, '50': 9, '8': 1, '14': 25, '41': 17, '3': 29}, '15': {'42': 2, '47': 1, '22': 2, '21': 12, '5': 7, '2': 13, '13': 13, '12': 14, '33': 11, '36': 5, '23': 11, '15': 0, '43': 5, '37': 1, '31': 14, '50': 2, '8': 2, '14': 14, '41': 9, '3': 15}, '43': {'42': 1, '47': 1, '22': 0, '21': 7, '5': 2, '2': 7, '13': 7, '12': 9, '33': 4, '36': 1, '23': 5, '15': 5, '43': 0, '37': 0, '31': 7, '50': 3, '8': 0, '14': 6, '41': 5, '3': 9}, '37': {'42': 0, '47': 0, '22': 0, '21': 1, '5': 0, '2': 3, '13': 1, '12': 1, '33': 1, '36': 1, '23': 1, '15': 1, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 2, '41': 0, '3': 2}, '31': {'42': 2, '47': 5, '22': 5, '21': 23, '5': 7, '2': 23, '13': 27, '12': 27, '33': 22, '36': 6, '23': 20, '15': 14, '43': 7, '37': 2, '31': 0, '50': 4, '8': 2, '14': 29, '41': 19, '3': 31}, '50': {'42': 1, '47': 2, '22': 0, '21': 3, '5': 2, '2': 7, '13': 7, '12': 5, '33': 8, '36': 1, '23': 9, '15': 2, '43': 3, '37': 0, '31': 4, '50': 0, '8': 0, '14': 6, '41': 3, '3': 8}, '8': {'42': 0, '47': 0, '22': 0, '21': 2, '5': 1, '2': 0, '13': 0, '12': 0, '33': 2, '36': 1, '23': 1, '15': 2, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 0, '41': 1, '3': 1}, '14': {'42': 7, '47': 3, '22': 4, '21': 27, '5': 5, '2': 29, '13': 29, '12': 32, '33': 24, '36': 7, '23': 25, '15': 14, '43': 6, '37': 2, '31': 29, '50': 6, '8': 0, '14': 0, '41': 18, '3': 35}, '41': {'42': 6, '47': 7, '22': 3, '21': 18, '5': 3, '2': 17, '13': 20, '12': 18, '33': 12, '36': 4, '23': 17, '15': 9, '43': 5, '37': 0, '31': 19, '50': 3, '8': 1, '14': 18, '41': 0, '3': 24}, '3': {'42': 8, '47': 6, '22': 3, '21': 32, '5': 4, '2': 33, '13': 30, '12': 34, '33': 26, '36': 7, '23': 29, '15': 15, '43': 9, '37': 2, '31': 31, '50': 8, '8': 1, '14': 35, '41': 24, '3': 0}}, 'pie_chart_items': [[{'project': '23', 'roundVoters': 25, 'nonRoundVoters': 11, 'reduction': -3.552713678800501e-15}, {'project': '31', 'roundVoters': 23, 'nonRoundVoters': 15, 'reduction': 0.0}, {'project': '21', 'roundVoters': 22, 'nonRoundVoters': 15, 'reduction': 0.0}, {'project': '33', 'roundVoters': 22, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '41', 'roundVoters': 17, 'nonRoundVoters': 15, 'reduction': 0.0}, {'project': '15', 'roundVoters': 13, 'nonRoundVoters': 8, 'reduction': -1.7763568394002505e-15}, {'project': '42', 'roundVoters': 8, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '43', 'roundVoters': 7, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '50', 'roundVoters': 7, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '36', 'roundVoters': 6, 'nonRoundVoters': 3, 'reduction': 0.0}, {'project': '47', 'roundVoters': 4, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '22', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '5', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '37', 'roundVoters': 3, 'nonRoundVoters': 0, 'reduction': 0.0}, {'project': '8', 'roundVoters': 0, 'nonRoundVoters': 3, 'reduction': 0.0}]], 'pie_chart_triplet': [[{'project': '23', 'roundVoters': 25, 'nonRoundVoters': 11, 'reduction': -3.552713678800501e-15}, {'project': '31', 'roundVoters': 23, 'nonRoundVoters': 15, 'reduction': 0.0}, {'project': '21', 'roundVoters': 22, 'nonRoundVoters': 15, 'reduction': 0.0}], [{'project': '33', 'roundVoters': 22, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '41', 'roundVoters': 17, 'nonRoundVoters': 15, 'reduction': 0.0}, {'project': '15', 'roundVoters': 13, 'nonRoundVoters': 8, 'reduction': -1.7763568394002505e-15}], [{'project': '42', 'roundVoters': 8, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '43', 'roundVoters': 7, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '50', 'roundVoters': 7, 'nonRoundVoters': 7, 'reduction': 0.0}], [{'project': '36', 'roundVoters': 6, 'nonRoundVoters': 3, 'reduction': 0.0}, {'project': '47', 'roundVoters': 4, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '22', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}], [{'project': '5', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '37', 'roundVoters': 3, 'nonRoundVoters': 0, 'reduction': 0.0}, {'project': '8', 'roundVoters': 0, 'nonRoundVoters': 3, 'reduction': 0.0}]]}, {'id': '31', 'name': '31', 'effective_vote_count': {'31': 38.0, '21': 37.0, '41': 32.0, '23': 29.037389276309845, '15': 14.840668302976171, '50': 14.0, '42': 13.0, '43': 13.0, '33': 12.193089917753575, '47': 11.0, '22': 9.0, '5': 9.0, '36': 9.0, '37': 3.0, '8': 3.0}, 'effective_vote_count_reduction': {'42': 0.0, '47': 0.0, '22': 0.0, '15': -1.7763568394002505e-15, '21': 0.0, '5': 0.0, '43': 0.0, '37': 0.0, '50': 0.0, '33': 0.0, '8': 0.0, '41': 0.0, '36': 0.0, '23': -3.552713678800501e-15}, 'cost': 8000, 'totalvotes': 38, 'initial_voter_funding': 275362.3188405797, 'funding_lost_per_round': {3: 34615.384615384624, 1: 17682.926829268283, 0: 17437.49999999997, 2: 16200.0, 4: 7666.666666666657}, 'final_voter_funding': 181759.84072926012, 'dropped_projects': [], 'remaining_budget': 353000.0, 'voter_flow': {'42': {'42': 0, '47': 2, '22': 1, '21': 7, '5': 1, '2': 8, '13': 4, '12': 5, '33': 3, '36': 1, '23': 4, '15': 2, '43': 1, '37': 0, '31': 2, '50': 1, '8': 0, '14': 7, '41': 6, '3': 8}, '47': {'42': 2, '47': 0, '22': 0, '21': 2, '5': 0, '2': 4, '13': 5, '12': 3, '33': 2, '36': 0, '23': 7, '15': 1, '43': 1, '37': 0, '31': 5, '50': 2, '8': 0, '14': 3, '41': 7, '3': 6}, '22': {'42': 1, '47': 0, '22': 0, '21': 2, '5': 1, '2': 4, '13': 6, '12': 6, '33': 2, '36': 0, '23': 0, '15': 2, '43': 0, '37': 0, '31': 5, '50': 0, '8': 0, '14': 4, '41': 3, '3': 3}, '21': {'42': 7, '47': 2, '22': 2, '21': 0, '5': 3, '2': 22, '13': 22, '12': 23, '33': 20, '36': 4, '23': 22, '15': 12, '43': 7, '37': 1, '31': 23, '50': 3, '8': 2, '14': 27, '41': 18, '3': 32}, '5': {'42': 1, '47': 0, '22': 1, '21': 3, '5': 0, '2': 4, '13': 5, '12': 4, '33': 5, '36': 3, '23': 4, '15': 7, '43': 2, '37': 0, '31': 7, '50': 2, '8': 1, '14': 5, '41': 3, '3': 4}, '2': {'42': 8, '47': 4, '22': 4, '21': 22, '5': 4, '2': 0, '13': 25, '12': 27, '33': 22, '36': 6, '23': 25, '15': 13, '43': 7, '37': 3, '31': 23, '50': 7, '8': 0, '14': 29, '41': 17, '3': 33}, '13': {'42': 4, '47': 5, '22': 6, '21': 22, '5': 5, '2': 25, '13': 0, '12': 26, '33': 21, '36': 5, '23': 24, '15': 13, '43': 7, '37': 1, '31': 27, '50': 7, '8': 0, '14': 29, '41': 20, '3': 30}, '12': {'42': 5, '47': 3, '22': 6, '21': 23, '5': 4, '2': 27, '13': 26, '12': 0, '33': 22, '36': 6, '23': 23, '15': 14, '43': 9, '37': 1, '31': 27, '50': 5, '8': 0, '14': 32, '41': 18, '3': 34}, '33': {'42': 3, '47': 2, '22': 2, '21': 20, '5': 5, '2': 22, '13': 21, '12': 22, '33': 0, '36': 6, '23': 23, '15': 11, '43': 4, '37': 1, '31': 22, '50': 8, '8': 2, '14': 24, '41': 12, '3': 26}, '36': {'42': 1, '47': 0, '22': 0, '21': 4, '5': 3, '2': 6, '13': 5, '12': 6, '33': 6, '36': 0, '23': 5, '15': 5, '43': 1, '37': 1, '31': 6, '50': 1, '8': 1, '14': 7, '41': 4, '3': 7}, '23': {'42': 4, '47': 7, '22': 0, '21': 22, '5': 4, '2': 25, '13': 24, '12': 23, '33': 23, '36': 5, '23': 0, '15': 11, '43': 5, '37': 1, '31': 20, '50': 9, '8': 1, '14': 25, '41': 17, '3': 29}, '15': {'42': 2, '47': 1, '22': 2, '21': 12, '5': 7, '2': 13, '13': 13, '12': 14, '33': 11, '36': 5, '23': 11, '15': 0, '43': 5, '37': 1, '31': 14, '50': 2, '8': 2, '14': 14, '41': 9, '3': 15}, '43': {'42': 1, '47': 1, '22': 0, '21': 7, '5': 2, '2': 7, '13': 7, '12': 9, '33': 4, '36': 1, '23': 5, '15': 5, '43': 0, '37': 0, '31': 7, '50': 3, '8': 0, '14': 6, '41': 5, '3': 9}, '37': {'42': 0, '47': 0, '22': 0, '21': 1, '5': 0, '2': 3, '13': 1, '12': 1, '33': 1, '36': 1, '23': 1, '15': 1, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 2, '41': 0, '3': 2}, '31': {'42': 2, '47': 5, '22': 5, '21': 23, '5': 7, '2': 23, '13': 27, '12': 27, '33': 22, '36': 6, '23': 20, '15': 14, '43': 7, '37': 2, '31': 0, '50': 4, '8': 2, '14': 29, '41': 19, '3': 31}, '50': {'42': 1, '47': 2, '22': 0, '21': 3, '5': 2, '2': 7, '13': 7, '12': 5, '33': 8, '36': 1, '23': 9, '15': 2, '43': 3, '37': 0, '31': 4, '50': 0, '8': 0, '14': 6, '41': 3, '3': 8}, '8': {'42': 0, '47': 0, '22': 0, '21': 2, '5': 1, '2': 0, '13': 0, '12': 0, '33': 2, '36': 1, '23': 1, '15': 2, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 0, '41': 1, '3': 1}, '14': {'42': 7, '47': 3, '22': 4, '21': 27, '5': 5, '2': 29, '13': 29, '12': 32, '33': 24, '36': 7, '23': 25, '15': 14, '43': 6, '37': 2, '31': 29, '50': 6, '8': 0, '14': 0, '41': 18, '3': 35}, '41': {'42': 6, '47': 7, '22': 3, '21': 18, '5': 3, '2': 17, '13': 20, '12': 18, '33': 12, '36': 4, '23': 17, '15': 9, '43': 5, '37': 0, '31': 19, '50': 3, '8': 1, '14': 18, '41': 0, '3': 24}, '3': {'42': 8, '47': 6, '22': 3, '21': 32, '5': 4, '2': 33, '13': 30, '12': 34, '33': 26, '36': 7, '23': 29, '15': 15, '43': 9, '37': 2, '31': 31, '50': 8, '8': 1, '14': 35, '41': 24, '3': 0}}, 'pie_chart_items': [[{'project': '21', 'roundVoters': 23, 'nonRoundVoters': 14, 'reduction': 0.0}, {'project': '33', 'roundVoters': 22, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '23', 'roundVoters': 20, 'nonRoundVoters': 16, 'reduction': -3.552713678800501e-15}, {'project': '41', 'roundVoters': 19, 'nonRoundVoters': 13, 'reduction': 0.0}, {'project': '15', 'roundVoters': 14, 'nonRoundVoters': 7, 'reduction': -1.7763568394002505e-15}, {'project': '5', 'roundVoters': 7, 'nonRoundVoters': 2, 'reduction': 0.0}, {'project': '43', 'roundVoters': 7, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '36', 'roundVoters': 6, 'nonRoundVoters': 3, 'reduction': 0.0}, {'project': '47', 'roundVoters': 5, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '22', 'roundVoters': 5, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '50', 'roundVoters': 4, 'nonRoundVoters': 10, 'reduction': 0.0}, {'project': '42', 'roundVoters': 2, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '37', 'roundVoters': 2, 'nonRoundVoters': 1, 'reduction': 0.0}, {'project': '8', 'roundVoters': 2, 'nonRoundVoters': 1, 'reduction': 0.0}]], 'pie_chart_triplet': [[{'project': '21', 'roundVoters': 23, 'nonRoundVoters': 14, 'reduction': 0.0}, {'project': '33', 'roundVoters': 22, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '23', 'roundVoters': 20, 'nonRoundVoters': 16, 'reduction': -3.552713678800501e-15}], [{'project': '41', 'roundVoters': 19, 'nonRoundVoters': 13, 'reduction': 0.0}, {'project': '15', 'roundVoters': 14, 'nonRoundVoters': 7, 'reduction': -1.7763568394002505e-15}, {'project': '5', 'roundVoters': 7, 'nonRoundVoters': 2, 'reduction': 0.0}], [{'project': '43', 'roundVoters': 7, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '36', 'roundVoters': 6, 'nonRoundVoters': 3, 'reduction': 0.0}, {'project': '47', 'roundVoters': 5, 'nonRoundVoters': 6, 'reduction': 0.0}], [{'project': '22', 'roundVoters': 5, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '50', 'roundVoters': 4, 'nonRoundVoters': 10, 'reduction': 0.0}, {'project': '42', 'roundVoters': 2, 'nonRoundVoters': 11, 'reduction': 0.0}], [{'project': '37', 'roundVoters': 2, 'nonRoundVoters': 1, 'reduction': 0.0}, {'project': '8', 'roundVoters': 2, 'nonRoundVoters': 1, 'reduction': 0.0}]]}, {'id': '21', 'name': '21', 'effective_vote_count': {'21': 37.0, '41': 32.0, '23': 29.037389276309845, '15': 14.840668302976171, '50': 14.0, '42': 13.0, '43': 13.0, '33': 12.193089917753575, '47': 11.0, '22': 9.0, '5': 9.0, '36': 9.0, '37': 3.0, '8': 3.0}, 'effective_vote_count_reduction': {'42': 0.0, '47': 0.0, '22': 0.0, '15': -1.7763568394002505e-15, '5': 0.0, '43': 0.0, '37': 0.0, '50': 0.0, '33': 0.0, '8': 0.0, '41': 0.0, '36': 0.0, '23': -3.552713678800501e-15}, 'cost': 119400, 'totalvotes': 37, 'initial_voter_funding': 268115.94202898553, 'funding_lost_per_round': {3: 29487.1794871795, 0: 17999.99999999997, 1: 16463.41463414635, 2: 13200.0, 4: 7333.333333333314, 5: 4842.105263157893}, 'final_voter_funding': 178789.90931116845, 'dropped_projects': [], 'remaining_budget': 233600.0, 'voter_flow': {'42': {'42': 0, '47': 2, '22': 1, '21': 7, '5': 1, '2': 8, '13': 4, '12': 5, '33': 3, '36': 1, '23': 4, '15': 2, '43': 1, '37': 0, '31': 2, '50': 1, '8': 0, '14': 7, '41': 6, '3': 8}, '47': {'42': 2, '47': 0, '22': 0, '21': 2, '5': 0, '2': 4, '13': 5, '12': 3, '33': 2, '36': 0, '23': 7, '15': 1, '43': 1, '37': 0, '31': 5, '50': 2, '8': 0, '14': 3, '41': 7, '3': 6}, '22': {'42': 1, '47': 0, '22': 0, '21': 2, '5': 1, '2': 4, '13': 6, '12': 6, '33': 2, '36': 0, '23': 0, '15': 2, '43': 0, '37': 0, '31': 5, '50': 0, '8': 0, '14': 4, '41': 3, '3': 3}, '21': {'42': 7, '47': 2, '22': 2, '21': 0, '5': 3, '2': 22, '13': 22, '12': 23, '33': 20, '36': 4, '23': 22, '15': 12, '43': 7, '37': 1, '31': 23, '50': 3, '8': 2, '14': 27, '41': 18, '3': 32}, '5': {'42': 1, '47': 0, '22': 1, '21': 3, '5': 0, '2': 4, '13': 5, '12': 4, '33': 5, '36': 3, '23': 4, '15': 7, '43': 2, '37': 0, '31': 7, '50': 2, '8': 1, '14': 5, '41': 3, '3': 4}, '2': {'42': 8, '47': 4, '22': 4, '21': 22, '5': 4, '2': 0, '13': 25, '12': 27, '33': 22, '36': 6, '23': 25, '15': 13, '43': 7, '37': 3, '31': 23, '50': 7, '8': 0, '14': 29, '41': 17, '3': 33}, '13': {'42': 4, '47': 5, '22': 6, '21': 22, '5': 5, '2': 25, '13': 0, '12': 26, '33': 21, '36': 5, '23': 24, '15': 13, '43': 7, '37': 1, '31': 27, '50': 7, '8': 0, '14': 29, '41': 20, '3': 30}, '12': {'42': 5, '47': 3, '22': 6, '21': 23, '5': 4, '2': 27, '13': 26, '12': 0, '33': 22, '36': 6, '23': 23, '15': 14, '43': 9, '37': 1, '31': 27, '50': 5, '8': 0, '14': 32, '41': 18, '3': 34}, '33': {'42': 3, '47': 2, '22': 2, '21': 20, '5': 5, '2': 22, '13': 21, '12': 22, '33': 0, '36': 6, '23': 23, '15': 11, '43': 4, '37': 1, '31': 22, '50': 8, '8': 2, '14': 24, '41': 12, '3': 26}, '36': {'42': 1, '47': 0, '22': 0, '21': 4, '5': 3, '2': 6, '13': 5, '12': 6, '33': 6, '36': 0, '23': 5, '15': 5, '43': 1, '37': 1, '31': 6, '50': 1, '8': 1, '14': 7, '41': 4, '3': 7}, '23': {'42': 4, '47': 7, '22': 0, '21': 22, '5': 4, '2': 25, '13': 24, '12': 23, '33': 23, '36': 5, '23': 0, '15': 11, '43': 5, '37': 1, '31': 20, '50': 9, '8': 1, '14': 25, '41': 17, '3': 29}, '15': {'42': 2, '47': 1, '22': 2, '21': 12, '5': 7, '2': 13, '13': 13, '12': 14, '33': 11, '36': 5, '23': 11, '15': 0, '43': 5, '37': 1, '31': 14, '50': 2, '8': 2, '14': 14, '41': 9, '3': 15}, '43': {'42': 1, '47': 1, '22': 0, '21': 7, '5': 2, '2': 7, '13': 7, '12': 9, '33': 4, '36': 1, '23': 5, '15': 5, '43': 0, '37': 0, '31': 7, '50': 3, '8': 0, '14': 6, '41': 5, '3': 9}, '37': {'42': 0, '47': 0, '22': 0, '21': 1, '5': 0, '2': 3, '13': 1, '12': 1, '33': 1, '36': 1, '23': 1, '15': 1, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 2, '41': 0, '3': 2}, '31': {'42': 2, '47': 5, '22': 5, '21': 23, '5': 7, '2': 23, '13': 27, '12': 27, '33': 22, '36': 6, '23': 20, '15': 14, '43': 7, '37': 2, '31': 0, '50': 4, '8': 2, '14': 29, '41': 19, '3': 31}, '50': {'42': 1, '47': 2, '22': 0, '21': 3, '5': 2, '2': 7, '13': 7, '12': 5, '33': 8, '36': 1, '23': 9, '15': 2, '43': 3, '37': 0, '31': 4, '50': 0, '8': 0, '14': 6, '41': 3, '3': 8}, '8': {'42': 0, '47': 0, '22': 0, '21': 2, '5': 1, '2': 0, '13': 0, '12': 0, '33': 2, '36': 1, '23': 1, '15': 2, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 0, '41': 1, '3': 1}, '14': {'42': 7, '47': 3, '22': 4, '21': 27, '5': 5, '2': 29, '13': 29, '12': 32, '33': 24, '36': 7, '23': 25, '15': 14, '43': 6, '37': 2, '31': 29, '50': 6, '8': 0, '14': 0, '41': 18, '3': 35}, '41': {'42': 6, '47': 7, '22': 3, '21': 18, '5': 3, '2': 17, '13': 20, '12': 18, '33': 12, '36': 4, '23': 17, '15': 9, '43': 5, '37': 0, '31': 19, '50': 3, '8': 1, '14': 18, '41': 0, '3': 24}, '3': {'42': 8, '47': 6, '22': 3, '21': 32, '5': 4, '2': 33, '13': 30, '12': 34, '33': 26, '36': 7, '23': 29, '15': 15, '43': 9, '37': 2, '31': 31, '50': 8, '8': 1, '14': 35, '41': 24, '3': 0}}, 'pie_chart_items': [[{'project': '23', 'roundVoters': 22, 'nonRoundVoters': 14, 'reduction': -3.552713678800501e-15}, {'project': '33', 'roundVoters': 20, 'nonRoundVoters': 13, 'reduction': 0.0}, {'project': '41', 'roundVoters': 18, 'nonRoundVoters': 14, 'reduction': 0.0}, {'project': '15', 'roundVoters': 12, 'nonRoundVoters': 9, 'reduction': -1.7763568394002505e-15}, {'project': '42', 'roundVoters': 7, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '43', 'roundVoters': 7, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '36', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '5', 'roundVoters': 3, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '50', 'roundVoters': 3, 'nonRoundVoters': 11, 'reduction': 0.0}, {'project': '47', 'roundVoters': 2, 'nonRoundVoters': 9, 'reduction': 0.0}, {'project': '22', 'roundVoters': 2, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '8', 'roundVoters': 2, 'nonRoundVoters': 1, 'reduction': 0.0}, {'project': '37', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0.0}]], 'pie_chart_triplet': [[{'project': '23', 'roundVoters': 22, 'nonRoundVoters': 14, 'reduction': -3.552713678800501e-15}, {'project': '33', 'roundVoters': 20, 'nonRoundVoters': 13, 'reduction': 0.0}, {'project': '41', 'roundVoters': 18, 'nonRoundVoters': 14, 'reduction': 0.0}], [{'project': '15', 'roundVoters': 12, 'nonRoundVoters': 9, 'reduction': -1.7763568394002505e-15}, {'project': '42', 'roundVoters': 7, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '43', 'roundVoters': 7, 'nonRoundVoters': 6, 'reduction': 0.0}], [{'project': '36', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '5', 'roundVoters': 3, 'nonRoundVoters': 6, 'reduction': 0.0}, {'project': '50', 'roundVoters': 3, 'nonRoundVoters': 11, 'reduction': 0.0}], [{'project': '47', 'roundVoters': 2, 'nonRoundVoters': 9, 'reduction': 0.0}, {'project': '22', 'roundVoters': 2, 'nonRoundVoters': 7, 'reduction': 0.0}, {'project': '8', 'roundVoters': 2, 'nonRoundVoters': 1, 'reduction': 0.0}], [{'project': '37', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0.0}]]}, {'id': '23', 'name': '23', 'effective_vote_count': {'41': 32.0, '23': 29.037389276309845, '15': 14.840668302976171, '50': 14.0, '42': 13.0, '43': 13.0, '33': 12.193089917753575, '47': 11.0, '22': 9.0, '5': 9.0, '36': 9.0, '37': 3.0, '8': 3.0}, 'effective_vote_count_reduction': {'42': 0.0, '47': 0.0, '22': 0.0, '15': -1.7763568394002505e-15, '5': 0.0, '43': 0.0, '37': 0.0, '50': 0.0, '33': 0.0, '8': 0.0, '36': 0.0}, 'cost': 40000, 'totalvotes': 36, 'initial_voter_funding': 260869.5652173913, 'funding_lost_per_round': {6: 70994.59459459459, 3: 29487.1794871795, 0: 16312.5, 1: 15243.902439024387, 2: 14400.0, 4: 8333.333333333343, 5: 4210.526315789466}, 'final_voter_funding': 101887.52904747002, 'dropped_projects': [{'id': '41', 'cost': 110000, 'effective_vote_count': 32.0, 'totalvotes': 32, 'initial_voter_funding': 231884.0579710145, 'funding_lost_per_round': {6: 58086.48648648648, 3: 23076.923076923093, 0: 13500.0, 2: 12000.0, 1: 10975.609756097547, 4: 5666.666666666657, 5: 4000.0}, 'final_voter_funding': 104578.37198484069}], 'remaining_budget': 193600.0, 'voter_flow': {'42': {'42': 0, '47': 2, '22': 1, '21': 7, '5': 1, '2': 8, '13': 4, '12': 5, '33': 3, '36': 1, '23': 4, '15': 2, '43': 1, '37': 0, '31': 2, '50': 1, '8': 0, '14': 7, '41': 6, '3': 8}, '47': {'42': 2, '47': 0, '22': 0, '21': 2, '5': 0, '2': 4, '13': 5, '12': 3, '33': 2, '36': 0, '23': 7, '15': 1, '43': 1, '37': 0, '31': 5, '50': 2, '8': 0, '14': 3, '41': 7, '3': 6}, '22': {'42': 1, '47': 0, '22': 0, '21': 2, '5': 1, '2': 4, '13': 6, '12': 6, '33': 2, '36': 0, '23': 0, '15': 2, '43': 0, '37': 0, '31': 5, '50': 0, '8': 0, '14': 4, '41': 3, '3': 3}, '21': {'42': 7, '47': 2, '22': 2, '21': 0, '5': 3, '2': 22, '13': 22, '12': 23, '33': 20, '36': 4, '23': 22, '15': 12, '43': 7, '37': 1, '31': 23, '50': 3, '8': 2, '14': 27, '41': 18, '3': 32}, '5': {'42': 1, '47': 0, '22': 1, '21': 3, '5': 0, '2': 4, '13': 5, '12': 4, '33': 5, '36': 3, '23': 4, '15': 7, '43': 2, '37': 0, '31': 7, '50': 2, '8': 1, '14': 5, '41': 3, '3': 4}, '2': {'42': 8, '47': 4, '22': 4, '21': 22, '5': 4, '2': 0, '13': 25, '12': 27, '33': 22, '36': 6, '23': 25, '15': 13, '43': 7, '37': 3, '31': 23, '50': 7, '8': 0, '14': 29, '41': 17, '3': 33}, '13': {'42': 4, '47': 5, '22': 6, '21': 22, '5': 5, '2': 25, '13': 0, '12': 26, '33': 21, '36': 5, '23': 24, '15': 13, '43': 7, '37': 1, '31': 27, '50': 7, '8': 0, '14': 29, '41': 20, '3': 30}, '12': {'42': 5, '47': 3, '22': 6, '21': 23, '5': 4, '2': 27, '13': 26, '12': 0, '33': 22, '36': 6, '23': 23, '15': 14, '43': 9, '37': 1, '31': 27, '50': 5, '8': 0, '14': 32, '41': 18, '3': 34}, '33': {'42': 3, '47': 2, '22': 2, '21': 20, '5': 5, '2': 22, '13': 21, '12': 22, '33': 0, '36': 6, '23': 23, '15': 11, '43': 4, '37': 1, '31': 22, '50': 8, '8': 2, '14': 24, '41': 12, '3': 26}, '36': {'42': 1, '47': 0, '22': 0, '21': 4, '5': 3, '2': 6, '13': 5, '12': 6, '33': 6, '36': 0, '23': 5, '15': 5, '43': 1, '37': 1, '31': 6, '50': 1, '8': 1, '14': 7, '41': 4, '3': 7}, '23': {'42': 4, '47': 7, '22': 0, '21': 22, '5': 4, '2': 25, '13': 24, '12': 23, '33': 23, '36': 5, '23': 0, '15': 11, '43': 5, '37': 1, '31': 20, '50': 9, '8': 1, '14': 25, '41': 17, '3': 29}, '15': {'42': 2, '47': 1, '22': 2, '21': 12, '5': 7, '2': 13, '13': 13, '12': 14, '33': 11, '36': 5, '23': 11, '15': 0, '43': 5, '37': 1, '31': 14, '50': 2, '8': 2, '14': 14, '41': 9, '3': 15}, '43': {'42': 1, '47': 1, '22': 0, '21': 7, '5': 2, '2': 7, '13': 7, '12': 9, '33': 4, '36': 1, '23': 5, '15': 5, '43': 0, '37': 0, '31': 7, '50': 3, '8': 0, '14': 6, '41': 5, '3': 9}, '37': {'42': 0, '47': 0, '22': 0, '21': 1, '5': 0, '2': 3, '13': 1, '12': 1, '33': 1, '36': 1, '23': 1, '15': 1, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 2, '41': 0, '3': 2}, '31': {'42': 2, '47': 5, '22': 5, '21': 23, '5': 7, '2': 23, '13': 27, '12': 27, '33': 22, '36': 6, '23': 20, '15': 14, '43': 7, '37': 2, '31': 0, '50': 4, '8': 2, '14': 29, '41': 19, '3': 31}, '50': {'42': 1, '47': 2, '22': 0, '21': 3, '5': 2, '2': 7, '13': 7, '12': 5, '33': 8, '36': 1, '23': 9, '15': 2, '43': 3, '37': 0, '31': 4, '50': 0, '8': 0, '14': 6, '41': 3, '3': 8}, '8': {'42': 0, '47': 0, '22': 0, '21': 2, '5': 1, '2': 0, '13': 0, '12': 0, '33': 2, '36': 1, '23': 1, '15': 2, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 0, '41': 1, '3': 1}, '14': {'42': 7, '47': 3, '22': 4, '21': 27, '5': 5, '2': 29, '13': 29, '12': 32, '33': 24, '36': 7, '23': 25, '15': 14, '43': 6, '37': 2, '31': 29, '50': 6, '8': 0, '14': 0, '41': 18, '3': 35}, '41': {'42': 6, '47': 7, '22': 3, '21': 18, '5': 3, '2': 17, '13': 20, '12': 18, '33': 12, '36': 4, '23': 17, '15': 9, '43': 5, '37': 0, '31': 19, '50': 3, '8': 1, '14': 18, '41': 0, '3': 24}, '3': {'42': 8, '47': 6, '22': 3, '21': 32, '5': 4, '2': 33, '13': 30, '12': 34, '33': 26, '36': 7, '23': 29, '15': 15, '43': 9, '37': 2, '31': 31, '50': 8, '8': 1, '14': 35, '41': 24, '3': 0}}, 'pie_chart_items': [[{'project': '33', 'roundVoters': 23, 'nonRoundVoters': 10, 'reduction': 0.0}, {'project': '41', 'roundVoters': 17, 'nonRoundVoters': 15, 'reduction': 0}, {'project': '15', 'roundVoters': 11, 'nonRoundVoters': 10, 'reduction': -1.7763568394002505e-15}, {'project': '50', 'roundVoters': 9, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '47', 'roundVoters': 7, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '36', 'roundVoters': 5, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '43', 'roundVoters': 5, 'nonRoundVoters': 8, 'reduction': 0.0}, {'project': '42', 'roundVoters': 4, 'nonRoundVoters': 9, 'reduction': 0.0}, {'project': '5', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '37', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0.0}, {'project': '8', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0.0}, {'project': '22', 'roundVoters': 0, 'nonRoundVoters': 9, 'reduction': 0.0}]], 'pie_chart_triplet': [[{'project': '33', 'roundVoters': 23, 'nonRoundVoters': 10, 'reduction': 0.0}, {'project': '41', 'roundVoters': 17, 'nonRoundVoters': 15, 'reduction': 0}, {'project': '15', 'roundVoters': 11, 'nonRoundVoters': 10, 'reduction': -1.7763568394002505e-15}], [{'project': '50', 'roundVoters': 9, 'nonRoundVoters': 5, 'reduction': 0.0}, {'project': '47', 'roundVoters': 7, 'nonRoundVoters': 4, 'reduction': 0.0}, {'project': '36', 'roundVoters': 5, 'nonRoundVoters': 4, 'reduction': 0.0}], [{'project': '43', 'roundVoters': 5, 'nonRoundVoters': 8, 'reduction': 0.0}, {'project': '42', 'roundVoters': 4, 'nonRoundVoters': 9, 'reduction': 0.0}, {'project': '5', 'roundVoters': 4, 'nonRoundVoters': 5, 'reduction': 0.0}], [{'project': '37', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0.0}, {'project': '8', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0.0}, {'project': '22', 'roundVoters': 0, 'nonRoundVoters': 9, 'reduction': 0.0}]]}, {'name': '15', 'effective_vote_count': {'42': 13.0, '47': 11.0, '22': 9.0, '15': 14.840668302976171, '5': 9.0, '43': 13.0, '37': 3.0, '50': 14.0, '33': 12.193089917753575, '8': 3.0, '36': 9.0}, 'effective_vote_count_reduction': {'42': 0, '47': 0, '22': 0, '15': 0, '5': 0, '43': 0, '37': 0, '50': 0, '33': 0, '8': 0, '36': 0}, 'cost': 20000, 'totalvotes': 21, 'initial_voter_funding': 152173.91304347827, 'funding_lost_per_round': {6: 12908.108108108103, 3: 7692.307692307688, 7: 6887.671549837643, 1: 4268.292682926833, 0: 3937.5, 2: 3000.0, 4: 2000.0, 5: 1263.157894736847}, 'final_voter_funding': 51118.612457095216, 'dropped_projects': [{'id': '42', 'cost': 190000, 'effective_vote_count': 13.0, 'totalvotes': 13, 'initial_voter_funding': 94202.89855072464, 'funding_lost_per_round': {6: 22589.189189189186, 3: 6410.2564102564065, 7: 5364.312001524166, 0: 4500.0, 1: 4268.292682926825, 4: 2666.6666666666715, 2: 2400.0, 5: 421.0526315789466}, 'final_voter_funding': 45583.12896858242}, {'id': '47', 'cost': 200000, 'effective_vote_count': 11.0, 'totalvotes': 11, 'initial_voter_funding': 79710.14492753624, 'funding_lost_per_round': {7: 9642.740169772696, 6: 6454.0540540540605, 3: 3846.153846153844, 0: 3375.0, 2: 3000.0, 1: 1829.2682926829293, 4: 1333.3333333333285, 5: 1052.6315789473665}, 'final_voter_funding': 49176.963652592}, {'id': '22', 'cost': 320000, 'effective_vote_count': 9.0, 'totalvotes': 9, 'initial_voter_funding': 65217.391304347824, 'funding_lost_per_round': {3: 7692.307692307695, 6: 6454.054054054053, 2: 3600.0, 1: 2439.0243902439033, 0: 1687.5, 4: 1333.3333333333285, 5: 1052.6315789473738, 7: 0.0}, 'final_voter_funding': 40958.54025546147}, {'id': '5', 'cost': 75000, 'effective_vote_count': 9.0, 'totalvotes': 9, 'initial_voter_funding': 65217.391304347824, 'funding_lost_per_round': {6: 9681.08108108108, 3: 5128.2051282051325, 7: 4887.119019068028, 1: 3048.7804878048773, 2: 3000.0, 0: 2250.0, 5: 1473.6842105263204, 4: 1333.3333333333285}, 'final_voter_funding': 34415.18804432906}, {'id': '43', 'cost': 150000, 'effective_vote_count': 13.0, 'totalvotes': 13, 'initial_voter_funding': 94202.89855072464, 'funding_lost_per_round': {6: 22589.18918918918, 3: 11538.461538461546, 0: 5062.5, 7: 4628.372984992369, 2: 4200.0, 1: 3658.536585365844, 4: 2333.3333333333285, 5: 1473.6842105263204}, 'final_voter_funding': 38718.82070885604}, {'id': '37', 'cost': 305000, 'effective_vote_count': 3.0, 'totalvotes': 3, 'initial_voter_funding': 21739.130434782608, 'funding_lost_per_round': {6: 3227.0270270270266, 7: 1377.5343099675283, 3: 1282.0512820512813, 1: 1219.5121951219517, 0: 1125.0, 4: 1000.0, 2: 600.0, 5: 421.0526315789484}, 'final_voter_funding': 11486.952989035872}, {'id': '50', 'cost': 200000, 'effective_vote_count': 14.0, 'totalvotes': 14, 'initial_voter_funding': 101449.27536231885, 'funding_lost_per_round': {7: 11651.983551361816, 6: 9681.08108108108, 3: 6410.2564102564065, 0: 4500.0, 2: 4200.0, 1: 3658.5365853658586, 4: 2333.3333333333285, 5: 842.1052631578932}, 'final_voter_funding': 58171.97913776245}, {'id': '8', 'cost': 250000, 'effective_vote_count': 3.0, 'totalvotes': 3, 'initial_voter_funding': 21739.130434782608, 'funding_lost_per_round': {6: 6454.054054054051, 7: 1377.5343099675283, 0: 562.5, 5: 421.05263157895024, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0}, 'final_voter_funding': 12923.989439182078}, {'id': '36', 'cost': 61000, 'effective_vote_count': 9.0, 'totalvotes': 9, 'initial_voter_funding': 65217.391304347824, 'funding_lost_per_round': {6: 12908.108108108103, 3: 7692.307692307688, 7: 6887.671549837643, 1: 4268.292682926833, 0: 3937.5, 2: 3000.0, 4: 2000.0, 5: 1263.157894736847}, 'final_voter_funding': 23260.35337643071}], 'remaining_budget': 173600.0, 'voter_flow': {'42': {'42': 0, '47': 2, '22': 1, '21': 7, '5': 1, '2': 8, '13': 4, '12': 5, '33': 3, '36': 1, '23': 4, '15': 2, '43': 1, '37': 0, '31': 2, '50': 1, '8': 0, '14': 7, '41': 6, '3': 8}, '47': {'42': 2, '47': 0, '22': 0, '21': 2, '5': 0, '2': 4, '13': 5, '12': 3, '33': 2, '36': 0, '23': 7, '15': 1, '43': 1, '37': 0, '31': 5, '50': 2, '8': 0, '14': 3, '41': 7, '3': 6}, '22': {'42': 1, '47': 0, '22': 0, '21': 2, '5': 1, '2': 4, '13': 6, '12': 6, '33': 2, '36': 0, '23': 0, '15': 2, '43': 0, '37': 0, '31': 5, '50': 0, '8': 0, '14': 4, '41': 3, '3': 3}, '21': {'42': 7, '47': 2, '22': 2, '21': 0, '5': 3, '2': 22, '13': 22, '12': 23, '33': 20, '36': 4, '23': 22, '15': 12, '43': 7, '37': 1, '31': 23, '50': 3, '8': 2, '14': 27, '41': 18, '3': 32}, '5': {'42': 1, '47': 0, '22': 1, '21': 3, '5': 0, '2': 4, '13': 5, '12': 4, '33': 5, '36': 3, '23': 4, '15': 7, '43': 2, '37': 0, '31': 7, '50': 2, '8': 1, '14': 5, '41': 3, '3': 4}, '2': {'42': 8, '47': 4, '22': 4, '21': 22, '5': 4, '2': 0, '13': 25, '12': 27, '33': 22, '36': 6, '23': 25, '15': 13, '43': 7, '37': 3, '31': 23, '50': 7, '8': 0, '14': 29, '41': 17, '3': 33}, '13': {'42': 4, '47': 5, '22': 6, '21': 22, '5': 5, '2': 25, '13': 0, '12': 26, '33': 21, '36': 5, '23': 24, '15': 13, '43': 7, '37': 1, '31': 27, '50': 7, '8': 0, '14': 29, '41': 20, '3': 30}, '12': {'42': 5, '47': 3, '22': 6, '21': 23, '5': 4, '2': 27, '13': 26, '12': 0, '33': 22, '36': 6, '23': 23, '15': 14, '43': 9, '37': 1, '31': 27, '50': 5, '8': 0, '14': 32, '41': 18, '3': 34}, '33': {'42': 3, '47': 2, '22': 2, '21': 20, '5': 5, '2': 22, '13': 21, '12': 22, '33': 0, '36': 6, '23': 23, '15': 11, '43': 4, '37': 1, '31': 22, '50': 8, '8': 2, '14': 24, '41': 12, '3': 26}, '36': {'42': 1, '47': 0, '22': 0, '21': 4, '5': 3, '2': 6, '13': 5, '12': 6, '33': 6, '36': 0, '23': 5, '15': 5, '43': 1, '37': 1, '31': 6, '50': 1, '8': 1, '14': 7, '41': 4, '3': 7}, '23': {'42': 4, '47': 7, '22': 0, '21': 22, '5': 4, '2': 25, '13': 24, '12': 23, '33': 23, '36': 5, '23': 0, '15': 11, '43': 5, '37': 1, '31': 20, '50': 9, '8': 1, '14': 25, '41': 17, '3': 29}, '15': {'42': 2, '47': 1, '22': 2, '21': 12, '5': 7, '2': 13, '13': 13, '12': 14, '33': 11, '36': 5, '23': 11, '15': 0, '43': 5, '37': 1, '31': 14, '50': 2, '8': 2, '14': 14, '41': 9, '3': 15}, '43': {'42': 1, '47': 1, '22': 0, '21': 7, '5': 2, '2': 7, '13': 7, '12': 9, '33': 4, '36': 1, '23': 5, '15': 5, '43': 0, '37': 0, '31': 7, '50': 3, '8': 0, '14': 6, '41': 5, '3': 9}, '37': {'42': 0, '47': 0, '22': 0, '21': 1, '5': 0, '2': 3, '13': 1, '12': 1, '33': 1, '36': 1, '23': 1, '15': 1, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 2, '41': 0, '3': 2}, '31': {'42': 2, '47': 5, '22': 5, '21': 23, '5': 7, '2': 23, '13': 27, '12': 27, '33': 22, '36': 6, '23': 20, '15': 14, '43': 7, '37': 2, '31': 0, '50': 4, '8': 2, '14': 29, '41': 19, '3': 31}, '50': {'42': 1, '47': 2, '22': 0, '21': 3, '5': 2, '2': 7, '13': 7, '12': 5, '33': 8, '36': 1, '23': 9, '15': 2, '43': 3, '37': 0, '31': 4, '50': 0, '8': 0, '14': 6, '41': 3, '3': 8}, '8': {'42': 0, '47': 0, '22': 0, '21': 2, '5': 1, '2': 0, '13': 0, '12': 0, '33': 2, '36': 1, '23': 1, '15': 2, '43': 0, '37': 0, '31': 2, '50': 0, '8': 0, '14': 0, '41': 1, '3': 1}, '14': {'42': 7, '47': 3, '22': 4, '21': 27, '5': 5, '2': 29, '13': 29, '12': 32, '33': 24, '36': 7, '23': 25, '15': 14, '43': 6, '37': 2, '31': 29, '50': 6, '8': 0, '14': 0, '41': 18, '3': 35}, '41': {'42': 6, '47': 7, '22': 3, '21': 18, '5': 3, '2': 17, '13': 20, '12': 18, '33': 12, '36': 4, '23': 17, '15': 9, '43': 5, '37': 0, '31': 19, '50': 3, '8': 1, '14': 18, '41': 0, '3': 24}, '3': {'42': 8, '47': 6, '22': 3, '21': 32, '5': 4, '2': 33, '13': 30, '12': 34, '33': 26, '36': 7, '23': 29, '15': 15, '43': 9, '37': 2, '31': 31, '50': 8, '8': 1, '14': 35, '41': 24, '3': 0}}, 'id': '15', 'pie_chart_items': [[{'project': '33', 'roundVoters': 11, 'nonRoundVoters': 22, 'reduction': 0}, {'project': '41', 'roundVoters': 9, 'nonRoundVoters': 23, 'reduction': 0}, {'project': '5', 'roundVoters': 7, 'nonRoundVoters': 2, 'reduction': 0}, {'project': '36', 'roundVoters': 5, 'nonRoundVoters': 4, 'reduction': 0}, {'project': '43', 'roundVoters': 5, 'nonRoundVoters': 8, 'reduction': 0}, {'project': '42', 'roundVoters': 2, 'nonRoundVoters': 11, 'reduction': 0}, {'project': '22', 'roundVoters': 2, 'nonRoundVoters': 7, 'reduction': 0}, {'project': '50', 'roundVoters': 2, 'nonRoundVoters': 12, 'reduction': 0}, {'project': '8', 'roundVoters': 2, 'nonRoundVoters': 1, 'reduction': 0}, {'project': '47', 'roundVoters': 1, 'nonRoundVoters': 10, 'reduction': 0}, {'project': '37', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0}]], 'pie_chart_triplet': [[{'project': '33', 'roundVoters': 11, 'nonRoundVoters': 22, 'reduction': 0}, {'project': '41', 'roundVoters': 9, 'nonRoundVoters': 23, 'reduction': 0}, {'project': '5', 'roundVoters': 7, 'nonRoundVoters': 2, 'reduction': 0}], [{'project': '36', 'roundVoters': 5, 'nonRoundVoters': 4, 'reduction': 0}, {'project': '43', 'roundVoters': 5, 'nonRoundVoters': 8, 'reduction': 0}, {'project': '42', 'roundVoters': 2, 'nonRoundVoters': 11, 'reduction': 0}], [{'project': '22', 'roundVoters': 2, 'nonRoundVoters': 7, 'reduction': 0}, {'project': '50', 'roundVoters': 2, 'nonRoundVoters': 12, 'reduction': 0}, {'project': '8', 'roundVoters': 2, 'nonRoundVoters': 1, 'reduction': 0}], [{'project': '47', 'roundVoters': 1, 'nonRoundVoters': 10, 'reduction': 0}, {'project': '37', 'roundVoters': 1, 'nonRoundVoters': 2, 'reduction': 0}]]}];
+        var numProjects = 9;
+        var idsArray = myJsArray.map(function(item) {
+            return item.id;
+        });
+        
+        var rounds_data = {
+            
+                "3": {
+                    "effective_vote_count_bar_chart": {"x_labels": ['Computers for t','Benches for a W','Real-Time Bus A','Little (book ex','Separate Bike L','Fire Hydrant Ma','Planting trees ','Protect the Hea','5 Water Bottle ','Urban Bicycle W','New Playground ','New Chairs for ','Invention and P','Outdoor Fitness','Upgraded Water ','24H public toil','Digital Sign at','Volleyball Cour','Inclusive Playg','Meeting Room Up',], "values": [48.0, 41.0, 40.0, 39.0, 39.0, 38.0, 37.0, 32.0, 29.037389276309845, 14.840668302976171, 14.0, 13.0, 13.0, 12.193089917753575, 11.0, 9.0, 9.0, 9.0, 3.0, 3.0] },
+                    "effective_vote_count_stacked_bar_chart": {"x_labels": ['New Chairs for ','Upgraded Water ','24H public toil','Urban Bicycle W','Planting trees ','Digital Sign at','Little (book ex','Real-Time Bus A','Invention and P','Inclusive Playg','Separate Bike L','Fire Hydrant Ma','New Playground ','Outdoor Fitness','Meeting Room Up','Benches for a W','Protect the Hea','Volleyball Cour','5 Water Bottle ',], "initial_values": [ 13.0, 11.0, 9.0, 14.840668302976171, 37.0, 9.0, 39.0, 40.0, 13.0, 3.0, 39.0, 38.0, 14.0, 12.193089917753575, 3.0, 41.0, 32.0, 9.0, 29.037389276309845,], "reduced_values": [0.0, 0.0, 0.0, -1.7763568394002505e-15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -3.552713678800501e-15] },
+                    "pie_chart_triplets": [[{"project_name": "Benches for a Walkable City","round_name": "Computers for the community learning center","title":  "'Benches for a W' Voters'","values_1": [35],"text_1":  "'Computers for t' Voters","values_2": [6] ,"text_2": "Non 'Computers for t' Voters"},{"project_name": "Separate Bike Lanes from Traffic","round_name": "Computers for the community learning center","title":  "'Separate Bike L' Voters'","values_1": [34],"text_1":  "'Computers for t' Voters","values_2": [5] ,"text_2": "Non 'Computers for t' Voters"},{"project_name": "Little (book exchange) libraries","round_name": "Computers for the community learning center","title":  "'Little (book ex' Voters'","values_1": [33],"text_1":  "'Computers for t' Voters","values_2": [6] ,"text_2": "Non 'Computers for t' Voters"},], [{"project_name": "Planting trees in the city","round_name": "Computers for the community learning center","title":  "'Planting trees ' Voters'","values_1": [32],"text_1":  "'Computers for t' Voters","values_2": [5] ,"text_2": "Non 'Computers for t' Voters"},{"project_name": "Fire Hydrant Markers","round_name": "Computers for the community learning center","title":  "'Fire Hydrant Ma' Voters'","values_1": [31],"text_1":  "'Computers for t' Voters","values_2": [7] ,"text_2": "Non 'Computers for t' Voters"},{"project_name": "Real-Time Bus Arrival Monitors in bus stations","round_name": "Computers for the community learning center","title":  "'Real-Time Bus A' Voters'","values_1": [30],"text_1":  "'Computers for t' Voters","values_2": [10] ,"text_2": "Non 'Computers for t' Voters"},], [{"project_name": "5 Water Bottle Refill Stations","round_name": "Computers for the community learning center","title":  "'5 Water Bottle ' Voters'","values_1": [29],"text_1":  "'Computers for t' Voters","values_2": [7] ,"text_2": "Non 'Computers for t' Voters"},{"project_name": "Outdoor Fitness Equipment in the public park","round_name": "Computers for the community learning center","title":  "'Outdoor Fitness' Voters'","values_1": [26],"text_1":  "'Computers for t' Voters","values_2": [7] ,"text_2": "Non 'Computers for t' Voters"},{"project_name": "Protect the Health and Safety of our Firefighters","round_name": "Computers for the community learning center","title":  "'Protect the Hea' Voters'","values_1": [24],"text_1":  "'Computers for t' Voters","values_2": [8] ,"text_2": "Non 'Computers for t' Voters"},], [{"project_name": "Urban Bicycle Wash Stations","round_name": "Computers for the community learning center","title":  "'Urban Bicycle W' Voters'","values_1": [15],"text_1":  "'Computers for t' Voters","values_2": [6] ,"text_2": "Non 'Computers for t' Voters"},{"project_name": "Invention and Production of Music","round_name": "Computers for the community learning center","title":  "'Invention and P' Voters'","values_1": [9],"text_1":  "'Computers for t' Voters","values_2": [4] ,"text_2": "Non 'Computers for t' Voters"},{"project_name": "New Chairs for Public Schools","round_name": "Computers for the community learning center","title":  "'New Chairs for ' Voters'","values_1": [8],"text_1":  "'Computers for t' Voters","values_2": [5] ,"text_2": "Non 'Computers for t' Voters"},], [{"project_name": "New Playground for public school","round_name": "Computers for the community learning center","title":  "'New Playground ' Voters'","values_1": [8],"text_1":  "'Computers for t' Voters","values_2": [6] ,"text_2": "Non 'Computers for t' Voters"},{"project_name": "Volleyball Court in the public park","round_name": "Computers for the community learning center","title":  "'Volleyball Cour' Voters'","values_1": [7],"text_1":  "'Computers for t' Voters","values_2": [2] ,"text_2": "Non 'Computers for t' Voters"},{"project_name": "Upgraded Water Fountains for Public Schools","round_name": "Computers for the community learning center","title":  "'Upgraded Water ' Voters'","values_1": [6],"text_1":  "'Computers for t' Voters","values_2": [5] ,"text_2": "Non 'Computers for t' Voters"},], [{"project_name": "Digital Sign at City Hall in Multiple Languages","round_name": "Computers for the community learning center","title":  "'Digital Sign at' Voters'","values_1": [4],"text_1":  "'Computers for t' Voters","values_2": [5] ,"text_2": "Non 'Computers for t' Voters"},{"project_name": "24H public toilet","round_name": "Computers for the community learning center","title":  "'24H public toil' Voters'","values_1": [3],"text_1":  "'Computers for t' Voters","values_2": [6] ,"text_2": "Non 'Computers for t' Voters"},{"project_name": "Inclusive Playground for All Kids","round_name": "Computers for the community learning center","title":  "'Inclusive Playg' Voters'","values_1": [2],"text_1":  "'Computers for t' Voters","values_2": [1] ,"text_2": "Non 'Computers for t' Voters"},], [{"project_name": "Meeting Room Upgrade for libraries","round_name": "Computers for the community learning center","title":  "'Meeting Room Up' Voters'","values_1": [1],"text_1":  "'Computers for t' Voters","values_2": [2] ,"text_2": "Non 'Computers for t' Voters"},], ],
+                    "sankey_chart": {"rows": [['Computers for t', 'Benches for a W', 35],['Computers for t', 'Separate Bike L', 34],['Computers for t', 'Little (book ex', 33],['Computers for t', 'Planting trees ', 32],['Computers for t', 'Fire Hydrant Ma', 31],['Computers for t', 'Real-Time Bus A', 30],['Computers for t', 'Other', 142],]},
+                    "chord_chart": {"series": [        {        "values":[0,35,34,33,32,31,30,0,],        "text": "Computers for t"    },    {        "values":[35,0,32,29,27,29,29,],        "text": "Benches for a W"    },    {        "values":[34,32,0,27,23,27,26,],        "text": "Separate Bike L"    },    {        "values":[33,29,27,0,22,23,25,],        "text": "Little (book ex"    },    {        "values":[32,27,23,22,0,23,22,],        "text": "Planting trees "    },    {        "values":[31,29,27,23,23,0,27,],        "text": "Fire Hydrant Ma"    },    {        "values":[30,29,26,25,22,27,0,],        "text": "Real-Time Bus A"    },]},
+                    "intro": {"project_name": "Computers for the community learning center", "round_number": "1", "description": "Funding 20 laptops including mice and keyboards, giving students a place to study.", "project_cost" : "27000", "budget_remaining" : "473000.0", "effective_vote_count" : "48.0", "project_votes" : "48" },
+                    "roundNum": 0,
+                },
+            
+                "14": {
+                    "effective_vote_count_bar_chart": {"x_labels": ['Benches for a W','Real-Time Bus A','Little (book ex','Separate Bike L','Fire Hydrant Ma','Planting trees ','Protect the Hea','5 Water Bottle ','Urban Bicycle W','New Playground ','New Chairs for ','Invention and P','Outdoor Fitness','Upgraded Water ','24H public toil','Digital Sign at','Volleyball Cour','Inclusive Playg','Meeting Room Up',], "values": [41.0, 40.0, 39.0, 39.0, 38.0, 37.0, 32.0, 29.037389276309845, 14.840668302976171, 14.0, 13.0, 13.0, 12.193089917753575, 11.0, 9.0, 9.0, 9.0, 3.0, 3.0] },
+                    "effective_vote_count_stacked_bar_chart": {"x_labels": ['New Chairs for ','Upgraded Water ','24H public toil','Urban Bicycle W','Planting trees ','Digital Sign at','Little (book ex','Real-Time Bus A','Invention and P','Inclusive Playg','Separate Bike L','Fire Hydrant Ma','New Playground ','Outdoor Fitness','Meeting Room Up','Protect the Hea','Volleyball Cour','5 Water Bottle ',], "initial_values": [ 13.0, 11.0, 9.0, 14.840668302976171, 37.0, 9.0, 39.0, 40.0, 13.0, 3.0, 39.0, 38.0, 14.0, 12.193089917753575, 3.0, 32.0, 9.0, 29.037389276309845,], "reduced_values": [0.0, 0.0, 0.0, -1.7763568394002505e-15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -3.552713678800501e-15] },
+                    "pie_chart_triplets": [[{"project_name": "Separate Bike Lanes from Traffic","round_name": "Benches for a Walkable City","title":  "'Separate Bike L' Voters'","values_1": [32],"text_1":  "'Benches for a W' Voters","values_2": [7] ,"text_2": "Non 'Benches for a W' Voters"},{"project_name": "Little (book exchange) libraries","round_name": "Benches for a Walkable City","title":  "'Little (book ex' Voters'","values_1": [29],"text_1":  "'Benches for a W' Voters","values_2": [10] ,"text_2": "Non 'Benches for a W' Voters"},{"project_name": "Real-Time Bus Arrival Monitors in bus stations","round_name": "Benches for a Walkable City","title":  "'Real-Time Bus A' Voters'","values_1": [29],"text_1":  "'Benches for a W' Voters","values_2": [11] ,"text_2": "Non 'Benches for a W' Voters"},], [{"project_name": "Fire Hydrant Markers","round_name": "Benches for a Walkable City","title":  "'Fire Hydrant Ma' Voters'","values_1": [29],"text_1":  "'Benches for a W' Voters","values_2": [9] ,"text_2": "Non 'Benches for a W' Voters"},{"project_name": "Planting trees in the city","round_name": "Benches for a Walkable City","title":  "'Planting trees ' Voters'","values_1": [27],"text_1":  "'Benches for a W' Voters","values_2": [10] ,"text_2": "Non 'Benches for a W' Voters"},{"project_name": "5 Water Bottle Refill Stations","round_name": "Benches for a Walkable City","title":  "'5 Water Bottle ' Voters'","values_1": [25],"text_1":  "'Benches for a W' Voters","values_2": [11] ,"text_2": "Non 'Benches for a W' Voters"},], [{"project_name": "Outdoor Fitness Equipment in the public park","round_name": "Benches for a Walkable City","title":  "'Outdoor Fitness' Voters'","values_1": [24],"text_1":  "'Benches for a W' Voters","values_2": [9] ,"text_2": "Non 'Benches for a W' Voters"},{"project_name": "Protect the Health and Safety of our Firefighters","round_name": "Benches for a Walkable City","title":  "'Protect the Hea' Voters'","values_1": [18],"text_1":  "'Benches for a W' Voters","values_2": [14] ,"text_2": "Non 'Benches for a W' Voters"},{"project_name": "Urban Bicycle Wash Stations","round_name": "Benches for a Walkable City","title":  "'Urban Bicycle W' Voters'","values_1": [14],"text_1":  "'Benches for a W' Voters","values_2": [7] ,"text_2": "Non 'Benches for a W' Voters"},], [{"project_name": "New Chairs for Public Schools","round_name": "Benches for a Walkable City","title":  "'New Chairs for ' Voters'","values_1": [7],"text_1":  "'Benches for a W' Voters","values_2": [6] ,"text_2": "Non 'Benches for a W' Voters"},{"project_name": "Volleyball Court in the public park","round_name": "Benches for a Walkable City","title":  "'Volleyball Cour' Voters'","values_1": [7],"text_1":  "'Benches for a W' Voters","values_2": [2] ,"text_2": "Non 'Benches for a W' Voters"},{"project_name": "Invention and Production of Music","round_name": "Benches for a Walkable City","title":  "'Invention and P' Voters'","values_1": [6],"text_1":  "'Benches for a W' Voters","values_2": [7] ,"text_2": "Non 'Benches for a W' Voters"},], [{"project_name": "New Playground for public school","round_name": "Benches for a Walkable City","title":  "'New Playground ' Voters'","values_1": [6],"text_1":  "'Benches for a W' Voters","values_2": [8] ,"text_2": "Non 'Benches for a W' Voters"},{"project_name": "Digital Sign at City Hall in Multiple Languages","round_name": "Benches for a Walkable City","title":  "'Digital Sign at' Voters'","values_1": [5],"text_1":  "'Benches for a W' Voters","values_2": [4] ,"text_2": "Non 'Benches for a W' Voters"},{"project_name": "24H public toilet","round_name": "Benches for a Walkable City","title":  "'24H public toil' Voters'","values_1": [4],"text_1":  "'Benches for a W' Voters","values_2": [5] ,"text_2": "Non 'Benches for a W' Voters"},], [{"project_name": "Upgraded Water Fountains for Public Schools","round_name": "Benches for a Walkable City","title":  "'Upgraded Water ' Voters'","values_1": [3],"text_1":  "'Benches for a W' Voters","values_2": [8] ,"text_2": "Non 'Benches for a W' Voters"},{"project_name": "Inclusive Playground for All Kids","round_name": "Benches for a Walkable City","title":  "'Inclusive Playg' Voters'","values_1": [2],"text_1":  "'Benches for a W' Voters","values_2": [1] ,"text_2": "Non 'Benches for a W' Voters"},{"project_name": "Meeting Room Upgrade for libraries","round_name": "Benches for a Walkable City","title":  "'Meeting Room Up' Voters'","values_1": [0],"text_1":  "'Benches for a W' Voters","values_2": [3] ,"text_2": "Non 'Benches for a W' Voters"},], ],
+                    "sankey_chart": {"rows": [['Benches for a W', 'Computers for t', 35],['Benches for a W', 'Separate Bike L', 32],['Benches for a W', 'Little (book ex', 29],['Benches for a W', 'Real-Time Bus A', 29],['Benches for a W', 'Fire Hydrant Ma', 29],['Benches for a W', 'Planting trees ', 27],['Benches for a W', 'Other', 121],]},
+                    "chord_chart": {"series": [        {        "values":[0,35,32,29,29,29,27,0,],        "text": "Benches for a W"    },    {        "values":[35,0,34,33,30,31,32,],        "text": "Computers for t"    },    {        "values":[32,34,0,27,26,27,23,],        "text": "Separate Bike L"    },    {        "values":[29,33,27,0,25,23,22,],        "text": "Little (book ex"    },    {        "values":[29,30,26,25,0,27,22,],        "text": "Real-Time Bus A"    },    {        "values":[29,31,27,23,27,0,23,],        "text": "Fire Hydrant Ma"    },    {        "values":[27,32,23,22,22,23,0,],        "text": "Planting trees "    },]},
+                    "intro": {"project_name": "Benches for a Walkable City", "round_number": "2", "description": "Install 12 benches across town so that people of all ages and abilities can enjoy benches for resting, talking, tinkering with electronic devices, people watching, and being outdoors (3 of which are shown in the map).", "project_cost" : "25000", "budget_remaining" : "448000.0", "effective_vote_count" : "41.0", "project_votes" : "41" },
+                    "roundNum": 1,
+                },
+            
+                "13": {
+                    "effective_vote_count_bar_chart": {"x_labels": ['Real-Time Bus A','Little (book ex','Separate Bike L','Fire Hydrant Ma','Planting trees ','Protect the Hea','5 Water Bottle ','Urban Bicycle W','New Playground ','New Chairs for ','Invention and P','Outdoor Fitness','Upgraded Water ','24H public toil','Digital Sign at','Volleyball Cour','Inclusive Playg','Meeting Room Up',], "values": [40.0, 39.0, 39.0, 38.0, 37.0, 32.0, 29.037389276309845, 14.840668302976171, 14.0, 13.0, 13.0, 12.193089917753575, 11.0, 9.0, 9.0, 9.0, 3.0, 3.0] },
+                    "effective_vote_count_stacked_bar_chart": {"x_labels": ['New Chairs for ','Upgraded Water ','24H public toil','Urban Bicycle W','Planting trees ','Digital Sign at','Little (book ex','Invention and P','Inclusive Playg','Separate Bike L','Fire Hydrant Ma','New Playground ','Outdoor Fitness','Meeting Room Up','Protect the Hea','Volleyball Cour','5 Water Bottle ',], "initial_values": [ 13.0, 11.0, 9.0, 14.840668302976171, 37.0, 9.0, 39.0, 13.0, 3.0, 39.0, 38.0, 14.0, 12.193089917753575, 3.0, 32.0, 9.0, 29.037389276309845,], "reduced_values": [0.0, 0.0, 0.0, -1.7763568394002505e-15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -3.552713678800501e-15] },
+                    "pie_chart_triplets": [[{"project_name": "Fire Hydrant Markers","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Fire Hydrant Ma' Voters'","values_1": [27],"text_1":  "'Real-Time Bus A' Voters","values_2": [11] ,"text_2": "Non 'Real-Time Bus A' Voters"},{"project_name": "Separate Bike Lanes from Traffic","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Separate Bike L' Voters'","values_1": [26],"text_1":  "'Real-Time Bus A' Voters","values_2": [13] ,"text_2": "Non 'Real-Time Bus A' Voters"},{"project_name": "Little (book exchange) libraries","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Little (book ex' Voters'","values_1": [25],"text_1":  "'Real-Time Bus A' Voters","values_2": [14] ,"text_2": "Non 'Real-Time Bus A' Voters"},], [{"project_name": "5 Water Bottle Refill Stations","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'5 Water Bottle ' Voters'","values_1": [24],"text_1":  "'Real-Time Bus A' Voters","values_2": [12] ,"text_2": "Non 'Real-Time Bus A' Voters"},{"project_name": "Planting trees in the city","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Planting trees ' Voters'","values_1": [22],"text_1":  "'Real-Time Bus A' Voters","values_2": [15] ,"text_2": "Non 'Real-Time Bus A' Voters"},{"project_name": "Outdoor Fitness Equipment in the public park","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Outdoor Fitness' Voters'","values_1": [21],"text_1":  "'Real-Time Bus A' Voters","values_2": [12] ,"text_2": "Non 'Real-Time Bus A' Voters"},], [{"project_name": "Protect the Health and Safety of our Firefighters","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Protect the Hea' Voters'","values_1": [20],"text_1":  "'Real-Time Bus A' Voters","values_2": [12] ,"text_2": "Non 'Real-Time Bus A' Voters"},{"project_name": "Urban Bicycle Wash Stations","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Urban Bicycle W' Voters'","values_1": [13],"text_1":  "'Real-Time Bus A' Voters","values_2": [8] ,"text_2": "Non 'Real-Time Bus A' Voters"},{"project_name": "Invention and Production of Music","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Invention and P' Voters'","values_1": [7],"text_1":  "'Real-Time Bus A' Voters","values_2": [6] ,"text_2": "Non 'Real-Time Bus A' Voters"},], [{"project_name": "New Playground for public school","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'New Playground ' Voters'","values_1": [7],"text_1":  "'Real-Time Bus A' Voters","values_2": [7] ,"text_2": "Non 'Real-Time Bus A' Voters"},{"project_name": "24H public toilet","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'24H public toil' Voters'","values_1": [6],"text_1":  "'Real-Time Bus A' Voters","values_2": [3] ,"text_2": "Non 'Real-Time Bus A' Voters"},{"project_name": "Upgraded Water Fountains for Public Schools","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Upgraded Water ' Voters'","values_1": [5],"text_1":  "'Real-Time Bus A' Voters","values_2": [6] ,"text_2": "Non 'Real-Time Bus A' Voters"},], [{"project_name": "Digital Sign at City Hall in Multiple Languages","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Digital Sign at' Voters'","values_1": [5],"text_1":  "'Real-Time Bus A' Voters","values_2": [4] ,"text_2": "Non 'Real-Time Bus A' Voters"},{"project_name": "Volleyball Court in the public park","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Volleyball Cour' Voters'","values_1": [5],"text_1":  "'Real-Time Bus A' Voters","values_2": [4] ,"text_2": "Non 'Real-Time Bus A' Voters"},{"project_name": "New Chairs for Public Schools","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'New Chairs for ' Voters'","values_1": [4],"text_1":  "'Real-Time Bus A' Voters","values_2": [9] ,"text_2": "Non 'Real-Time Bus A' Voters"},], [{"project_name": "Inclusive Playground for All Kids","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Inclusive Playg' Voters'","values_1": [1],"text_1":  "'Real-Time Bus A' Voters","values_2": [2] ,"text_2": "Non 'Real-Time Bus A' Voters"},{"project_name": "Meeting Room Upgrade for libraries","round_name": "Real-Time Bus Arrival Monitors in bus stations","title":  "'Meeting Room Up' Voters'","values_1": [0],"text_1":  "'Real-Time Bus A' Voters","values_2": [3] ,"text_2": "Non 'Real-Time Bus A' Voters"},], ],
+                    "sankey_chart": {"rows": [['Real-Time Bus A', 'Computers for t', 30],['Real-Time Bus A', 'Benches for a W', 29],['Real-Time Bus A', 'Fire Hydrant Ma', 27],['Real-Time Bus A', 'Separate Bike L', 26],['Real-Time Bus A', 'Little (book ex', 25],['Real-Time Bus A', '5 Water Bottle ', 24],['Real-Time Bus A', 'Other', 116],]},
+                    "chord_chart": {"series": [        {        "values":[0,30,29,27,26,25,24,0,],        "text": "Real-Time Bus A"    },    {        "values":[30,0,35,31,34,33,29,],        "text": "Computers for t"    },    {        "values":[29,35,0,29,32,29,25,],        "text": "Benches for a W"    },    {        "values":[27,31,29,0,27,23,20,],        "text": "Fire Hydrant Ma"    },    {        "values":[26,34,32,27,0,27,23,],        "text": "Separate Bike L"    },    {        "values":[25,33,29,23,27,0,25,],        "text": "Little (book ex"    },    {        "values":[24,29,25,20,23,25,0,],        "text": "5 Water Bottle "    },]},
+                    "intro": {"project_name": "Real-Time Bus Arrival Monitors in bus stations", "round_number": "3", "description": "Real-time bus arrival monitors bus stops will inform travelers when the next bus will arrive, so they can adjust their plans if needed.", "project_cost" : "24000", "budget_remaining" : "424000.0", "effective_vote_count" : "40.0", "project_votes" : "40" },
+                    "roundNum": 2,
+                },
+            
+                "12": {
+                    "effective_vote_count_bar_chart": {"x_labels": ['Little (book ex','Separate Bike L','Fire Hydrant Ma','Planting trees ','Protect the Hea','5 Water Bottle ','Urban Bicycle W','New Playground ','New Chairs for ','Invention and P','Outdoor Fitness','Upgraded Water ','24H public toil','Digital Sign at','Volleyball Cour','Inclusive Playg','Meeting Room Up',], "values": [39.0, 39.0, 38.0, 37.0, 32.0, 29.037389276309845, 14.840668302976171, 14.0, 13.0, 13.0, 12.193089917753575, 11.0, 9.0, 9.0, 9.0, 3.0, 3.0] },
+                    "effective_vote_count_stacked_bar_chart": {"x_labels": ['New Chairs for ','Upgraded Water ','24H public toil','Urban Bicycle W','Planting trees ','Digital Sign at','Little (book ex','Invention and P','Inclusive Playg','Fire Hydrant Ma','New Playground ','Outdoor Fitness','Meeting Room Up','Protect the Hea','Volleyball Cour','5 Water Bottle ',], "initial_values": [ 13.0, 11.0, 9.0, 14.840668302976171, 37.0, 9.0, 39.0, 13.0, 3.0, 38.0, 14.0, 12.193089917753575, 3.0, 32.0, 9.0, 29.037389276309845,], "reduced_values": [0.0, 0.0, 0.0, -1.7763568394002505e-15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -3.552713678800501e-15] },
+                    "pie_chart_triplets": [[{"project_name": "Little (book exchange) libraries","round_name": "Separate Bike Lanes from Traffic","title":  "'Little (book ex' Voters'","values_1": [27],"text_1":  "'Separate Bike L' Voters","values_2": [12] ,"text_2": "Non 'Separate Bike L' Voters"},{"project_name": "Fire Hydrant Markers","round_name": "Separate Bike Lanes from Traffic","title":  "'Fire Hydrant Ma' Voters'","values_1": [27],"text_1":  "'Separate Bike L' Voters","values_2": [11] ,"text_2": "Non 'Separate Bike L' Voters"},{"project_name": "Planting trees in the city","round_name": "Separate Bike Lanes from Traffic","title":  "'Planting trees ' Voters'","values_1": [23],"text_1":  "'Separate Bike L' Voters","values_2": [14] ,"text_2": "Non 'Separate Bike L' Voters"},], [{"project_name": "5 Water Bottle Refill Stations","round_name": "Separate Bike Lanes from Traffic","title":  "'5 Water Bottle ' Voters'","values_1": [23],"text_1":  "'Separate Bike L' Voters","values_2": [13] ,"text_2": "Non 'Separate Bike L' Voters"},{"project_name": "Outdoor Fitness Equipment in the public park","round_name": "Separate Bike Lanes from Traffic","title":  "'Outdoor Fitness' Voters'","values_1": [22],"text_1":  "'Separate Bike L' Voters","values_2": [11] ,"text_2": "Non 'Separate Bike L' Voters"},{"project_name": "Protect the Health and Safety of our Firefighters","round_name": "Separate Bike Lanes from Traffic","title":  "'Protect the Hea' Voters'","values_1": [18],"text_1":  "'Separate Bike L' Voters","values_2": [14] ,"text_2": "Non 'Separate Bike L' Voters"},], [{"project_name": "Urban Bicycle Wash Stations","round_name": "Separate Bike Lanes from Traffic","title":  "'Urban Bicycle W' Voters'","values_1": [14],"text_1":  "'Separate Bike L' Voters","values_2": [7] ,"text_2": "Non 'Separate Bike L' Voters"},{"project_name": "Invention and Production of Music","round_name": "Separate Bike Lanes from Traffic","title":  "'Invention and P' Voters'","values_1": [9],"text_1":  "'Separate Bike L' Voters","values_2": [4] ,"text_2": "Non 'Separate Bike L' Voters"},{"project_name": "24H public toilet","round_name": "Separate Bike Lanes from Traffic","title":  "'24H public toil' Voters'","values_1": [6],"text_1":  "'Separate Bike L' Voters","values_2": [3] ,"text_2": "Non 'Separate Bike L' Voters"},], [{"project_name": "Volleyball Court in the public park","round_name": "Separate Bike Lanes from Traffic","title":  "'Volleyball Cour' Voters'","values_1": [6],"text_1":  "'Separate Bike L' Voters","values_2": [3] ,"text_2": "Non 'Separate Bike L' Voters"},{"project_name": "New Chairs for Public Schools","round_name": "Separate Bike Lanes from Traffic","title":  "'New Chairs for ' Voters'","values_1": [5],"text_1":  "'Separate Bike L' Voters","values_2": [8] ,"text_2": "Non 'Separate Bike L' Voters"},{"project_name": "New Playground for public school","round_name": "Separate Bike Lanes from Traffic","title":  "'New Playground ' Voters'","values_1": [5],"text_1":  "'Separate Bike L' Voters","values_2": [9] ,"text_2": "Non 'Separate Bike L' Voters"},], [{"project_name": "Digital Sign at City Hall in Multiple Languages","round_name": "Separate Bike Lanes from Traffic","title":  "'Digital Sign at' Voters'","values_1": [4],"text_1":  "'Separate Bike L' Voters","values_2": [5] ,"text_2": "Non 'Separate Bike L' Voters"},{"project_name": "Upgraded Water Fountains for Public Schools","round_name": "Separate Bike Lanes from Traffic","title":  "'Upgraded Water ' Voters'","values_1": [3],"text_1":  "'Separate Bike L' Voters","values_2": [8] ,"text_2": "Non 'Separate Bike L' Voters"},{"project_name": "Inclusive Playground for All Kids","round_name": "Separate Bike Lanes from Traffic","title":  "'Inclusive Playg' Voters'","values_1": [1],"text_1":  "'Separate Bike L' Voters","values_2": [2] ,"text_2": "Non 'Separate Bike L' Voters"},], [{"project_name": "Meeting Room Upgrade for libraries","round_name": "Separate Bike Lanes from Traffic","title":  "'Meeting Room Up' Voters'","values_1": [0],"text_1":  "'Separate Bike L' Voters","values_2": [3] ,"text_2": "Non 'Separate Bike L' Voters"},], ],
+                    "sankey_chart": {"rows": [['Separate Bike L', 'Computers for t', 34],['Separate Bike L', 'Benches for a W', 32],['Separate Bike L', 'Little (book ex', 27],['Separate Bike L', 'Fire Hydrant Ma', 27],['Separate Bike L', 'Real-Time Bus A', 26],['Separate Bike L', 'Planting trees ', 23],['Separate Bike L', 'Other', 116],]},
+                    "chord_chart": {"series": [        {        "values":[0,34,32,27,27,26,23,0,],        "text": "Separate Bike L"    },    {        "values":[34,0,35,33,31,30,32,],        "text": "Computers for t"    },    {        "values":[32,35,0,29,29,29,27,],        "text": "Benches for a W"    },    {        "values":[27,33,29,0,23,25,22,],        "text": "Little (book ex"    },    {        "values":[27,31,29,23,0,27,23,],        "text": "Fire Hydrant Ma"    },    {        "values":[26,30,29,25,27,0,22,],        "text": "Real-Time Bus A"    },    {        "values":[23,32,27,22,23,22,0,],        "text": "Planting trees "    },]},
+                    "intro": {"project_name": "Separate Bike Lanes from Traffic", "round_number": "4", "description": "Improve safety for drivers and bikers by moving bike lanes to be between street parking spots and the sidewalk, reducing car-bike interactions and potential collisions.", "project_cost" : "50000", "budget_remaining" : "374000.0", "effective_vote_count" : "39.0", "project_votes" : "39" },
+                    "roundNum": 3,
+                },
+            
+                "2": {
+                    "effective_vote_count_bar_chart": {"x_labels": ['Little (book ex','Fire Hydrant Ma','Planting trees ','Protect the Hea','5 Water Bottle ','Urban Bicycle W','New Playground ','New Chairs for ','Invention and P','Outdoor Fitness','Upgraded Water ','24H public toil','Digital Sign at','Volleyball Cour','Inclusive Playg','Meeting Room Up',], "values": [39.0, 38.0, 37.0, 32.0, 29.037389276309845, 14.840668302976171, 14.0, 13.0, 13.0, 12.193089917753575, 11.0, 9.0, 9.0, 9.0, 3.0, 3.0] },
+                    "effective_vote_count_stacked_bar_chart": {"x_labels": ['New Chairs for ','Upgraded Water ','24H public toil','Urban Bicycle W','Planting trees ','Digital Sign at','Invention and P','Inclusive Playg','Fire Hydrant Ma','New Playground ','Outdoor Fitness','Meeting Room Up','Protect the Hea','Volleyball Cour','5 Water Bottle ',], "initial_values": [ 13.0, 11.0, 9.0, 14.840668302976171, 37.0, 9.0, 13.0, 3.0, 38.0, 14.0, 12.193089917753575, 3.0, 32.0, 9.0, 29.037389276309845,], "reduced_values": [0.0, 0.0, 0.0, -1.7763568394002505e-15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -3.552713678800501e-15] },
+                    "pie_chart_triplets": [[{"project_name": "5 Water Bottle Refill Stations","round_name": "Little (book exchange) libraries","title":  "'5 Water Bottle ' Voters'","values_1": [25],"text_1":  "'Little (book ex' Voters","values_2": [11] ,"text_2": "Non 'Little (book ex' Voters"},{"project_name": "Fire Hydrant Markers","round_name": "Little (book exchange) libraries","title":  "'Fire Hydrant Ma' Voters'","values_1": [23],"text_1":  "'Little (book ex' Voters","values_2": [15] ,"text_2": "Non 'Little (book ex' Voters"},{"project_name": "Planting trees in the city","round_name": "Little (book exchange) libraries","title":  "'Planting trees ' Voters'","values_1": [22],"text_1":  "'Little (book ex' Voters","values_2": [15] ,"text_2": "Non 'Little (book ex' Voters"},], [{"project_name": "Outdoor Fitness Equipment in the public park","round_name": "Little (book exchange) libraries","title":  "'Outdoor Fitness' Voters'","values_1": [22],"text_1":  "'Little (book ex' Voters","values_2": [11] ,"text_2": "Non 'Little (book ex' Voters"},{"project_name": "Protect the Health and Safety of our Firefighters","round_name": "Little (book exchange) libraries","title":  "'Protect the Hea' Voters'","values_1": [17],"text_1":  "'Little (book ex' Voters","values_2": [15] ,"text_2": "Non 'Little (book ex' Voters"},{"project_name": "Urban Bicycle Wash Stations","round_name": "Little (book exchange) libraries","title":  "'Urban Bicycle W' Voters'","values_1": [13],"text_1":  "'Little (book ex' Voters","values_2": [8] ,"text_2": "Non 'Little (book ex' Voters"},], [{"project_name": "New Chairs for Public Schools","round_name": "Little (book exchange) libraries","title":  "'New Chairs for ' Voters'","values_1": [8],"text_1":  "'Little (book ex' Voters","values_2": [5] ,"text_2": "Non 'Little (book ex' Voters"},{"project_name": "Invention and Production of Music","round_name": "Little (book exchange) libraries","title":  "'Invention and P' Voters'","values_1": [7],"text_1":  "'Little (book ex' Voters","values_2": [6] ,"text_2": "Non 'Little (book ex' Voters"},{"project_name": "New Playground for public school","round_name": "Little (book exchange) libraries","title":  "'New Playground ' Voters'","values_1": [7],"text_1":  "'Little (book ex' Voters","values_2": [7] ,"text_2": "Non 'Little (book ex' Voters"},], [{"project_name": "Volleyball Court in the public park","round_name": "Little (book exchange) libraries","title":  "'Volleyball Cour' Voters'","values_1": [6],"text_1":  "'Little (book ex' Voters","values_2": [3] ,"text_2": "Non 'Little (book ex' Voters"},{"project_name": "Upgraded Water Fountains for Public Schools","round_name": "Little (book exchange) libraries","title":  "'Upgraded Water ' Voters'","values_1": [4],"text_1":  "'Little (book ex' Voters","values_2": [7] ,"text_2": "Non 'Little (book ex' Voters"},{"project_name": "24H public toilet","round_name": "Little (book exchange) libraries","title":  "'24H public toil' Voters'","values_1": [4],"text_1":  "'Little (book ex' Voters","values_2": [5] ,"text_2": "Non 'Little (book ex' Voters"},], [{"project_name": "Digital Sign at City Hall in Multiple Languages","round_name": "Little (book exchange) libraries","title":  "'Digital Sign at' Voters'","values_1": [4],"text_1":  "'Little (book ex' Voters","values_2": [5] ,"text_2": "Non 'Little (book ex' Voters"},{"project_name": "Inclusive Playground for All Kids","round_name": "Little (book exchange) libraries","title":  "'Inclusive Playg' Voters'","values_1": [3],"text_1":  "'Little (book ex' Voters","values_2": [0] ,"text_2": "Non 'Little (book ex' Voters"},{"project_name": "Meeting Room Upgrade for libraries","round_name": "Little (book exchange) libraries","title":  "'Meeting Room Up' Voters'","values_1": [0],"text_1":  "'Little (book ex' Voters","values_2": [3] ,"text_2": "Non 'Little (book ex' Voters"},], ],
+                    "sankey_chart": {"rows": [['Little (book ex', 'Computers for t', 33],['Little (book ex', 'Benches for a W', 29],['Little (book ex', 'Separate Bike L', 27],['Little (book ex', 'Real-Time Bus A', 25],['Little (book ex', '5 Water Bottle ', 25],['Little (book ex', 'Fire Hydrant Ma', 23],['Little (book ex', 'Other', 117],]},
+                    "chord_chart": {"series": [        {        "values":[0,33,29,27,25,25,23,0,],        "text": "Little (book ex"    },    {        "values":[33,0,35,34,30,29,31,],        "text": "Computers for t"    },    {        "values":[29,35,0,32,29,25,29,],        "text": "Benches for a W"    },    {        "values":[27,34,32,0,26,23,27,],        "text": "Separate Bike L"    },    {        "values":[25,30,29,26,0,24,27,],        "text": "Real-Time Bus A"    },    {        "values":[25,29,25,23,24,0,20,],        "text": "5 Water Bottle "    },    {        "values":[23,31,29,27,27,20,0,],        "text": "Fire Hydrant Ma"    },]},
+                    "intro": {"project_name": "Little (book exchange) libraries", "round_number": "5", "description": "Installing 13 little free libraries across town (3 of which are shown in the map).", "project_cost" : "13000", "budget_remaining" : "361000.0", "effective_vote_count" : "39.0", "project_votes" : "39" },
+                    "roundNum": 4,
+                },
+            
+                "31": {
+                    "effective_vote_count_bar_chart": {"x_labels": ['Fire Hydrant Ma','Planting trees ','Protect the Hea','5 Water Bottle ','Urban Bicycle W','New Playground ','New Chairs for ','Invention and P','Outdoor Fitness','Upgraded Water ','24H public toil','Digital Sign at','Volleyball Cour','Inclusive Playg','Meeting Room Up',], "values": [38.0, 37.0, 32.0, 29.037389276309845, 14.840668302976171, 14.0, 13.0, 13.0, 12.193089917753575, 11.0, 9.0, 9.0, 9.0, 3.0, 3.0] },
+                    "effective_vote_count_stacked_bar_chart": {"x_labels": ['New Chairs for ','Upgraded Water ','24H public toil','Urban Bicycle W','Planting trees ','Digital Sign at','Invention and P','Inclusive Playg','New Playground ','Outdoor Fitness','Meeting Room Up','Protect the Hea','Volleyball Cour','5 Water Bottle ',], "initial_values": [ 13.0, 11.0, 9.0, 14.840668302976171, 37.0, 9.0, 13.0, 3.0, 14.0, 12.193089917753575, 3.0, 32.0, 9.0, 29.037389276309845,], "reduced_values": [0.0, 0.0, 0.0, -1.7763568394002505e-15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -3.552713678800501e-15] },
+                    "pie_chart_triplets": [[{"project_name": "Planting trees in the city","round_name": "Fire Hydrant Markers","title":  "'Planting trees ' Voters'","values_1": [23],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [14] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},{"project_name": "Outdoor Fitness Equipment in the public park","round_name": "Fire Hydrant Markers","title":  "'Outdoor Fitness' Voters'","values_1": [22],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [11] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},{"project_name": "5 Water Bottle Refill Stations","round_name": "Fire Hydrant Markers","title":  "'5 Water Bottle ' Voters'","values_1": [20],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [16] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},], [{"project_name": "Protect the Health and Safety of our Firefighters","round_name": "Fire Hydrant Markers","title":  "'Protect the Hea' Voters'","values_1": [19],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [13] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},{"project_name": "Urban Bicycle Wash Stations","round_name": "Fire Hydrant Markers","title":  "'Urban Bicycle W' Voters'","values_1": [14],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [7] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},{"project_name": "Digital Sign at City Hall in Multiple Languages","round_name": "Fire Hydrant Markers","title":  "'Digital Sign at' Voters'","values_1": [7],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [2] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},], [{"project_name": "Invention and Production of Music","round_name": "Fire Hydrant Markers","title":  "'Invention and P' Voters'","values_1": [7],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [6] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},{"project_name": "Volleyball Court in the public park","round_name": "Fire Hydrant Markers","title":  "'Volleyball Cour' Voters'","values_1": [6],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [3] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},{"project_name": "Upgraded Water Fountains for Public Schools","round_name": "Fire Hydrant Markers","title":  "'Upgraded Water ' Voters'","values_1": [5],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [6] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},], [{"project_name": "24H public toilet","round_name": "Fire Hydrant Markers","title":  "'24H public toil' Voters'","values_1": [5],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [4] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},{"project_name": "New Playground for public school","round_name": "Fire Hydrant Markers","title":  "'New Playground ' Voters'","values_1": [4],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [10] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},{"project_name": "New Chairs for Public Schools","round_name": "Fire Hydrant Markers","title":  "'New Chairs for ' Voters'","values_1": [2],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [11] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},], [{"project_name": "Inclusive Playground for All Kids","round_name": "Fire Hydrant Markers","title":  "'Inclusive Playg' Voters'","values_1": [2],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [1] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},{"project_name": "Meeting Room Upgrade for libraries","round_name": "Fire Hydrant Markers","title":  "'Meeting Room Up' Voters'","values_1": [2],"text_1":  "'Fire Hydrant Ma' Voters","values_2": [1] ,"text_2": "Non 'Fire Hydrant Ma' Voters"},], ],
+                    "sankey_chart": {"rows": [['Fire Hydrant Ma', 'Computers for t', 31],['Fire Hydrant Ma', 'Benches for a W', 29],['Fire Hydrant Ma', 'Real-Time Bus A', 27],['Fire Hydrant Ma', 'Separate Bike L', 27],['Fire Hydrant Ma', 'Planting trees ', 23],['Fire Hydrant Ma', 'Little (book ex', 23],['Fire Hydrant Ma', 'Other', 115],]},
+                    "chord_chart": {"series": [        {        "values":[0,31,29,27,27,23,23,0,],        "text": "Fire Hydrant Ma"    },    {        "values":[31,0,35,30,34,32,33,],        "text": "Computers for t"    },    {        "values":[29,35,0,29,32,27,29,],        "text": "Benches for a W"    },    {        "values":[27,30,29,0,26,22,25,],        "text": "Real-Time Bus A"    },    {        "values":[27,34,32,26,0,23,27,],        "text": "Separate Bike L"    },    {        "values":[23,32,27,22,23,0,22,],        "text": "Planting trees "    },    {        "values":[23,33,29,25,27,22,0,],        "text": "Little (book ex"    },]},
+                    "intro": {"project_name": "Fire Hydrant Markers", "round_number": "6", "description": "Install high-visibility markers on fire hydrants around town to increase safety for all residents and reduce response time of the fire department by improving ease of locating hydrants in emergencies, at night, and in the snow.", "project_cost" : "8000", "budget_remaining" : "353000.0", "effective_vote_count" : "38.0", "project_votes" : "38" },
+                    "roundNum": 5,
+                },
+            
+                "21": {
+                    "effective_vote_count_bar_chart": {"x_labels": ['Planting trees ','Protect the Hea','5 Water Bottle ','Urban Bicycle W','New Playground ','New Chairs for ','Invention and P','Outdoor Fitness','Upgraded Water ','24H public toil','Digital Sign at','Volleyball Cour','Inclusive Playg','Meeting Room Up',], "values": [37.0, 32.0, 29.037389276309845, 14.840668302976171, 14.0, 13.0, 13.0, 12.193089917753575, 11.0, 9.0, 9.0, 9.0, 3.0, 3.0] },
+                    "effective_vote_count_stacked_bar_chart": {"x_labels": ['New Chairs for ','Upgraded Water ','24H public toil','Urban Bicycle W','Digital Sign at','Invention and P','Inclusive Playg','New Playground ','Outdoor Fitness','Meeting Room Up','Protect the Hea','Volleyball Cour','5 Water Bottle ',], "initial_values": [ 13.0, 11.0, 9.0, 14.840668302976171, 9.0, 13.0, 3.0, 14.0, 12.193089917753575, 3.0, 32.0, 9.0, 29.037389276309845,], "reduced_values": [0.0, 0.0, 0.0, -1.7763568394002505e-15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -3.552713678800501e-15] },
+                    "pie_chart_triplets": [[{"project_name": "5 Water Bottle Refill Stations","round_name": "Planting trees in the city","title":  "'5 Water Bottle ' Voters'","values_1": [22],"text_1":  "'Planting trees ' Voters","values_2": [14] ,"text_2": "Non 'Planting trees ' Voters"},{"project_name": "Outdoor Fitness Equipment in the public park","round_name": "Planting trees in the city","title":  "'Outdoor Fitness' Voters'","values_1": [20],"text_1":  "'Planting trees ' Voters","values_2": [13] ,"text_2": "Non 'Planting trees ' Voters"},{"project_name": "Protect the Health and Safety of our Firefighters","round_name": "Planting trees in the city","title":  "'Protect the Hea' Voters'","values_1": [18],"text_1":  "'Planting trees ' Voters","values_2": [14] ,"text_2": "Non 'Planting trees ' Voters"},], [{"project_name": "Urban Bicycle Wash Stations","round_name": "Planting trees in the city","title":  "'Urban Bicycle W' Voters'","values_1": [12],"text_1":  "'Planting trees ' Voters","values_2": [9] ,"text_2": "Non 'Planting trees ' Voters"},{"project_name": "New Chairs for Public Schools","round_name": "Planting trees in the city","title":  "'New Chairs for ' Voters'","values_1": [7],"text_1":  "'Planting trees ' Voters","values_2": [6] ,"text_2": "Non 'Planting trees ' Voters"},{"project_name": "Invention and Production of Music","round_name": "Planting trees in the city","title":  "'Invention and P' Voters'","values_1": [7],"text_1":  "'Planting trees ' Voters","values_2": [6] ,"text_2": "Non 'Planting trees ' Voters"},], [{"project_name": "Volleyball Court in the public park","round_name": "Planting trees in the city","title":  "'Volleyball Cour' Voters'","values_1": [4],"text_1":  "'Planting trees ' Voters","values_2": [5] ,"text_2": "Non 'Planting trees ' Voters"},{"project_name": "Digital Sign at City Hall in Multiple Languages","round_name": "Planting trees in the city","title":  "'Digital Sign at' Voters'","values_1": [3],"text_1":  "'Planting trees ' Voters","values_2": [6] ,"text_2": "Non 'Planting trees ' Voters"},{"project_name": "New Playground for public school","round_name": "Planting trees in the city","title":  "'New Playground ' Voters'","values_1": [3],"text_1":  "'Planting trees ' Voters","values_2": [11] ,"text_2": "Non 'Planting trees ' Voters"},], [{"project_name": "Upgraded Water Fountains for Public Schools","round_name": "Planting trees in the city","title":  "'Upgraded Water ' Voters'","values_1": [2],"text_1":  "'Planting trees ' Voters","values_2": [9] ,"text_2": "Non 'Planting trees ' Voters"},{"project_name": "24H public toilet","round_name": "Planting trees in the city","title":  "'24H public toil' Voters'","values_1": [2],"text_1":  "'Planting trees ' Voters","values_2": [7] ,"text_2": "Non 'Planting trees ' Voters"},{"project_name": "Meeting Room Upgrade for libraries","round_name": "Planting trees in the city","title":  "'Meeting Room Up' Voters'","values_1": [2],"text_1":  "'Planting trees ' Voters","values_2": [1] ,"text_2": "Non 'Planting trees ' Voters"},], [{"project_name": "Inclusive Playground for All Kids","round_name": "Planting trees in the city","title":  "'Inclusive Playg' Voters'","values_1": [1],"text_1":  "'Planting trees ' Voters","values_2": [2] ,"text_2": "Non 'Planting trees ' Voters"},], ],
+                    "sankey_chart": {"rows": [['Planting trees ', 'Computers for t', 32],['Planting trees ', 'Benches for a W', 27],['Planting trees ', 'Separate Bike L', 23],['Planting trees ', 'Fire Hydrant Ma', 23],['Planting trees ', 'Little (book ex', 22],['Planting trees ', 'Real-Time Bus A', 22],['Planting trees ', 'Other', 103],]},
+                    "chord_chart": {"series": [        {        "values":[0,32,27,23,23,22,22,0,],        "text": "Planting trees "    },    {        "values":[32,0,35,34,31,33,30,],        "text": "Computers for t"    },    {        "values":[27,35,0,32,29,29,29,],        "text": "Benches for a W"    },    {        "values":[23,34,32,0,27,27,26,],        "text": "Separate Bike L"    },    {        "values":[23,31,29,27,0,23,27,],        "text": "Fire Hydrant Ma"    },    {        "values":[22,33,29,27,23,0,25,],        "text": "Little (book ex"    },    {        "values":[22,30,29,26,27,25,0,],        "text": "Real-Time Bus A"    },]},
+                    "intro": {"project_name": "Planting trees in the city", "round_number": "7", "description": "Street trees cool the city, absorb pollution, & make our neighborhoods more livable! planting 100 new trees & building tree wells in the areas that need them most.", "project_cost" : "119400", "budget_remaining" : "233600.0", "effective_vote_count" : "37.0", "project_votes" : "37" },
+                    "roundNum": 6,
+                },
+            
+                "23": {
+                    "effective_vote_count_bar_chart": {"x_labels": ['Protect the Hea','5 Water Bottle ','Urban Bicycle W','New Playground ','New Chairs for ','Invention and P','Outdoor Fitness','Upgraded Water ','24H public toil','Digital Sign at','Volleyball Cour','Inclusive Playg','Meeting Room Up',], "values": [32.0, 29.037389276309845, 14.840668302976171, 14.0, 13.0, 13.0, 12.193089917753575, 11.0, 9.0, 9.0, 9.0, 3.0, 3.0] },
+                    "effective_vote_count_stacked_bar_chart": {"x_labels": ['New Chairs for ','Upgraded Water ','24H public toil','Urban Bicycle W','Digital Sign at','Invention and P','Inclusive Playg','New Playground ','Outdoor Fitness','Meeting Room Up','Volleyball Cour',], "initial_values": [ 13.0, 11.0, 9.0, 14.840668302976171, 9.0, 13.0, 3.0, 14.0, 12.193089917753575, 3.0, 9.0,], "reduced_values": [0.0, 0.0, 0.0, -1.7763568394002505e-15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] },
+                    "pie_chart_triplets": [[{"project_name": "Outdoor Fitness Equipment in the public park","round_name": "5 Water Bottle Refill Stations","title":  "'Outdoor Fitness' Voters'","values_1": [23],"text_1":  "'5 Water Bottle ' Voters","values_2": [10] ,"text_2": "Non '5 Water Bottle ' Voters"},{"project_name": "Protect the Health and Safety of our Firefighters","round_name": "5 Water Bottle Refill Stations","title":  "'Protect the Hea' Voters'","values_1": [17],"text_1":  "'5 Water Bottle ' Voters","values_2": [15] ,"text_2": "Non '5 Water Bottle ' Voters"},{"project_name": "Urban Bicycle Wash Stations","round_name": "5 Water Bottle Refill Stations","title":  "'Urban Bicycle W' Voters'","values_1": [11],"text_1":  "'5 Water Bottle ' Voters","values_2": [10] ,"text_2": "Non '5 Water Bottle ' Voters"},], [{"project_name": "New Playground for public school","round_name": "5 Water Bottle Refill Stations","title":  "'New Playground ' Voters'","values_1": [9],"text_1":  "'5 Water Bottle ' Voters","values_2": [5] ,"text_2": "Non '5 Water Bottle ' Voters"},{"project_name": "Upgraded Water Fountains for Public Schools","round_name": "5 Water Bottle Refill Stations","title":  "'Upgraded Water ' Voters'","values_1": [7],"text_1":  "'5 Water Bottle ' Voters","values_2": [4] ,"text_2": "Non '5 Water Bottle ' Voters"},{"project_name": "Volleyball Court in the public park","round_name": "5 Water Bottle Refill Stations","title":  "'Volleyball Cour' Voters'","values_1": [5],"text_1":  "'5 Water Bottle ' Voters","values_2": [4] ,"text_2": "Non '5 Water Bottle ' Voters"},], [{"project_name": "Invention and Production of Music","round_name": "5 Water Bottle Refill Stations","title":  "'Invention and P' Voters'","values_1": [5],"text_1":  "'5 Water Bottle ' Voters","values_2": [8] ,"text_2": "Non '5 Water Bottle ' Voters"},{"project_name": "New Chairs for Public Schools","round_name": "5 Water Bottle Refill Stations","title":  "'New Chairs for ' Voters'","values_1": [4],"text_1":  "'5 Water Bottle ' Voters","values_2": [9] ,"text_2": "Non '5 Water Bottle ' Voters"},{"project_name": "Digital Sign at City Hall in Multiple Languages","round_name": "5 Water Bottle Refill Stations","title":  "'Digital Sign at' Voters'","values_1": [4],"text_1":  "'5 Water Bottle ' Voters","values_2": [5] ,"text_2": "Non '5 Water Bottle ' Voters"},], [{"project_name": "Inclusive Playground for All Kids","round_name": "5 Water Bottle Refill Stations","title":  "'Inclusive Playg' Voters'","values_1": [1],"text_1":  "'5 Water Bottle ' Voters","values_2": [2] ,"text_2": "Non '5 Water Bottle ' Voters"},{"project_name": "Meeting Room Upgrade for libraries","round_name": "5 Water Bottle Refill Stations","title":  "'Meeting Room Up' Voters'","values_1": [1],"text_1":  "'5 Water Bottle ' Voters","values_2": [2] ,"text_2": "Non '5 Water Bottle ' Voters"},{"project_name": "24H public toilet","round_name": "5 Water Bottle Refill Stations","title":  "'24H public toil' Voters'","values_1": [0],"text_1":  "'5 Water Bottle ' Voters","values_2": [9] ,"text_2": "Non '5 Water Bottle ' Voters"},], ],
+                    "sankey_chart": {"rows": [['5 Water Bottle ', 'Computers for t', 29],['5 Water Bottle ', 'Little (book ex', 25],['5 Water Bottle ', 'Benches for a W', 25],['5 Water Bottle ', 'Real-Time Bus A', 24],['5 Water Bottle ', 'Separate Bike L', 23],['5 Water Bottle ', 'Outdoor Fitness', 23],['5 Water Bottle ', 'Other', 106],]},
+                    "chord_chart": {"series": [        {        "values":[0,29,25,25,24,23,23,0,],        "text": "5 Water Bottle "    },    {        "values":[29,0,33,35,30,34,26,],        "text": "Computers for t"    },    {        "values":[25,33,0,29,25,27,22,],        "text": "Little (book ex"    },    {        "values":[25,35,29,0,29,32,24,],        "text": "Benches for a W"    },    {        "values":[24,30,25,29,0,26,21,],        "text": "Real-Time Bus A"    },    {        "values":[23,34,27,32,26,0,22,],        "text": "Separate Bike L"    },    {        "values":[23,26,22,24,21,22,0,],        "text": "Outdoor Fitness"    },]},
+                    "intro": {"project_name": "5 Water Bottle Refill Stations", "round_number": "8", "description": "At a water bottle refill station you get a healthy drink for free.", "project_cost" : "40000", "budget_remaining" : "193600.0", "effective_vote_count" : "29.037389276309845", "project_votes" : "36" },
+                    "roundNum": 7,
+                },
+            
+                "15": {
+                    "effective_vote_count_bar_chart": {"x_labels": ['New Chairs for ','Upgraded Water ','24H public toil','Urban Bicycle W','Digital Sign at','Invention and P','Inclusive Playg','New Playground ','Outdoor Fitness','Meeting Room Up','Volleyball Cour',], "values": [13.0, 11.0, 9.0, 14.840668302976171, 9.0, 13.0, 3.0, 14.0, 12.193089917753575, 3.0, 9.0] },
+                    "effective_vote_count_stacked_bar_chart": {"x_labels": ['New Chairs for ','Upgraded Water ','24H public toil','Urban Bicycle W','Digital Sign at','Invention and P','Inclusive Playg','New Playground ','Outdoor Fitness','Meeting Room Up','Volleyball Cour',], "initial_values": [ 13.0, 11.0, 9.0, 14.840668302976171, 9.0, 13.0, 3.0, 14.0, 12.193089917753575, 3.0, 9.0,], "reduced_values": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                    "pie_chart_triplets": [[{"project_name": "Outdoor Fitness Equipment in the public park","round_name": "Urban Bicycle Wash Stations","title":  "'Outdoor Fitness' Voters'","values_1": [11],"text_1":  "'Urban Bicycle W' Voters","values_2": [22] ,"text_2": "Non 'Urban Bicycle W' Voters"},{"project_name": "Protect the Health and Safety of our Firefighters","round_name": "Urban Bicycle Wash Stations","title":  "'Protect the Hea' Voters'","values_1": [9],"text_1":  "'Urban Bicycle W' Voters","values_2": [23] ,"text_2": "Non 'Urban Bicycle W' Voters"},{"project_name": "Digital Sign at City Hall in Multiple Languages","round_name": "Urban Bicycle Wash Stations","title":  "'Digital Sign at' Voters'","values_1": [7],"text_1":  "'Urban Bicycle W' Voters","values_2": [2] ,"text_2": "Non 'Urban Bicycle W' Voters"},], [{"project_name": "Volleyball Court in the public park","round_name": "Urban Bicycle Wash Stations","title":  "'Volleyball Cour' Voters'","values_1": [5],"text_1":  "'Urban Bicycle W' Voters","values_2": [4] ,"text_2": "Non 'Urban Bicycle W' Voters"},{"project_name": "Invention and Production of Music","round_name": "Urban Bicycle Wash Stations","title":  "'Invention and P' Voters'","values_1": [5],"text_1":  "'Urban Bicycle W' Voters","values_2": [8] ,"text_2": "Non 'Urban Bicycle W' Voters"},{"project_name": "New Chairs for Public Schools","round_name": "Urban Bicycle Wash Stations","title":  "'New Chairs for ' Voters'","values_1": [2],"text_1":  "'Urban Bicycle W' Voters","values_2": [11] ,"text_2": "Non 'Urban Bicycle W' Voters"},], [{"project_name": "24H public toilet","round_name": "Urban Bicycle Wash Stations","title":  "'24H public toil' Voters'","values_1": [2],"text_1":  "'Urban Bicycle W' Voters","values_2": [7] ,"text_2": "Non 'Urban Bicycle W' Voters"},{"project_name": "New Playground for public school","round_name": "Urban Bicycle Wash Stations","title":  "'New Playground ' Voters'","values_1": [2],"text_1":  "'Urban Bicycle W' Voters","values_2": [12] ,"text_2": "Non 'Urban Bicycle W' Voters"},{"project_name": "Meeting Room Upgrade for libraries","round_name": "Urban Bicycle Wash Stations","title":  "'Meeting Room Up' Voters'","values_1": [2],"text_1":  "'Urban Bicycle W' Voters","values_2": [1] ,"text_2": "Non 'Urban Bicycle W' Voters"},], [{"project_name": "Upgraded Water Fountains for Public Schools","round_name": "Urban Bicycle Wash Stations","title":  "'Upgraded Water ' Voters'","values_1": [1],"text_1":  "'Urban Bicycle W' Voters","values_2": [10] ,"text_2": "Non 'Urban Bicycle W' Voters"},{"project_name": "Inclusive Playground for All Kids","round_name": "Urban Bicycle Wash Stations","title":  "'Inclusive Playg' Voters'","values_1": [1],"text_1":  "'Urban Bicycle W' Voters","values_2": [2] ,"text_2": "Non 'Urban Bicycle W' Voters"},], ],
+                    "sankey_chart": {"rows": [['Urban Bicycle W', 'Computers for t', 15],['Urban Bicycle W', 'Separate Bike L', 14],['Urban Bicycle W', 'Fire Hydrant Ma', 14],['Urban Bicycle W', 'Benches for a W', 14],['Urban Bicycle W', 'Little (book ex', 13],['Urban Bicycle W', 'Real-Time Bus A', 13],['Urban Bicycle W', 'Other', 70],]},
+                    "chord_chart": {"series": [        {        "values":[0,15,14,14,14,13,13,0,],        "text": "Urban Bicycle W"    },    {        "values":[15,0,34,31,35,33,30,],        "text": "Computers for t"    },    {        "values":[14,34,0,27,32,27,26,],        "text": "Separate Bike L"    },    {        "values":[14,31,27,0,29,23,27,],        "text": "Fire Hydrant Ma"    },    {        "values":[14,35,32,29,0,29,29,],        "text": "Benches for a W"    },    {        "values":[13,33,27,23,29,0,25,],        "text": "Little (book ex"    },    {        "values":[13,30,26,27,29,25,0,],        "text": "Real-Time Bus A"    },]},
+                    "intro": {"project_name": "Urban Bicycle Wash Stations", "round_number": "9", "description": "Bicycle owners need to clean and care for their bikes, ideally monthly. But for apartment dwellers, this is really hard! These centrally located bicycle wash stations would allow bicycle owners to wash off dirt, grime, and salt from their bikes.", "project_cost" : "20000", "budget_remaining" : "173600.0", "effective_vote_count" : "14.840668302976171", "project_votes" : "21" },
+                    "roundNum": 8,
+                },
+            }
+
+    </script>
+    <script>
+        function updateBarChart(x_labels, values) {
+            let args = {
+                "data":{
+                    "scale-x":{
+                    "labels": x_labels,
+                    },
+                    "series":[{"values": values}],
+                }
+            }
+            zingchart.exec('BarChart', 'modify', args);
+        }
+
+        function updateStackedBarChart(x_labels, initial_values, reduced_values) {
+            let args = {
+                "data":{
+                "scale-x":{
+                    "labels": x_labels,
+                },
+                "series":[
+                    {
+                        "text": "Current Votes",
+                        "values": initial_values,
+                    },
+                    {
+                        "text": "Previous Votes",
+                        "values": reduced_values
+                    }
+                ]
+                }
+            };
+            zingchart.exec('StackedBarChart', 'modify', args);   
+        }
+
+        function renderChordChart(id) {
+            zingchart.render({
+                id: "ChordChart",
+                data: {
+                    "type": "chord",
+                    "options": {
+                        "radius": "80%"
+                    },
+                    "plotarea": {
+                        "margin": "dynamic"
+                    },
+                    "series": rounds_data[id].chord_chart.series,
+                
+                },
+                height: "60%",
+                width: "100%",
+            });
+        }
+
+        function updateSankeyChart(rows) {
+            let chart = new google.visualization.Sankey(document.getElementById('SankeyChart'));
+            let options = {
+                title: 'Project Vote Sankey Diagram',
+                width: 445,
+                height: 280,
+                sankey: {}
+            };
+            let data = new google.visualization.DataTable();
+            data.addColumn('string', 'From');
+            data.addColumn('string', 'To');
+            data.addColumn('number', 'Weight');
+            data.addRows(rows);
+            // Instantiates and draws our chart, passing in some options.
+            chart.draw(data, options);
+        }
+
+        function updateIntro(project) {
+
+            var elements = document.getElementsByClassName("project_name");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.project_name;
+            }
+            var elements = document.getElementsByClassName("round_number");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.round_number;
+            }
+            var elements = document.getElementsByClassName("description");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.description;
+            }
+            var elements = document.getElementsByClassName("project_cost");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.project_cost;
+            }
+            var elements = document.getElementsByClassName("budget_remaining");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.budget_remaining;
+            }
+        
+            var elements = document.getElementsByClassName("effective_vote_count");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.effective_vote_count;
+            }
+            var elements = document.getElementsByClassName("project_votes");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.project_votes;
+            }
+        }
+           
+
+        function renderPieChart(id, title, values_1, text_1, values_2, text_2) {
+            let args = {
+                "type":"pie",
+                "title":{
+                    "text": title
+                },
+                "legend":{
+                    "toggle-action":"remove",
+                    "toggle-action":"remove",
+                    "layout":"x2",
+                    "align":"center",
+                    "vertical-align":"bottom"
+                },
+                "plot":{
+                    "valueBox":{
+                        "visible":true,
+                        "type":"all",
+                        "placement":"in",
+                        "text":"%v",
+                        "fontSize":10 // Adjust font size as needed
+                    },
+                    "animation":{
+                        "effect":"ANIMATION_EXPAND_VERTICAL",
+                        "sequence":"ANIMATION_BY_PLOT",
+                        "speed":0
+                    }
+                },
+                "series":[
+                    {
+                        "values": values_1,
+                        "text": text_1
+                    },
+                    {
+                        "values": values_2,
+                        "text": text_2
+                    }
+                ]
+            };
+            zingchart.render({
+                id: id,
+                data: args,
+                height: 300,
+                width: "100%"
+            });
+        }
+
+        async function addPieChartsToCarousel(pie_chart_triplets) {
+            pie_chart_data_for_render = [];
+            let carouselElement = document.getElementById("pieChartsCarousel");
+            carouselElement.innerHTML = "";
+            let carouselNum = 0;
+            pie_chart_triplets.forEach(triplet => {
+                let carouselClass = "carousel-item";
+                if (carouselNum === 0) {
+                    carouselClass = "carousel-item active";
+                }
+                let carouselItem = document.createElement("div");
+                carouselItem.className = carouselClass;
+                let wrapper = document.createElement("div");
+                wrapper.className = "wrapper";
+                let container = document.createElement("div");
+                container.className = "container";
+                let row = document.createElement("div");
+                row.className = "row";
+                triplet.forEach(data => {
+                    let col = document.createElement("div");
+                    col.className = "col-sm-4";
+                    let div = document.createElement("div");
+                    let pieChart = document.createElement("div");
+                    pieChart.id = "PieChart" + carouselNum + "-" + triplet.indexOf(data);
+                    pieChart.style.height = "100%";
+                    pieChart.style.width = "100%";
+                    div.appendChild(pieChart);
+                    pie_chart_data_for_render.push([pieChart.id, data.title, data.values_1, data.text_1, data.values_2, data.text_2])
+                    // renderPieChart(pieChart.id, data.title, data.values_1, data.text_1, data.values_2, data.text_2);
+                    col.appendChild(div);
+                    let pieChartText = document.createElement("div");
+                    pieChartText.className = "pie-chart-text";
+                    pieChartText.innerHTML = "This resulted in an average reduction of $ per voter for the '" + data.project_name + "' voters who also voted for '" + data.round_name + "'.";
+                    col.appendChild(pieChartText);
+                    row.appendChild(col);
+                });
+                container.appendChild(row);
+                wrapper.appendChild(container);
+                carouselItem.appendChild(wrapper);
+                carouselElement.appendChild(carouselItem);
+                carouselNum++;
+            });
+            return pie_chart_data_for_render;
+        }
+
+        async function renderRound(roundId) {
+            // console.log(roundId)
+            // roundNum = idsArray.indexOf(roundId)
+            // console.log(idsA)
+            let element = document.getElementById("dropdown-item-".concat(roundId));
+            var dropdownItems = document.querySelectorAll('.dropdown-item');
+            dropdownItems.forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('projectDropdown').innerText = element.innerText;
+            let round_data = rounds_data[roundId];
+            roundNum = round_data.roundNum
+            console.log(roundNum)
+            pie_chart_data_for_render = await addPieChartsToCarousel(round_data.pie_chart_triplets);
+            updateBarChart(round_data.effective_vote_count_bar_chart.x_labels, round_data.effective_vote_count_bar_chart.values);
+            updateStackedBarChart(round_data.effective_vote_count_stacked_bar_chart.x_labels, round_data.effective_vote_count_stacked_bar_chart.initial_values, round_data.effective_vote_count_stacked_bar_chart.reduced_values);
+            updateSankeyChart(round_data.sankey_chart.rows);
+            updateIntro(round_data.intro);
+            // renderChordChart(round_data.chord_chart.series);
+            pie_chart_data_for_render.forEach(data => {
+                renderPieChart(data[0], data[1], data[2], data[3], data[4], data[5]);
+            });
+        }
+
+        async function renderRoundNext() {
+            if (roundNum < numProjects - 1){
+                roundNum = roundNum + 1;
+                renderRound(myJsArray[roundNum].id);
+            }
+        }
+
+        async function renderRoundPrev() {
+            if (roundNum > 0) {
+                roundNum = roundNum - 1;
+                renderRound(myJsArray[roundNum].id);
+            }
+        }
+    </script>
+    <script>
+        async function loadRound() {
+            roundNum = 0
+            const urlParams = new URLSearchParams(window.location.search);
+            projectId = urlParams.get('projectId');
+            if (projectId === null) {
+                projectId = "3";
+            }
+            await google.charts.load('current', {
+                'packages': ['sankey']
+            });
+            // Display the round requested
+            renderRound(projectId);
+            renderChordChart(projectId);
+            document.getElementById("spinner").style.display = "none";
+            // Display the dropdown
+            document.getElementById("dropdown-container").classList.add('active');
+            document.getElementById("dropdown-container").style.display = 'flex';
+        }
+    </script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script>tippy('[data-tippy-content]', { allowHTML: true, maxWidth: 1000});</script>
+    <script type="text/javascript" src="https://unpkg.com/default-passive-events"></script>
+</body>
+</html>

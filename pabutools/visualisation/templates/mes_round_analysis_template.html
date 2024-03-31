@@ -56,7 +56,7 @@
             height: 100%;
         }
         
-        /* #myChordChart {
+        #myChordChart {
             height: 100%;
             width: 100%;
         }
@@ -65,15 +65,28 @@
         #myStackedBarChart1 {
             height: 100%;
             width: 100%;
-        } */
+        }
         /* zing-grid[loading] {
             height: 800px;
             width: 100%;
         } */
         
         h1,
+        h2,
+        h3,
+        h4,
         p {
             text-align: center;
+        }
+
+      
+        main {
+            padding-top: 100px; /* Adjust based on the actual height of your header */
+            }
+
+        .info-button {
+            margin-top: 25px;
+            /* padding-top: 100px; */
         }
     </style>
     <script>
@@ -141,6 +154,54 @@
             </div>
         </center>
         <div class="container">
+                      
+            <div class="col-12  justify-content-center">
+                <h3>
+                    Round <span class="round_number"></span>
+                </h3>
+                <h4>
+                    Winner - <span class="project_name"></span>
+                </h4>
+                <p>
+                    <b>Description:</b> <span class="description"></span>
+                    <br>
+                    <b>Project Cost:</b> <span class="project_cost"></span>
+                    <br>
+                    <b>Election Budget Remaining:</b> <span class="budget_remaining"></span>
+                </p>
+               
+                
+                <p>
+              
+                    <a href="#" class="btn btn-secondary my-2" onclick="renderRoundPrev()">Previous Round</a>
+                    <a href="#" class="btn btn-primary my-2" onclick="renderRoundNext()">Next Round</a>
+
+                </p>
+            </div>
+            <div class="row my-4 justify-content-center hidden-section" id="dropdown-container">
+                <div>
+                    <h4>Select Round:  </h4>
+                </div>
+                <div class="spacer-1"></div>
+                <div class="spacer-1"></div>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="projectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Round 1: {{ projects[rounds[0].id]['name'] }}
+                </button>
+                    <div class="dropdown-menu" aria-labelledby="projectDropdown">
+                    {% for round in rounds %}
+                        <a id="dropdown-item-{{ round.id }}" class="dropdown-item {% if loop.index == 1 %}active{% endif %}" item="{{ round.id }}" onclick="renderRound({{ round.id }}, this)">Round {{loop.index0 + 1}}: '{{ projects[round.id]['name'] }}'</a>
+                    {% endfor %}
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="container">
             <div class="spacer-1"></div>
             <hr>
             <div class="spacer-1"></div>
@@ -151,7 +212,9 @@
                     <div class="row featurette">
                         <div class="col-5">
                           <h2 class="featurette-heading">Effective Vote Count</h2>
-                          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+                          <p class="lead">'<span class="project_name"></span>' has the highest effective vote count, as there is enough budget to support this project the project will recieve funding. 
+                            This project costs <span class="project_cost"></span> .
+                            <span class="project_votes"></span> people voted for this project, at the time the project was elected it had an effective vote count of <span class="effective_vote_count"></span>.     </p>
                         </div>
                         <div class="col-7" style="min-height: 400px;">
                             <div id="BarChart" style="height: 100%; width: 100%;">
@@ -167,6 +230,7 @@
                     <!-- Sankey and Chord side by side -->
                     <div class="row" style="display: grid;">
                         <h5 style="text-align: center; font-weight: bold;">Voter Flows</h5>
+                        <p>The following graphs demonstrate how voters of '<span class="project_name"></span>' voted for other projects, highlighting where funding may be lost for certain projects in future rounds as voters funds have been allocated to '<span class="project_name"></span>'. </p>
                     </div>
                     <div class="row">
                         <div class="col-5" style="display: grid;">
@@ -205,7 +269,9 @@
                             <span class="sr-only">Next</span>
                           </a>
                     </div>
-                    
+
+
+
                     <div class="spacer-1"></div>
                     <hr>
                     <div class="spacer-1"></div>
@@ -223,25 +289,6 @@
                         </div>
                     </div>
                 </section>
-
-            
-            <div class="spacer-8"></div>
-            <div class="spacer-8"></div>
-
-            <!-- Dropdown UI -->
-            <div class="row my-4 justify-content-center hidden-section" id="dropdown-container">
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="projectDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ projects[rounds[0].id]['name'] }}
-                </button>
-                    <div class="dropdown-menu" aria-labelledby="projectDropdown">
-                    {% for round in rounds %}
-                        <a id="dropdown-item-{{ round.id }}" class="dropdown-item {% if loop.index == 1 %}active{% endif %}" item="{{ round.id }}" onclick="renderRound({{ round.id }}, this)">'{{ projects[round.id]['name'] }}'</a>
-                    {% endfor %}
-    
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="spacer-1"></div>
@@ -261,15 +308,20 @@
 
     <!-- Effective vote count bar chart -->
     <script>
-            //   ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
-            zingchart.render({
-                id: 'BarChart',
-                data: {
-                "type": "hbar",
-                "title": {
-                    "text": "Effective Vote Count"
-                },
-                "scale-x": {
+        zingchart.render({
+            id: 'BarChart',
+            data: {
+            "type": "hbar",
+            "title": {
+                "text": "Effective Vote Count",
+            "fontSize": 16, // Smaller font size to ensure it fits
+            "adjustLayout": true // ZingChart will try to adjust the layout 
+            },
+            "plotarea": {
+            "marginLeft":'dynamic',
+            "marginRight":'dynamic'
+        },
+            "scaleX": {
                 "labels": [], // Label that identifies each project in the round
                     "title": {
                     "text": "Project"
@@ -278,16 +330,219 @@
                     "font-size": 14, // Adjust font size as needed
                     "offset-x": 0, // Adjust to move the label left or right if needed
                     "offset-y": 0 // Adjust to move the label up or down if needed
-                    }
+                    },"zooming": true,
+                "zoomTo": [0, 10],
+                "mirrored": true,
+                "itemsOverlap": true, // allows items to overlap if necessary
+                "maxItems": 999, // set to a high number to ensure all labels show
+                "label": {
+                        "angle": 45 // rotates labels to fit better
+                    },
+            },
+
+            "scaleY": {
+                "title": {
+                "text": "Number of Votes"
                 },
-                "scale-y": {
+                "items-overlap": true,
+            },
+
+            "scrollX": {
+                "bar": {
+                "backgroundColor": '#2596be',
+                "alpha": 0.5,
+                },
+                "handle": {
+                "backgroundColor": '#2596be',
+                },
+            },
+            "series": [{
+                "values": [], // Current votes values
+                'hover-state': { /* Hover object */
+                'background-color': "orange",
+            }
+            }, ],
+            "plot": {
+            "tooltip": {
+                "text": "Project %scale-key-label has %v votes"
+            },
+                "animation": {
+                "effect": "ANIMATION_SLIDE_BOTTOM",
+                "sequence": "ANIMATION_BY_PLOT_AND_NODE",
+                "speed": 0
+                }
+            }
+        },
+        height: '100%',
+        width: '100%'
+    });
+    </script>
+    <!-- Effective vote count reduction bar chart -->
+    <script>
+
+    zingchart.render({
+        id: 'StackedBarChart',
+        data: {
+        "type": "hbar",
+        "stacked": true,
+        "title": {
+            "text": "Reduced Effective Vote Count",
+            "fontSize": 15, // Smaller font size to ensure it fits
+            "adjustLayout": true // ZingChart will try to adjust the layout 
+        },
+        "legend": {
+            "layout": "x4",
+            "background-color": "none",
+            "shadow": 0,
+            "align": "center",
+            "adjust-layout": true,
+            "item": {
+                "font-color": "#333"
+            },
+            "marker": {
+                "type": "square",
+                "border-width": 0,
+                "size": 5
+            },
+            "toggle-action": "remove",
+            "adjust-layout": true,
+        },
+        "plotarea": {
+            "marginLeft":'dynamic',
+            "marginRight":'dynamic'
+        },
+        "plot": {
+            "tooltip": {
+                "text": "Project %scale-key-label has %v votes"
+            },
+            "animation": {
+                "effect": "ANIMATION_SLIDE_BOTTOM",
+                "sequence": 1,
+                "speed": 0
+            }
+        },
+        "scale-x": {
+            "labels": [], // Label that identifies each project in the round
+            "title": {
+                "text": "Projects"
+            },
+            "item": { // Explicitly control the appearance of the scale labels
+                    "font-size": 14, // Adjust font size as needed
+                    "offset-x": 0, // Adjust to move the label left or right if needed
+                    "offset-y": 0 // Adjust to move the label up or down if needed
+                },"zooming": true,
+            "zoomTo": [0, 6]
+        },
+        "scale-y": {
+            "title": {
+                "text": "Votes"
+            },
+            "min-value": 0, // Set the minimum value to 0
+            "max-labels": 10, // Optional: Adjust the maximum number of labels displayed
+            "decimals": 0, // Optional: Adjust the number of decimal places
+        },
+        "scrollX": {
+                "bar": {
+                "backgroundColor": '#2596be',
+                "alpha": 0.5,
+                },
+                "handle": {
+                "backgroundColor": '#2596be',
+                }
+            },
+
+        "series": [{
+            "values":[], // Effective votes for next round
+            "background-color": "#0070C0",
+            "text": "Current Votes",
+            'hover-state': { /* Hover object */
+                    'background-color': "orange",
+                    // 'border-width':3,
+                    // 'border-color': "purple",
+                    // 'line-style': "dotted"
+                }
+        }, {
+            "values": [], // Effective votes lost this round
+            "background-color": "#FF0000",
+            "text": "Previous Votes"
+        }]
+    },
+    height: '100%',
+    width: '100%'
+});
+    </script>
+    <!-- Rounds data -->
+    <script>
+        var myJsArray = {{ rounds }};
+        var numProjects = {{ rounds|length }};
+        
+        var rounds_data = {
+            {% for round in rounds %}
+                "{{ round.id }}": {
+                    "effective_vote_count_bar_chart": {"x_labels": [{% for roundID in round.effective_vote_count.keys()%}'{{ projects[roundID]['name'][:15]|replace('\"', '\\\"') }}',{% endfor %}], "values": {{ round.effective_vote_count.values() | list }} },
+                    "effective_vote_count_stacked_bar_chart": {"x_labels": [{% for roundID in round.effective_vote_count_reduction.keys()%}'{{ projects[roundID]['name'][:15]|replace('\"', '\\\"') }}',{% endfor %}], "initial_values": [{% for key in round.effective_vote_count_reduction.keys() %} {{ round.effective_vote_count[key]}},{% endfor %}], "reduced_values": {{ round.effective_vote_count_reduction.values() | list }} },
+                    "pie_chart_triplets": [{% for pie_chart in round.pie_chart_triplet %}[{% for data in pie_chart%}{"project_name": "{{ projects[data.project]['name'] }}","round_name": "{{ projects[round.id]['name'] }}","title":  "'{{ projects[data.project]['name'][:15]|replace('\"', '\\\"')}}' Voters'","values_1": [{{ data.roundVoters }}],"text_1":  "'{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}' Voters","values_2": [{{ data.nonRoundVoters }}] ,"text_2": "Non '{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}' Voters"},{% endfor %}], {% endfor %}],
+                    "sankey_chart": {"rows": [{% set data_items = round.voter_flow[round.id].items() | sort(attribute='1', reverse=True) %}{% set top_items = data_items[:6] %}{% set other_items = data_items[6:] %}{% set other_total = other_items | map(attribute='1') | sum %}{% for key, value in top_items %}{% if key != round.id %}['{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}', '{{ projects[key]['name'][:15]|replace('\"', '\\\"') }}', {{ value }}],{% endif %}{% endfor %}{% if other_items %}['{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}', 'Other', {{ other_total }}],{% endif %}]},
+                    "chord_chart": {"series": [{% set project_name = projects[round.id]['name'][:15] %}{% set selected_project = round.name %}{% set project_votes = round.voter_flow[selected_project] | dictsort(by='value', reverse=True) %}{% set top_projects = project_votes[:6] | map(attribute=0) | list %}{% if selected_project not in top_projects %}    {% set top_projects = [selected_project] + top_projects %}{% endif %}{% for projFrom in top_projects %}    {        "values":[{% for projTo in top_projects %}{{ round.voter_flow[projFrom].get(projTo, 0) }},{% endfor %}{% if projFrom == selected_project %}{{ round.voter_flow[projFrom].get(projFrom, 0) }},{% endif %}],        "text": "{{ projects[projFrom]['name'][:15]|replace('\"', '\\\"') }}"    },{% endfor %}{% if selected_project not in top_projects %}{"values": [{% for projTo in top_projects %}{{ round.voter_flow[selected_project].get(projTo, 0) }},{% endfor %}{{ round.voter_flow[selected_project].get(selected_project, 0) }},],        "text": '{{ project_name }}'    },{% endif %}]},
+                    "intro": {"project_name": "{{ projects[round.id]['name']}}", "round_number": "{{loop.index0 + 1}}", "description": "{{projects[round.id]['description']}}", "project_cost" : "{{projects[round.id]['cost']}}", "budget_remaining" : "{{ round['remaining_budget'] }}", "effective_vote_count" : "{{ round['effective_vote_count'][round.id]}}", "project_votes" : "{{projects[round.id]['votes']}}" },
+                    "roundNum": {{loop.index0}},
+                },
+            {% endfor %}}
+
+    </script>
+    <script>
+        function updateBarChart(x_labels, values) {
+           
+            zingchart.render({
+                id: 'BarChart',
+                data: {
+                "type": "hbar",
+                "title": {
+                    "text": "Effective Vote Count",
+                "fontSize": 16, // Smaller font size to ensure it fits
+                "adjustLayout": true // ZingChart will try to adjust the layout 
+                },
+                "plotarea": {
+                "marginLeft":'dynamic',
+                "marginRight":'dynamic'
+            },
+                "scaleX": {
+                    "labels": x_labels, // Label that identifies each project in the round
+                        "title": {
+                        "text": "Project"
+                        },
+                        "item": { // Explicitly control the appearance of the scale labels
+                        "font-size": 14, // Adjust font size as needed
+                        "offset-x": 0, // Adjust to move the label left or right if needed
+                        "offset-y": 0 // Adjust to move the label up or down if needed
+                        },"zooming": true,
+                    "zoomTo": [0, 10],
+                    "mirrored": true,
+                    "itemsOverlap": true, // allows items to overlap if necessary
+                    "maxItems": 999, // set to a high number to ensure all labels show
+                    "label": {
+                            "angle": 45 // rotates labels to fit better
+                        },
+                },
+
+                "scaleY": {
                     "title": {
                     "text": "Number of Votes"
                     },
                     "items-overlap": true,
                 },
+
+                "scrollX": {
+                    "bar": {
+                    "backgroundColor": '#2596be',
+                    "alpha": 0.5,
+                    },
+                    "handle": {
+                    "backgroundColor": '#2596be',
+                    },
+                },
                 "series": [{
-                    "values": [], // Current votes values
+                    "values": values, // Current votes values
                     'hover-state': { /* Hover object */
                     'background-color': "orange",
                 }
@@ -305,129 +560,119 @@
             },
             height: '100%',
             width: '100%'
-        });
-    </script>
-    <!-- Effective vote count reduction bar chart -->
-    <script>
-        // ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
-        zingchart.render({
-            id: 'StackedBarChart',
-            data: {
-            "type": "hbar",
-            "stacked": true,
-            "title": {
-                "text": "Reduced Effective Vote Count",
-                "adjust-layout": true,
-            },
-            "legend": {
-                "layout": "x4",
-                "background-color": "none",
-                "shadow": 0,
-                "align": "center",
-                "adjust-layout": true,
-                "item": {
-                    "font-color": "#333"
-                },
-                "marker": {
-                    "type": "square",
-                    "border-width": 0,
-                    "size": 5
-                },
-                "toggle-action": "remove",
-                "adjust-layout": true,
-            },
-            "plot": {
-                "tooltip": {
-                    "text": "Project %scale-key-label has %v votes"
-                },
-                "animation": {
-                    "effect": "ANIMATION_SLIDE_BOTTOM",
-                    "sequence": 1,
-                    "speed": 0
-                }
-            },
-            "scale-x": {
-                "labels": [], // Label that identifies each project in the round
-                "title": {
-                    "text": "Projects"
-                },
-                "item": { // Explicitly control the appearance of the scale labels
-                        "font-size": 14, // Adjust font size as needed
-                        "offset-x": 0, // Adjust to move the label left or right if needed
-                        "offset-y": 0 // Adjust to move the label up or down if needed
-                    }
-            },
-            "scale-y": {
-                "title": {
-                    "text": "Votes"
-                }
-            },
-            "series": [{
-                "values":[], // Effective votes for next round
-                "background-color": "#0070C0",
-                "text": "Current Votes",
-                'hover-state': { /* Hover object */
-                        'background-color': "orange",
-                        // 'border-width':3,
-                        // 'border-color': "purple",
-                        // 'line-style': "dotted"
-                    }
-            }, {
-                "values": [], // Effective votes lost this round
-                "background-color": "#FF0000",
-                "text": "Previous Votes"
-            }]
-        },
-        height: '100%',
-        width: '100%'
-    });
-    </script>
-    <!-- Rounds data -->
-    <script>
-        var rounds_data = {
-            {% for round in rounds %}
-                "{{ round.id }}": {
-                    "effective_vote_count_bar_chart": {"x_labels": [{% for roundID in round.effective_vote_count.keys()%}'{{ projects[roundID]['name'][:15]|replace('\"', '\\\"') }}',{% endfor %}], "values": {{ round.effective_vote_count.values() | list }} },
-                    "effective_vote_count_stacked_bar_chart": {"x_labels": [{% for roundID in round.effective_vote_count_reduction.keys()%}'{{ projects[roundID]['name'][:15]|replace('\"', '\\\"') }}',{% endfor %}], "initial_values": [{% for key in round.effective_vote_count_reduction.keys() %} {{ round.effective_vote_count[key]}},{% endfor %}], "reduced_values": {{ round.effective_vote_count_reduction.values() | list }} },
-                    "pie_chart_triplets": [{% for pie_chart in round.pie_chart_triplet %}[{% for data in pie_chart%}{"project_name": "{{ projects[data.project]['name'] }}","round_name": "{{ projects[round.id]['name'] }}","title":  "'{{ projects[data.project]['name'][:15]|replace('\"', '\\\"')}}' Voters'","values_1": [{{ data.roundVoters }}],"text_1":  "'{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}' Voters","values_2": [{{ data.nonRoundVoters }}] ,"text_2": "Non '{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}' Voters"},{% endfor %}], {% endfor %}],
-                    "sankey_chart": {"rows": [{% set data_items = round.voter_flow[round.id].items() | sort(attribute='1', reverse=True) %}{% set top_items = data_items[:6] %}{% set other_items = data_items[6:] %}{% set other_total = other_items | map(attribute='1') | sum %}{% for key, value in top_items %}{% if key != round.id %}['{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}', '{{ projects[key]['name'][:15]|replace('\"', '\\\"') }}', {{ value }}],{% endif %}{% endfor %}{% if other_items %}['{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}', 'Other', {{ other_total }}],{% endif %}]},
-                    "chord_chart": {"series": [{% set project_name = projects[round.id]['name'][:15] %}{% set selected_project = round.name %}{% set project_votes = round.voter_flow[selected_project] | dictsort(by='value', reverse=True) %}{% set top_projects = project_votes[:6] | map(attribute=0) | list %}{% if selected_project not in top_projects %}    {% set top_projects = [selected_project] + top_projects %}{% endif %}{% for projFrom in top_projects %}    {        "values":[{% for projTo in top_projects %}{{ round.voter_flow[projFrom].get(projTo, 0) }},{% endfor %}{% if projFrom == selected_project %}{{ round.voter_flow[projFrom].get(projFrom, 0) }},{% endif %}],        "text": "{{ projects[projFrom]['name'][:15]|replace('\"', '\\\"') }}"    },{% endfor %}{% if selected_project not in top_projects %}{"values": [{% for projTo in top_projects %}{{ round.voter_flow[selected_project].get(projTo, 0) }},{% endfor %}{{ round.voter_flow[selected_project].get(selected_project, 0) }},],        "text": '{{ project_name }}'    },{% endif %}]},
-                },
-            {% endfor %}
-        }
-    </script>
-    <script>
-        function updateBarChart(x_labels, values) {
-            let args = {
-                "data":{
-                    "scale-x":{
-                    "labels": x_labels,
-                    },
-                    "series":[{"values": values}],
-                }
-            }
-            zingchart.exec('BarChart', 'modify', args);
+            });
         }
 
         function updateStackedBarChart(x_labels, initial_values, reduced_values) {
-            let args = {
-                "data":{
-                "scale-x":{
-                    "labels": x_labels,
+            // let args = {
+            //     "data":{
+            //     "scale-x":{
+            //         "labels": x_labels,
+            //     },
+            //     "series":[
+            //         {
+            //             "text": "Current Votes",
+            //             "values": initial_values,
+            //         },
+            //         {
+            //             "text": "Previous Votes",
+            //             "values": reduced_values
+            //         }
+            //     ]
+            //     }
+            // };
+            // zingchart.exec('StackedBarChart', 'modify', args);   
+
+            zingchart.render({
+                id: 'StackedBarChart',
+                data: {
+                "type": "hbar",
+                "stacked": true,
+                "title": {
+                    "text": "Reduced Effective Vote Count",
+                    "fontSize": 15, // Smaller font size to ensure it fits
+                    "adjustLayout": true // ZingChart will try to adjust the layout 
                 },
-                "series":[
-                    {
-                        "text": "Current Votes",
-                        "values": initial_values,
+                "legend": {
+                    "layout": "x4",
+                    "background-color": "none",
+                    "shadow": 0,
+                    "align": "center",
+                    "adjust-layout": true,
+                    "item": {
+                        "font-color": "#333"
                     },
-                    {
-                        "text": "Previous Votes",
-                        "values": reduced_values
+                    "marker": {
+                        "type": "square",
+                        "border-width": 0,
+                        "size": 5
+                    },
+                    "toggle-action": "remove",
+                    "adjust-layout": true,
+                },
+                "plotarea": {
+                    "marginLeft":'dynamic',
+                    "marginRight":'dynamic'
+                },
+                "plot": {
+                    "tooltip": {
+                        "text": "Project %scale-key-label has %v votes"
+                    },
+                    "animation": {
+                        "effect": "ANIMATION_SLIDE_BOTTOM",
+                        "sequence": 1,
+                        "speed": 0
                     }
-                ]
-                }
-            };
-            zingchart.exec('StackedBarChart', 'modify', args);   
+                },
+                "scale-x": {
+                    "labels": x_labels, // Label that identifies each project in the round
+                    "title": {
+                        "text": "Projects"
+                    },
+                    "item": { // Explicitly control the appearance of the scale labels
+                            "font-size": 14, // Adjust font size as needed
+                            "offset-x": 0, // Adjust to move the label left or right if needed
+                            "offset-y": 0 // Adjust to move the label up or down if needed
+                        },"zooming": true,
+                    "zoomTo": [0, 6]
+                },
+                "scale-y": {
+                    "title": {
+                        "text": "Votes"
+                    },
+                    "min-value": 0, // Set the minimum value to 0
+                    "max-labels": 10, // Optional: Adjust the maximum number of labels displayed
+                    "decimals": 0, // Optional: Adjust the number of decimal places
+                },
+                "scrollX": {
+                        "bar": {
+                        "backgroundColor": '#2596be',
+                        "alpha": 0.5,
+                        },
+                        "handle": {
+                        "backgroundColor": '#2596be',
+                        }
+                    },
+
+                "series": [{
+                    "values":initial_values, // Effective votes for next round
+                    "background-color": "#0070C0",
+                    "text": "Current Votes",
+                    'hover-state': { /* Hover object */
+                            'background-color': "orange",
+                            // 'border-width':3,
+                            // 'border-color': "purple",
+                            // 'line-style': "dotted"
+                        }
+                }, {
+                    "values": reduced_values, // Effective votes lost this round
+                    "background-color": "#FF0000",
+                    "text": "Previous Votes"
+                }]
+            },
+            height: '100%',
+            width: '100%'
+        });
         }
 
         function renderChordChart(id) {
@@ -465,6 +710,40 @@
             // Instantiates and draws our chart, passing in some options.
             chart.draw(data, options);
         }
+
+        function updateIntro(project) {
+
+            var elements = document.getElementsByClassName("project_name");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.project_name;
+            }
+            var elements = document.getElementsByClassName("round_number");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.round_number;
+            }
+            var elements = document.getElementsByClassName("description");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.description;
+            }
+            var elements = document.getElementsByClassName("project_cost");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.project_cost;
+            }
+            var elements = document.getElementsByClassName("budget_remaining");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.budget_remaining;
+            }
+        
+            var elements = document.getElementsByClassName("effective_vote_count");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.effective_vote_count;
+            }
+            var elements = document.getElementsByClassName("project_votes");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].innerHTML = project.project_votes;
+            }
+        }
+           
 
         function renderPieChart(id, title, values_1, text_1, values_2, text_2) {
             let args = {
@@ -564,19 +843,35 @@
             element.classList.add('active');
             document.getElementById('projectDropdown').innerText = element.innerText;
             let round_data = rounds_data[roundId];
+            roundNum = round_data.roundNum
             pie_chart_data_for_render = await addPieChartsToCarousel(round_data.pie_chart_triplets);
             updateBarChart(round_data.effective_vote_count_bar_chart.x_labels, round_data.effective_vote_count_bar_chart.values);
             updateStackedBarChart(round_data.effective_vote_count_stacked_bar_chart.x_labels, round_data.effective_vote_count_stacked_bar_chart.initial_values, round_data.effective_vote_count_stacked_bar_chart.reduced_values);
             updateSankeyChart(round_data.sankey_chart.rows);
+            updateIntro(round_data.intro);
             // renderChordChart(round_data.chord_chart.series);
             pie_chart_data_for_render.forEach(data => {
                 renderPieChart(data[0], data[1], data[2], data[3], data[4], data[5]);
             });
+        }
 
+        async function renderRoundNext() {
+            if (roundNum < numProjects - 1){
+                roundNum = roundNum + 1;
+                renderRound(myJsArray[roundNum].id);
+            }
+        }
+
+        async function renderRoundPrev() {
+            if (roundNum > 0) {
+                roundNum = roundNum - 1;
+                renderRound(myJsArray[roundNum].id);
+            }
         }
     </script>
     <script>
         async function loadRound() {
+            roundNum = 0
             const urlParams = new URLSearchParams(window.location.search);
             projectId = urlParams.get('projectId');
             if (projectId === null) {
