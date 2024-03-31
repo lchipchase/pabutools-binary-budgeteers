@@ -9,7 +9,7 @@ from collections.abc import Collection, Iterable
 from math import inf
 
 from pabutools.rules.budgetallocation import BudgetAllocation
-from pabutools.rules.greedywelfare.greedywelfare_details import GreedyWelfareIteration, GreedyWelfareAllocationDetails, GreedyWelfareProjectDetails
+from pabutools.rules.greedywelfare.greedywelfare_details import GreedyWelfareAllocationDetails, GreedyWelfareProjectDetails
 from pabutools.utils import Numeric
 
 from pabutools.election import AbstractBallot
@@ -63,8 +63,6 @@ def greedy_utilitarian_scheme(
             The selected projects if resolute (:code:`resoluteness == True`), or the set of selected projects if irresolute
             (:code:`resoluteness == False`).
     """
-    if analytics:
-        current_iteration = GreedyWelfareIteration()
     def aux(inst, prof, feasible, sats, allocs, alloc, tie, resolute):
         if len(feasible) == 0:
             if resolute:
@@ -133,9 +131,6 @@ def greedy_utilitarian_scheme(
         tie_breaking,
         resoluteness,
     )
-    if analytics:
-        print(budget_allocation)
-        budget_allocation.details.iterations.append(current_iteration)
     if resoluteness:
         return all_budget_allocations[0]
     else:
@@ -177,10 +172,6 @@ def greedy_utilitarian_scheme_additive(
             The selected projects if resolute (:code:`resoluteness == True`), or the set of selected projects if irresolute
             (:code:`resoluteness == False`).
     """
-    if analytics:
-        current_iteration = GreedyWelfareIteration()
-        current_iteration.extend([GreedyWelfareProjectDetails(p, current_iteration) for p in budget_allocation])
-
     if not resoluteness:
         return greedy_utilitarian_scheme(
             instance,
@@ -195,9 +186,6 @@ def greedy_utilitarian_scheme_additive(
     projects = sorted(instance)
     for project in budget_allocation:
         projects.remove(project)
-        print(project)
-        if analytics:
-            current_iteration.update_project_details_as_discarded(project)
     projects = tie_breaking.order(instance, profile, projects)
 
     def satisfaction_density(proj):
@@ -207,23 +195,21 @@ def greedy_utilitarian_scheme_additive(
                 return frac(total_sat, proj.cost)
             return inf
         return 0
-
+    selection = BudgetAllocation(budget_allocation, details=GreedyWelfareAllocationDetails())
+    if analytics:
+        selection.details.projects.extend([GreedyWelfareProjectDetails(project, score=satisfaction_density(project)) for project in projects])
     # We sort based on a tuple to ensure ties are broken as intended
     ordered_projects = sorted(
         projects, key=lambda p: (-satisfaction_density(p), projects.index(p))
     )
 
-    selection = BudgetAllocation(budget_allocation)
     remaining_budget = instance.budget_limit - total_cost(budget_allocation)
     for project in ordered_projects:
         if project.cost <= remaining_budget:
             selection.append(project)
             remaining_budget -= project.cost
             if analytics:
-                current_iteration.append(GreedyWelfareProjectDetails(project, current_iteration))
-    if analytics:
-        budget_allocation.details.iterations.append(current_iteration)
-
+                selection.details.mark_as_selected(project, remaining_budget)
     return selection
 
 
@@ -280,12 +266,9 @@ def greedy_utilitarian_welfare(
     if tie_breaking is None:
         tie_breaking = lexico_tie_breaking
     if initial_budget_allocation is not None:
-        budget_allocation = BudgetAllocation(
-            initial_budget_allocation,
-            details=GreedyWelfareAllocationDetails([] if analytics else None)                             
-        )
+        budget_allocation = BudgetAllocation(initial_budget_allocation)
     else:
-        budget_allocation = BudgetAllocation(init=[], details=GreedyWelfareAllocationDetails([] if analytics else None))
+        budget_allocation = BudgetAllocation()
 
     if sat_class is None:
         if sat_profile is None:

@@ -208,42 +208,71 @@ class GreedyWelfareVisualiser(Visualiser):
         self.profile = profile
         self.instance = instance
         self.verbose = verbose
-        self.greedy_iterations = greedy_details.iterations
-        self.rounds = [{
-                "id": 1,
-                "remaining_budget": 20000,
-                "rejected_projects" : [{
-                    "id": 1,
-                    "name": "Project 1",
-                    "cost": 30000,
-                    "votes" : 2000
-                },
-                {
-                    "id": 2,
-                    "name": "Project 2",
-                    "cost": 25000,
-                    "votes" : 1800
-                },
-                {
-                    "id": 3,
-                    "name": "Project 3",
-                    "cost": 22000,
-                    "votes" : 1700
-                }],
-                "max_cost": 30000,
-                "selected_project": {
-                    "id": 4,
-                    "name": "Project 4",
-                    "cost": 20000,
-                    "votes": 1500
-                }
-            }]
+        self.details = greedy_details
+        # self.rounds = [
+        #         {
+        #             "id": 1,
+        #             "remaining_budget": 20000,
+        #             "rejected_projects" : [
+        #                 {
+        #                     "id": 1,
+        #                     "name": "Project 1",
+        #                     "cost": 30000,
+        #                     "votes" : 2000
+        #                 },
+        #                 {
+        #                     "id": 2,
+        #                     "name": "Project 2",
+        #                     "cost": 25000,
+        #                     "votes" : 1800
+        #                 },
+        #                 {
+        #                     "id": 3,
+        #                     "name": "Project 3",
+        #                     "cost": 22000,
+        #                     "votes" : 1700
+        #                 }
+        #             ],
+        #             "max_cost": 30000,
+        #             "selected_project": {
+        #                 "id": 4,
+        #                 "name": "Project 4",
+        #                 "cost": 20000,
+        #                 "votes": 1500
+        #             }
+        #         }
+        #     ]
+        self.rounds = []
+        
     
     def _calculate(self):
-        rounds = []
-        for greedy_iteration in self.greedy_iterations:
-            pass
-
+        self.rounds = []
+        current_round = {}
+        rejected_projects = []
+        for project in self.details.projects:
+            if project.discarded:
+                rejected_projects.append({
+                    #TODO: Should only have to store ID (name, cost and votes can be retrieved using 'projects' like it is done for MES)
+                    "id": project.project.name,
+                    "name": project.project.name,
+                    "cost": project.project.cost,
+                    "votes": 10 # dummy retrieve votes using id 'projects' key
+                })
+                print(rejected_projects)
+            else:
+                current_round["selected_project"] = {
+                    "id": project.project.name,
+                    "name": project.project.name,
+                    "cost": project.project.cost,
+                    "votes": 10 # dummy retrieve votes using id 'projects' key
+                }
+                current_round["rejected_projects"] = rejected_projects[:]
+                current_round["remaining_budget"] = project.remaining_budget
+                rejected_cost=[p["cost"] for p in rejected_projects]
+                current_round["max_cost"] = max(rejected_cost) if rejected_cost else 1 # TODO: Used 1 as default because unsure how to handle case where rejected projects is empty (0 throws divisionbyzero error)
+                self.rounds.append(current_round)
+                current_round = {}
+                rejected_projects = []
 
     def render(self, outcome, output_folder_path):
         self._calculate()
