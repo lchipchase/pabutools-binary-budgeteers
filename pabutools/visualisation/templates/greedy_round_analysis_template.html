@@ -18,6 +18,9 @@
             padding: 10px;
             box-sizing: border-box;
         }
+        .budget{
+            color: black
+        }
         .bar {
             position: relative;
             height: 30px;
@@ -127,9 +130,20 @@
         p {
             text-align: center;
         }
+        .spacer-2 {
+            padding: 2rem;
+        }
+  .bar-container {
+        position: relative;
+        width: 100%;
+    }
+    .budget {
+        color: black;
+    }
+
+
     </style>
 </head>
-<!-- onload="loadRound()" -->
 <body > 
     <header>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -165,6 +179,7 @@
                 <div class="spacer-2"></div>
                 <div class="spacer-2"></div>
 
+
                 <div class="row mb-3">
                     <div class="col-12  justify-content-center">
                         <h1>
@@ -172,7 +187,12 @@
                         </h1>
                         <div class="spacer-1"><hr></div>
                         <p>
-                            This is the explanation for the outcome of the participatory budgeting election decided using the Greedy Utalitarian Welfare algorithm.
+                            This is the explanation for the outcome of the participatory budgeting election decided using the Greedy Utalitarian Welfare algorithm.<br>
+                            Some of the key features of the election are: The election has a total budget of {{budget}} of which {{spent}} was spent. The election had a 
+                            total of {{total_votes}} votes cast. Note that each vote can be for multiple projects, therefore, the total votes for all projects will be 
+                            higher than {{total_votes}}<br>
+                            This page shows and explains the outcome of the election. The first graph shows the number of votes for each project.
+                            The bars show the budget at each stage of the election, and the projects which were selected or rejected in each round. Finally, the final bar chart shows an overview of the selected and rejected projects.
                         </p>
                     </div>
                 </div>
@@ -197,11 +217,9 @@
                     <div class="row featurette">
                         <div class="col-1"></div>
                         <div class="col-10" style="min-height: 600px;">
-                            {% for round in rounds %}
-                            <div id="{{ round.id }}SortableBarChart" style="height: 100%; width: 100%;">
+                            <div id="SortableBarChart" style="height: 100%; width: 100%;">
                                 <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Project Vote Counts:</b><br> The following graphs shows the votes for each of the projects along with the corresponding budget.">i</button>
                             </div>
-                            {% endfor %}
                         </div>
                         <div class="col-1"></div>
                     </div>
@@ -211,9 +229,24 @@
                     <hr>
                     <div class="spacer-1"></div>
 
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                            <div class="row">
+                                <div class="col-6">
+                                    <button id="prevButton" class="btn btn-primary">Previous Round</button>
+                                </div>
+                                <div class="col-6">
+                                    <button id="nextButton" class="btn btn-primary">Next Round</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1"></div>
+
+                    </div>
+
                     {% for round in rounds %}
-                    <!-- Budget Bar and Table -->
-                    <div class="container">
+                    <div class="container" id="{{round.id}}Bars" style="display: none;">
 
                         <!-- Budget Breakdown -->
                         <div class="row">
@@ -222,29 +255,59 @@
                                 <div class="row">
                                     <div class="budget-container">
                                         <!-- Remaining Budget Bar -->
-                                        <div class="bar" style="background-color: #ccc; width: {{ round.remaining_budget / round.max_cost * 90 }}%;">
-                                            <div class="bar-inner">£{{ round.remaining_budget }}</div>
-                                            <div class="dashed-line" style="left: {{ round.remaining_budget / round.max_cost * 100 }}%;"></div>
+                                        <div class="bar-container">
+                                            {% if (round.remaining_budget / round.max_cost) * 90 > 30 %}
+                                                <div class="bar budget" style="width: {{ (round.remaining_budget / round.max_cost) * 90 }}%;">
+                                                    <div class="bar-inner">£{{ round.remaining_budget }}</div>
+                                                </div>
+                                            {% else %}
+                                                <div class="bar budget" style="width: {{ (round.remaining_budget / round.max_cost) * 90 }}%;">
+                                                    <div class="bar-inner bar-text-outside">£{{ round.remaining_budget }}</div>
+                                                </div>
+                                            {% endif %}
                                         </div>
-                                    
+
                                         <!-- Project Bars -->
                                         {% for proj in round.rejected_projects %}
-                                        <div class="bar red" style="width: {{ proj.cost / round.max_cost * 90 }}%;">
-                                            <div class="bar-inner">{{proj.name}} - £{{ proj.cost }}</div>
-                                            <div class="rejected-mark">✘</div>
+                                        <div class="bar-container">
+                                            {% if (proj.cost / round.max_cost) * 90 > 30 %}
+                                                <div class="bar red" style="width: {{ (proj.cost / round.max_cost) * 90 }}%;">
+                                                    <div class="bar-inner">{{proj.name}} - £{{ proj.cost }}</div>
+                                                    <div class="rejected-mark">✘</div>
+                                                </div>
+                                            {% else %}
+                                                <div class="bar red" style="width: {{ (proj.cost / round.max_cost) * 90 }}%">
+                                                    <div class="bar-inner bar-text-outside">{{proj.name}} - £{{ proj.cost }}</div>
+                                                    <div class="rejected-mark">✘</div>
+                                                </div>
+                                            {% endif %}
                                         </div>
                                         {% endfor %}
 
                                         <!-- Selected Project Bar -->
-                                        <div class="bar green"  style="width: {{ round.selected_project.cost / round.max_cost * 90 }}%;">
-                                            <div class="bar-inner">{{round.selected_project.name}} - £{{ round.selected_project.cost }}</div>
+                                        <div class="bar-container">
+                                            {% if (round.selected_project.cost / round.max_cost) * 90 %}
+                                            <div class="bar green" style="width: {{ (round.selected_project.cost / round.max_cost) * 90 }}%;">
+                                                <div class="bar-inner">{{round.selected_project.name}} - £{{ round.selected_project.cost }}</div>
+                                            </div>
+                                            {% else %}
+                                                <div class="bar green" style="width: {{ (round.selected_project.cost / round.max_cost) * 90 }}%; background-color: transparent;">
+                                                    <div class="bar-inner bar-text-outside">{{round.selected_project.name}} - £{{ round.selected_project.cost }}</div>
+                                                </div>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <p>
-                                        The chart above shows the current budget of {{round.remaining_budget}}. Projects {% for proj in round.rejected_projects %} {{ proj.name }}, {% endfor %} were rejected in this round, even though they had more votes than the selected project.  
-                                    </p>
+                                    {% if round.rejected_projects %}
+                                        <p>
+                                            The chart above shows the current budget of {{round.remaining_budget}}. Projects {% for proj in round.rejected_projects %} {{ proj.name }}, {% endfor %} were rejected in this round, even though they had more votes than the selected project.  
+                                        </p>
+                                    {% else %}
+                                        <p>
+                                            The chart above shows the current budget of {{round.remaining_budget}}, and the selected project {{round.selected_project.name}} with cost {{round.selected_project.cost}}. The selected project was chosen because it had the most votes and was within budget.
+                                        </p>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-2"></div>
@@ -258,15 +321,12 @@
 
                     <!-- Green and Red Painted Chart -->
                     <div class="row featurette">
-                        <div class="col-2"></div>
-                        <div class="col-8" style="min-height: 600px;">
-                            {% for round in rounds %}
-                            <div id="{{ round.id }}RGBarChart" style="height: 100%; width: 100%;">
-                                <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "EXAMPLE">i</button>
-                            </div>
-                            {% endfor %}
+                        <div class="col-1"></div>
+                        <div class="col-10" style="min-height: 600px;">
+                            <div id="RGBarChart" style="height: 100%; width: 100%;">
+                                <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Project Vote Counts:</b><br> The following graphs shows the votes for each of the projects along with the corresponding budget.">i</button>
                         </div>
-                        <div class="col-2"></div>
+                        <div class="col-1"></div>
                     </div>
                 </section>
             
@@ -287,53 +347,245 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        // Set the display of the first round to block
+        document.getElementById("1Bars").style.display = "block";
 
-    <!-- Dropdown functionality -->
-    <!-- <script>
-        function loadRound() {
-            const urlParams = new URLSearchParams(window.location.search);
-            projectId = urlParams.get('projectId');
-            if (projectId === null) {
-                projectId = "{{ rounds[0].id }}";
-            }
-            // Display the round requested
-            onClickDropdown(document.getElementById("dropdown-item-".concat(projectId)));
-            document.getElementById("spinner").style.display = "none";
-            
-            // Display the dropdown
-            document.getElementById("dropdown-container").classList.add('active');
-            document.getElementById("dropdown-container").style.display = 'flex';
+        let currentRoundIndex = 0; // Starting with the first round
+        const roundsIds = document.querySelectorAll('.container').length; // Get the total number of rounds based on containers
+
+        // Function to toggle display of rounds
+        function displayRound(index) {
+            // Show the current round
+            const currentRoundId = index + 'Bars'; // Construct ID string based on the current index
+            const currentRound = document.getElementById(currentRoundId);
+            if (currentRound) currentRound.style.display = 'block';
         }
-    </script> -->
-    <!-- <script>
-    // Object to store rendered charts for each round
-    var renderedCharts = {};
+        function hideRound(index) {
+            // Hide the current round
+            const currentRoundId = index + 'Bars'; // Construct ID string based on the current index
+            const currentRound = document.getElementById(currentRoundId);
+            if (currentRound) currentRound.style.display = 'none';
+        }
 
-    function onClickDropdown(element) {
-        var dropdownItems = document.querySelectorAll('.dropdown-item');
-        dropdownItems.forEach(item => item.classList.remove('active'));
-        element.classList.add('active');
-        document.getElementById('projectDropdown').innerText = element.innerText;
+        // Initial display setup
+        displayRound(currentRoundIndex);
 
-        // Show the corresponding section and hide others
-        var sections = document.querySelectorAll('section');
-        sections.forEach(section => section.style.display = 'none');
-        var selectedSection = document.getElementById(element.getAttribute("item"));
-        selectedSection.style.display = 'block';
+        // Event listeners for navigation buttons
+        document.getElementById('prevButton').addEventListener('click', function() {
 
-        // Check if chart has been rendered for the selected round
-        var roundId = element.getAttribute("item"); // Ensure your round button has a data-round-id attribute
-        if (!renderedCharts[roundId]) {
-            // If not, render the chart
-            renderChordChart(roundId);
-            renderedCharts[roundId] = true; // Mark this round's chart as rendered
-        } else {
-            // Optional: Handle cases where the chart is already rendered (e.g., re-render, show/hide, etc.)
-            // This part depends on how you want to handle already rendered charts.
+            if (currentRoundIndex > 0) {
+                hideRound(currentRoundIndex);
+                currentRoundIndex--; // Decrement index to show previous round
+                displayRound(currentRoundIndex);
+            }
+        });
+
+        document.getElementById('nextButton').addEventListener('click', function() {
+            if (currentRoundIndex < roundsIds - 1) {
+                hideRound(currentRoundIndex);
+                currentRoundIndex++; // Increment index to show next round
+                displayRound(currentRoundIndex);
+            }
+        });
+        
+    </script>
+
+    <script>
+       zingchart.render({
+          id: 'SortableBarChart',
+          data: {
+          "type": "hbar",
+          "title": {
+             "text": "Vote Count Bar Chart"
+          },
+          shapes: [
+            {
+                "type": "circle",
+                "background-color": "#5297b6",
+                "size": 20,
+                "x": 35,
+                "y": 25,
+                "tooltip": {
+                    "text": "This bar chart shows the number of votes for each project.",
+                    "background-color": "white",
+                    "font-color": "gray",
+                    "font-family": "Georgia",
+                    "background-color": "white",
+                    "border-color": "gray",
+                    "border-width": 1,
+                    "line-style": "dotted",
+                    "padding": "15%",
+                },
+                label: {
+                    text: 'i', // Text inside the shape
+                    fontSize: 28,
+                    fontWeight: 'bold',
+                    fontColor: '#fff'
+                }
+              }
+        ],
+        "scrollX": {
+                        "bar": {
+                        "backgroundColor": '#2596be',
+                        "alpha": 0.5,
+                        },
+                        "handle": {
+                        "backgroundColor": '#2596be',
+                        },
+                    },
+          "scale-x": {
+            
+             "labels": {{ project_votes.keys() | list }}, // Label that identifies each project in the round
+             "title": {
+                "text": "Project"
+             },
+             "item": { // Explicitly control the appearance of the scale labels
+                "font-size": 14, // Adjust font size as needed
+                "offset-x": 0, // Adjust to move the label left or right if needed
+                "offset-y": 0 // Adjust to move the label up or down if needed
+             },"zooming": true,
+                    "zoomTo": [0, 25]
+          },
+          "scale-y": {
+             "title": {
+                "text": "Number of Votes"
+             }
+          },
+          "series": [{
+             "values": {{ project_votes.values() | list }}, // Current votes values
+             'hover-state': { /* Hover object */
+                'background-color': "orange",
+            }
+          }, ],
+          "plot": {
+            "tooltip": {
+                "text": "Project %scale-key-label has %v votes"
+            },
+             "animation": {
+                "effect": "ANIMATION_SLIDE_BOTTOM",
+                "sequence": "ANIMATION_BY_PLOT_AND_NODE",
+                "speed": 0
+             }
+          }
+    },
+          height: '100%',
+          width: '100%'
+    });
+</script>
+<script>
+    projects_selected_or_rejected = JSON.parse('{{projects_selected_or_rejected | safe}}')
+    var config = {
+        "type": "hbar",
+        "title": {
+            "text": "Vote Count Bar Chart"
+        },
+        shapes: [{
+            "type": "circle",
+            "background-color": "#5297b6",
+            "size": 20,
+            "x": 35,
+            "y": 25,
+            "tooltip": {
+                "text": "This bar chart shows the number of votes for each project.",
+                "background-color": "white",
+                "font-color": "gray",
+                "font-family": "Georgia",
+                "border-color": "gray",
+                "border-width": 1,
+                "line-style": "dotted",
+                "padding": "15%",
+            },
+            label: {
+                text: 'i', // Text inside the shape
+                fontSize: 28,
+                fontWeight: 'bold',
+                fontColor: '#fff'
+            }
+        }],
+        "scrollX": {
+            "bar": {
+                "backgroundColor": '#2596be',
+                "alpha": 0.5,
+            },
+            "handle": {
+                "backgroundColor": '#2596be',
+            },
+        },
+        "scale-x": {
+            // Assuming `project_votes.keys()` returns an iterable of project names
+            "labels": {{ project_votes.keys() | list }},
+            "title": {
+                "text": "Project"
+            },
+            "item": {
+                "font-size": 14,
+                "offset-x": 0,
+                "offset-y": 0
+            },
+            "zooming": true,
+            "zoomTo": [0, 25]
+        },
+        "scale-y": {
+            "title": {
+                "text": "Number of Votes"
+            }
+        },
+        "series": [{
+            "values": {{ project_votes.values() | list }},
+            // dynamically set the background color based on the selection status
+
+            'hover-state': {
+                'background-color': "orange",
+            },
+        }],
+        "plot": {
+            "tooltip": {
+                "text": "Project %scale-key-label has %v votes"
+            },
+            "animation": {
+                "effect": "ANIMATION_SLIDE_BOTTOM",
+                "sequence": "ANIMATION_BY_PLOT_AND_NODE",
+                "speed": 0
+            }
         }
     }
-    </script> -->
-       
+    // function applyStyles(seriesArray, projects_selected_or_rejected){
+    //     var colors = {
+    //         "selected": "#4CAF50",
+    //         "rejected": "#F44336",
+    //     }
+        
+    //     console.log(seriesObj)
+    //     seriesArray.forEach(function(seriesObj) {
+    //     if (seriesObj && seriesObj.values) {
+    //       for (var i = 1; i < seriesObj.values.length; i++) {
+    //         if (projects_selected_or_rejected[seriesObj.keys[i]] == true) {
+    //           stylesArray.push(colors.selected);
+    //         } else {
+    //           stylesArray.push(stylesArray.rejected);
+    //         }
+    //       }
+    //       seriesObj.styles = stylesArray;
+    //     }
+    //   });
+    // }
+
+    // zingchart.bind('RGBarChart', 'dataparse', function(e, oGraph) {
+    //   if (oGraph && oGraph.graphset[0])
+    //     applyStyles(oGraph.graphset[0].series);
+ 
+    //   return oGraph;
+    // });
+
+
+    zingchart.render({
+    id: 'RGBarChart',
+    data: config,
+    height: '100%',
+    width: '100%'
+});
+</script>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
     <script>tippy('[data-tippy-content]', { allowHTML: true, maxWidth: 1000});</script>

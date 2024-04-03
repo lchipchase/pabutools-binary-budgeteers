@@ -1,5 +1,6 @@
 from __future__ import annotations
 import os
+import json
 
 try:
     import jinja2
@@ -209,40 +210,11 @@ class GreedyWelfareVisualiser(Visualiser):
         self.instance = instance
         self.verbose = verbose
         self.details = greedy_details
-        # self.rounds = [
-        #         {
-        #             "id": 1,
-        #             "remaining_budget": 20000,
-        #             "rejected_projects" : [
-        #                 {
-        #                     "id": 1,
-        #                     "name": "Project 1",
-        #                     "cost": 30000,
-        #                     "votes" : 2000
-        #                 },
-        #                 {
-        #                     "id": 2,
-        #                     "name": "Project 2",
-        #                     "cost": 25000,
-        #                     "votes" : 1800
-        #                 },
-        #                 {
-        #                     "id": 3,
-        #                     "name": "Project 3",
-        #                     "cost": 22000,
-        #                     "votes" : 1700
-        #                 }
-        #             ],
-        #             "max_cost": 30000,
-        #             "selected_project": {
-        #                 "id": 4,
-        #                 "name": "Project 4",
-        #                 "cost": 20000,
-        #                 "votes": 1500
-        #             }
-        #         }
-        #     ]
         self.rounds = []
+        project_votes = votes_count_by_project(self.profile)
+
+        # Order the projects by votes
+        self.project_votes = {k: project_votes[k] for k in sorted(project_votes, key=project_votes.get, reverse=False)}
         
     
     def _calculate(self):
@@ -255,24 +227,30 @@ class GreedyWelfareVisualiser(Visualiser):
                     #TODO: Should only have to store ID (name, cost and votes can be retrieved using 'projects' like it is done for MES)
                     "id": project.project.name,
                     "name": project.project.name,
-                    "cost": project.project.cost,
-                    "votes": 10 # dummy retrieve votes using id 'projects' key
+                    "cost": int(project.project.cost),
+                    "votes": self.project_votes[project.project.name]
                 })
-                print(rejected_projects)
             else:
                 current_round["selected_project"] = {
                     "id": project.project.name,
                     "name": project.project.name,
-                    "cost": project.project.cost,
-                    "votes": 10 # dummy retrieve votes using id 'projects' key
+                    "cost": int(project.project.cost),
+                    "votes":  self.project_votes[project.project.name]
                 }
                 current_round["rejected_projects"] = rejected_projects[:]
-                current_round["remaining_budget"] = project.remaining_budget
-                rejected_cost=[p["cost"] for p in rejected_projects]
-                current_round["max_cost"] = max(rejected_cost) if rejected_cost else 1 # TODO: Used 1 as default because unsure how to handle case where rejected projects is empty (0 throws divisionbyzero error)
+                current_round["remaining_budget"] = int(project.remaining_budget)
+                rejected_cost=[int(p["cost"]) for p in rejected_projects]
+                current_round["max_cost"] = max(max(rejected_cost), int(project.remaining_budget)) if rejected_cost else int(project.remaining_budget) # TODO: Used 1 as default because unsure how to handle case where rejected projects is empty (0 throws divisionbyzero error)
                 self.rounds.append(current_round)
                 current_round = {}
                 rejected_projects = []
+
+        # Order the rounds by the remaining_budget at each staage
+        self.rounds = sorted(self.rounds, key=lambda x: x["remaining_budget"], reverse=True)
+
+        # Go through each round then add an id for each round based on the order of the rounds
+        for i, round in enumerate(self.rounds):
+            round["id"] = i + 1
 
     def render(self, outcome, output_folder_path):
         self._calculate()
@@ -282,7 +260,8 @@ class GreedyWelfareVisualiser(Visualiser):
         # Round by Round
         round_analysis_page_output = GreedyWelfareVisualiser.template.render( # TODO: Some redudant data is being passed to the template that can be calculated within template directly
             election_name=self.instance.meta["description"] if "description" in self.instance.meta else "No description provided.", 
-            # total_votes=sum(votes_count_by_project(self.profile).values()),
+            projects_selected_or_rejected = json.dumps({int(str(p)): (p in outcome) for p in self.project_votes.keys()}),
+            project_votes=self.project_votes,
             rounds=self.rounds, 
             projects=self.instance.project_meta,
             number_of_elected_projects=len(outcome),
