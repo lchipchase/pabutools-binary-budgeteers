@@ -214,14 +214,15 @@ class GreedyWelfareVisualiser(Visualiser):
         project_votes = votes_count_by_project(self.profile)
 
         # Order the projects by votes
-        self.project_votes = {k: project_votes[k] for k in sorted(project_votes, key=project_votes.get, reverse=False)}
+        self.project_votes = {str(k): project_votes[k] for k in sorted(project_votes, key=project_votes.get, reverse=False)}
         
     
     def _calculate(self):
         self.rounds = []
         current_round = {}
         rejected_projects = []
-        for project in self.details.projects:
+        projects = sorted(self.details.projects, key=lambda x: self.project_votes[x.project.name], reverse=True)
+        for project in projects:
             if project.discarded:
                 rejected_projects.append({
                     #TODO: Should only have to store ID (name, cost and votes can be retrieved using 'projects' like it is done for MES)
@@ -238,7 +239,7 @@ class GreedyWelfareVisualiser(Visualiser):
                     "votes":  self.project_votes[project.project.name]
                 }
                 current_round["rejected_projects"] = rejected_projects[:]
-                current_round["remaining_budget"] = int(project.remaining_budget)
+                current_round["remaining_budget"] = int(project.remaining_budget) + int(project.project.cost)
                 rejected_cost=[int(p["cost"]) for p in rejected_projects]
                 current_round["max_cost"] = max(max(rejected_cost), int(project.remaining_budget)) if rejected_cost else int(project.remaining_budget) # TODO: Used 1 as default because unsure how to handle case where rejected projects is empty (0 throws divisionbyzero error)
                 self.rounds.append(current_round)
