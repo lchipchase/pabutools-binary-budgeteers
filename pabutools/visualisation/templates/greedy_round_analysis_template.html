@@ -29,6 +29,7 @@
             position: relative;
             align-items: center;
             justify-content: center;
+            color: black;
         }
         .bar-inner {
             position: relative;
@@ -36,23 +37,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: black;
             position: absolute;
             left: 0;
             top: 0;
-            overflow: hidden; /* Ensures text does not overflow the colored bar */
         }
         .dashed-line {
-    position: absolute;
-    top: 0;
-    height: 600%;
-    border-left: 2px dashed black;
-}
+            position: absolute;
+            top: 0;
+            height: 600%;
+            border-left: 2px dashed black;
+        }
         .green {
             background-color: #4CAF50;
+            color: white;
+            justify-content: center;
         }
         .red {
             background-color: #F44336;
+            color: white;
+            justify-content: center;
         }
         .rejected-mark {
             position: absolute;
@@ -194,6 +198,14 @@
                             This page shows and explains the outcome of the election. The first graph shows the number of votes for each project.
                             The bars show the budget at each stage of the election, and the projects which were selected or rejected in each round. Finally, the final bar chart shows an overview of the selected and rejected projects.
                         </p>
+                        <p>
+                            To view the list of the projects selected, click this: <button type="button" id="electionOutcome">View Election Outcome</button>
+                            <div style="display: none;" id="outcomeList" class="row">
+                                {% for round in rounds %}
+                                    <p>Project: {{round.selected_project.name}} with cost: {{round.selected_project.cost}} and had {{round.selected_project.votes}} votes.</p>
+                                {% endfor %}
+                            </div>
+                        </p>
                     </div>
                 </div>
                 <div class="spacer-1"></div>
@@ -231,17 +243,18 @@
 
                     <div class="row">
                         <div class="col-1"></div>
-                        <div class="col-10">
-                            <div class="row">
-                                <div class="col-6">
-                                    <button id="prevButton" class="btn btn-primary">Previous Round</button>
-                                </div>
-                                <div class="col-6">
-                                    <button id="nextButton" class="btn btn-primary">Next Round</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-1"></div>
+<div class="col-10">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <button id="prevButton" class="btn btn-primary">Previous Round</button>
+        </div>
+        <div class="col-auto">
+            <button id="nextButton" class="btn btn-primary">Next Round</button>
+        </div>
+    </div>
+</div>
+<div class="col-1"></div>
+
 
                     </div>
 
@@ -258,12 +271,15 @@
                                         <div class="bar-container">
                                             {% if (round.remaining_budget / round.max_cost) * 90 > 30 %}
                                                 <div class="bar budget" style="width: {{ (round.remaining_budget / round.max_cost) * 90 }}%;">
-                                                    <div class="bar-inner">£{{ round.remaining_budget }}</div>
+                                                    <div class="bar-inner">&nbsp; Remaining Budget: £{{ round.remaining_budget }}</div>
                                                 </div>
                                             {% else %}
-                                                <div class="bar budget" style="width: {{ (round.remaining_budget / round.max_cost) * 90 }}%;">
-                                                    <div class="bar-inner bar-text-outside">£{{ round.remaining_budget }}</div>
+                                            <div>
+                                                <div class="bar budget" style="width: {{ (round.remaining_budget / round.max_cost) * 100 }}%; display: inline-flex; align-items: center;">
                                                 </div>
+                                                <div style="margin-left: 10px; display: inline-flex;"><p style="position:absolute; top: 12px;">&nbsp; Remaining Budget: £{{ round.remaining_budget }}</p></div>
+
+                                            </div>
                                             {% endif %}
                                         </div>
 
@@ -272,13 +288,16 @@
                                         <div class="bar-container">
                                             {% if (proj.cost / round.max_cost) * 90 > 30 %}
                                                 <div class="bar red" style="width: {{ (proj.cost / round.max_cost) * 90 }}%;">
-                                                    <div class="bar-inner">{{proj.name}} - £{{ proj.cost }}</div>
+                                                    <div class="bar-inner">&nbsp; {{proj.name}} - £{{ proj.cost }}</div>
                                                     <div class="rejected-mark">✘</div>
                                                 </div>
                                             {% else %}
-                                                <div class="bar red" style="width: {{ (proj.cost / round.max_cost) * 90 }}%">
-                                                    <div class="bar-inner bar-text-outside">{{proj.name}} - £{{ proj.cost }}</div>
+                                                <div>
+                                                    <div class="bar red" style="width: {{ (proj.cost / round.max_cost) * 90 }}%; display: inline-flex; align-items: center;">
+                                                    </div>
                                                     <div class="rejected-mark">✘</div>
+                                                    <div style="margin-left: 10px; display: inline-flex;"><p style="position:absolute; top: 12px;">{{round.selected_project.name}} - £{{ round.selected_project.cost }}</p></div>
+
                                                 </div>
                                             {% endif %}
                                         </div>
@@ -286,14 +305,17 @@
 
                                         <!-- Selected Project Bar -->
                                         <div class="bar-container">
-                                            {% if (round.selected_project.cost / round.max_cost) * 90 %}
+                                            {% if (round.selected_project.cost / round.max_cost) * 90  > 30 %}
                                             <div class="bar green" style="width: {{ (round.selected_project.cost / round.max_cost) * 90 }}%;">
-                                                <div class="bar-inner">{{round.selected_project.name}} - £{{ round.selected_project.cost }}</div>
+                                                <div class="bar-inner">&nbsp; {{round.selected_project.name}} - £{{ round.selected_project.cost }}</div>
                                             </div>
                                             {% else %}
-                                                <div class="bar green" style="width: {{ (round.selected_project.cost / round.max_cost) * 90 }}%; background-color: transparent;">
-                                                    <div class="bar-inner bar-text-outside">{{round.selected_project.name}} - £{{ round.selected_project.cost }}</div>
+                                            <div>
+                                                <div class="bar green" style="width: {{ (round.selected_project.cost / round.max_cost) * 90 }}%; display: inline-flex; align-items: center;">
                                                 </div>
+                                                <div style="margin-left: 10px; display: inline-flex;"><p style="position:absolute; top: 12px;">{{round.selected_project.name}} - £{{ round.selected_project.cost }}</p></div>
+
+                                            </div>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -351,7 +373,7 @@
         // Set the display of the first round to block
         document.getElementById("1Bars").style.display = "block";
 
-        let currentRoundIndex = 0; // Starting with the first round
+        let currentRoundIndex = 1; // Starting with the first round
         const roundsIds = document.querySelectorAll('.container').length; // Get the total number of rounds based on containers
 
         // Function to toggle display of rounds
@@ -386,6 +408,15 @@
                 hideRound(currentRoundIndex);
                 currentRoundIndex++; // Increment index to show next round
                 displayRound(currentRoundIndex);
+            }
+        });
+
+        document.getElementById('electionOutcome').addEventListener('click', function() {
+            const ul = document.getElementById('outcomeList');
+            if (ul.style.display === 'none') {
+                ul.style.display = 'block';
+            } else {
+                ul.style.display = 'none';
             }
         });
         
@@ -445,7 +476,7 @@
                 "offset-x": 0, // Adjust to move the label left or right if needed
                 "offset-y": 0 // Adjust to move the label up or down if needed
              },"zooming": true,
-                    "zoomTo": [0, 25]
+                    "zoomTo": [0, 15]
           },
           "scale-y": {
              "title": {
@@ -524,7 +555,7 @@
                 "offset-y": 0
             },
             "zooming": true,
-            "zoomTo": [0, 25]
+            "zoomTo": [0, 15]
         },
         "scale-y": {
             "title": {

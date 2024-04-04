@@ -241,7 +241,7 @@ class GreedyWelfareVisualiser(Visualiser):
                 current_round["rejected_projects"] = rejected_projects[:]
                 current_round["remaining_budget"] = int(project.remaining_budget) + int(project.project.cost)
                 rejected_cost=[int(p["cost"]) for p in rejected_projects]
-                current_round["max_cost"] = max(max(rejected_cost), int(project.remaining_budget)) if rejected_cost else int(project.remaining_budget) # TODO: Used 1 as default because unsure how to handle case where rejected projects is empty (0 throws divisionbyzero error)
+                current_round["max_cost"] = max(max(rejected_cost), current_round["remaining_budget"]) if rejected_cost else current_round["remaining_budget"] # TODO: Used 1 as default because unsure how to handle case where rejected projects is empty (0 throws divisionbyzero error)
                 self.rounds.append(current_round)
                 current_round = {}
                 rejected_projects = []
