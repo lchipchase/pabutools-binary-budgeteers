@@ -192,7 +192,7 @@
                         <div class="spacer-1"><hr></div>
                         <p>
                             This is the explanation for the outcome of the participatory budgeting election decided using the Greedy Utalitarian Welfare algorithm.<br>
-                            Some of the key features of the election are: The election has a total budget of {{ "{:,}".format((budget | int)) }} of which {{ "{:,}".format((spent | int)) }} was spent. The election had a 
+                            Some of the key features of the election are: The election has a total budget of {{ "{:,}".format((budget | int)) }} {{ currency }} of which {{ "{:,}".format((spent | int)) }} {{ currency }} was spent. The election had a 
                             total of {{total_votes}} votes cast. Note that each vote can be for multiple projects, therefore, the total votes for all projects will be 
                             higher than {{total_votes}}<br>
                             This page shows and explains the outcome of the election. The first graph shows the number of votes for each project.
@@ -202,7 +202,7 @@
                             To view the list of the projects selected, click this: <button type="button" id="electionOutcome">View Election Outcome</button>
                             <div style="display: none;" id="outcomeList" class="row">
                                 {% for round in rounds %}
-                                    <p>Project: "{{ projects[round.selected_project.id]["name"] }}" with cost: {{ "{:,}".format( (round.selected_project.cost | int) ) }} and had {{round.selected_project.votes}} votes.</p>
+                                    <p>Project: "{{ projects[round.selected_project.id]["name"] }}" with cost: {{ "{:,}".format( (round.selected_project.cost | int) ) }} {{ currency }} and had {{round.selected_project.votes}} votes.</p>
                                 {% endfor %}
                             </div>
                         </p>
@@ -271,13 +271,13 @@
                                         <div class="bar-container">
                                             {% if (round.remaining_budget / round.max_cost) * 90 > 30 %}
                                                 <div class="bar budget" style="width: {{ (round.remaining_budget / round.max_cost) * 90 }}%;">
-                                                    <div class="bar-inner">&nbsp; Remaining Budget: £{{ "{:,}".format( (round.remaining_budget | int) ) }}</div>
+                                                    <div class="bar-inner">&nbsp; Remaining Budget: {{ "{:,}".format( (round.remaining_budget | int) ) }} {{ currency }}</div>
                                                 </div>
                                             {% else %}
                                             <div>
                                                 <div class="bar budget" style="width: {{ (round.remaining_budget / round.max_cost) * 100 }}%; display: inline-flex; align-items: center;">
                                                 </div>
-                                                <div style="margin-left: 10px; display: inline-flex;"><p style="position:absolute; top: 12px;">&nbsp; Remaining Budget: £{{ "{:,}".format( (round.remaining_budget | int) ) }}</p></div>
+                                                <div style="margin-left: 10px; display: inline-flex;"><p style="position:absolute; top: 12px;">&nbsp; Remaining Budget: {{ "{:,}".format( (round.remaining_budget | int) ) }} {{ currency }}</p></div>
 
                                             </div>
                                             {% endif %}
@@ -288,7 +288,7 @@
                                         <div class="bar-container">
                                             {% if (proj.cost / round.max_cost) * 90 > 30 %}
                                                 <div class="bar red" style="width: {{ (proj.cost / round.max_cost) * 90 }}%;">
-                                                    <div class="bar-inner">&nbsp; {{proj.name}} - £{{ proj.cost }}</div>
+                                                    <div class="bar-inner">&nbsp; {{proj.name}} - {{ proj.cost }} {{ currency }}</div>
                                                     <div class="rejected-mark">✘</div>
                                                 </div>
                                             {% else %}
@@ -296,7 +296,7 @@
                                                     <div class="bar red" style="width: {{ (proj.cost / round.max_cost) * 90 }}%; display: inline-flex; align-items: center;">
                                                     </div>
                                                     <div class="rejected-mark">✘</div>
-                                                    <div style="margin-left: 10px; display: inline-flex;"><p style="position:absolute; top: 12px;">{{ round.selected_project.id }}: {{ projects[round.selected_project.id]["name"] }} - £{{ "{:,}".format( (round.selected_project.cost | int) ) }}</p></div>
+                                                    <div style="margin-left: 10px; display: inline-flex;"><p style="position:absolute; top: 12px;">{{ round.selected_project.id }}: {{ projects[round.selected_project.id]["name"] }} - {{ "{:,}".format( (round.selected_project.cost | int) ) }} {{ currency }}</p></div>
 
                                                 </div>
                                             {% endif %}
@@ -307,13 +307,13 @@
                                         <div class="bar-container">
                                             {% if (round.selected_project.cost / round.max_cost) * 90  > 30 %}
                                             <div class="bar green" style="width: {{ (round.selected_project.cost / round.max_cost) * 90 }}%;">
-                                                <div class="bar-inner"><nobr> {{ round.selected_project.id }}: {{ projects[round.selected_project.id]["name"] }} - £{{ "{:,}".format( (round.selected_project.cost | int) ) }}</nobr></div>
+                                                <div class="bar-inner"><nobr> {{ round.selected_project.id }}: {{ projects[round.selected_project.id]["name"] }} - {{ "{:,}".format( (round.selected_project.cost | int) ) }} {{ currency }}</nobr></div>
                                             </div>
                                             {% else %}
                                             <div>
                                                 <div class="bar green" style="width: {{ (round.selected_project.cost / round.max_cost) * 90 }}%; display: inline-flex; align-items: center;">
                                                 </div>
-                                                <div style="margin-left: 10px; display: inline-flex;"><p style="position:absolute; top: 12px;">{{ round.selected_project.id }}: {{ projects[round.selected_project.id]["name"] }} - £{{ "{:,}".format( (round.selected_project.cost | int) ) }}</p></div>
+                                                <div style="margin-left: 10px; display: inline-flex;"><p style="position:absolute; top: 12px;">{{ round.selected_project.id }}: {{ projects[round.selected_project.id]["name"] }} - {{ "{:,}".format( (round.selected_project.cost | int) ) }} {{ currency }}</p></div>
 
                                             </div>
                                             {% endif %}
@@ -323,11 +323,11 @@
                                 <div class="row">
                                     {% if round.rejected_projects %}
                                         <p>
-                                            The chart above shows the current budget of {{ "{:,}".format( (round.remaining_budget | int) ) }}. Projects {% for proj in round.rejected_projects %} {{ projects[proj.id]["name"] }}, {% endfor %} were rejected in this round, even though they had more votes than the selected project.  
+                                            The chart above shows the current budget of {{ "{:,}".format( (round.remaining_budget | int) ) }} {{ currency }}. Projects {% for proj in round.rejected_projects %} {{ projects[proj.id]["name"] }}, {% endfor %} were rejected in this round, even though they had more votes than the selected project.  
                                         </p>
                                     {% else %}
                                         <p>
-                                            The chart above shows the current budget of {{ "{:,}".format( (round.remaining_budget | int) ) }}, and the selected project "{{ projects[round.selected_project.id]["name"] }}" with cost {{ "{:,}".format( (round.selected_project.cost | int) ) }}. The selected project was chosen because it had the most votes and was within budget.
+                                            The chart above shows the current budget of {{ "{:,}".format( (round.remaining_budget | int) ) }} {{ currency }}, and the selected project "{{ projects[round.selected_project.id]["name"] }}" with cost {{ "{:,}".format( (round.selected_project.cost | int) ) }} {{ currency }}. The selected project was chosen because it had the most votes and was within budget.
                                         </p>
                                     {% endif %}
                                 </div>
