@@ -346,7 +346,7 @@
                         <div class="col-1"></div>
                         <div class="col-10" style="min-height: 600px;">
                             <div id="RGBarChart" style="height: 100%; width: 100%;">
-                                <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Project Vote Counts:</b><br> The following graphs shows the votes for each of the projects along with the corresponding budget.">i</button>
+                                <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Project Vote Counts:</b><br> The following graphs shows the votes for each of the projects along with the corresponding budget.<br>The green bars correspond to selected projects, the red bars correspond to rejected projects.">i</button>
                         </div>
                         <div class="col-1"></div>
                     </div>
@@ -506,6 +506,33 @@
 </script>
 <script>
     projects_selected_or_rejected = JSON.parse('{{projects_selected_or_rejected | safe}}')
+    var projectNames = {{ project_votes.keys() | list }};
+    console.log(projectNames);
+    var projectValues = {{ project_votes.values() | list }};
+    var seriesData = [];
+    var pNames = projectNames;
+
+    for (var i = 0; i < projectNames.length; i++) {
+        var projectName = projectNames[i];
+        var projectValue = projectValues[i];
+        var selectedOrRejected = projects_selected_or_rejected[projectName];
+        
+        // Assign color based on the project's selection status
+        var color = selectedOrRejected ? 'green' : 'red';
+        
+        seriesData.push({
+            "values": [projectValue],
+            "background-color": color,
+            'hover-state': {
+                'background-color': "orange",
+            },
+            "text": projectName
+        });
+    }
+
+    // Sort seriesData by the number of votes in descending order
+    seriesData.sort((a, b) => b.values[0] - a.values[0]);
+
     var config = {
         "type": "hbar",
         "title": {
@@ -518,7 +545,7 @@
             "x": 35,
             "y": 25,
             "tooltip": {
-                "text": "This bar chart shows the number of votes for each project.",
+                "text": "<b>Project Vote Counts:</b><br> The following graphs shows the votes for each of the projects along with the corresponding budget.<br>The green bars correspond to selected projects, the red bars correspond to rejected projects.",
                 "background-color": "white",
                 "font-color": "gray",
                 "font-family": "Georgia",
@@ -544,7 +571,6 @@
             },
         },
         "scale-x": {
-            // Assuming `project_votes.keys()` returns an iterable of project names
             "labels": {{ project_votes.keys() | list }},
             "title": {
                 "text": "Project"
@@ -562,14 +588,7 @@
                 "text": "Number of Votes"
             }
         },
-        "series": [{
-            "values": {{ project_votes.values() | list }},
-            // dynamically set the background color based on the selection status
-
-            'hover-state': {
-                'background-color': "orange",
-            },
-        }],
+        "series": seriesData,
         "plot": {
             "tooltip": {
                 "text": "Project %scale-key-label has %v votes"
@@ -581,33 +600,7 @@
             }
         }
     }
-    // function applyStyles(seriesArray, projects_selected_or_rejected){
-    //     var colors = {
-    //         "selected": "#4CAF50",
-    //         "rejected": "#F44336",
-    //     }
-        
-    //     console.log(seriesObj)
-    //     seriesArray.forEach(function(seriesObj) {
-    //     if (seriesObj && seriesObj.values) {
-    //       for (var i = 1; i < seriesObj.values.length; i++) {
-    //         if (projects_selected_or_rejected[seriesObj.keys[i]] == true) {
-    //           stylesArray.push(colors.selected);
-    //         } else {
-    //           stylesArray.push(stylesArray.rejected);
-    //         }
-    //       }
-    //       seriesObj.styles = stylesArray;
-    //     }
-    //   });
-    // }
 
-    // zingchart.bind('RGBarChart', 'dataparse', function(e, oGraph) {
-    //   if (oGraph && oGraph.graphset[0])
-    //     applyStyles(oGraph.graphset[0].series);
- 
-    //   return oGraph;
-    // });
 
 
     zingchart.render({
