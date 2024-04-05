@@ -38,9 +38,10 @@ class MESVisualiser(Visualiser):
             next_iteration = self.mes_iterations[i+1]
             round["id"] = current_iteration.selected_project.name
             round["name"] = current_iteration.selected_project.name # TODO Remove this and keep round["id"]
-            round["effective_vote_count"] = {
+            data = {
                 p.name: float(1/p.affordability) for p in current_iteration.get_all_projects()
             }
+            round["effective_vote_count"] =  dict(sorted(data.items(), key=lambda item: item[1], reverse=True))
             round["effective_vote_count_reduction"] = {
                 p.name: float(round["effective_vote_count"][p]-1/p.affordability) for p in next_iteration.get_all_projects()
             }
