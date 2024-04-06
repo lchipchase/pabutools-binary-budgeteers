@@ -109,7 +109,7 @@ class MESVisualiser(Visualiser):
                         - float(sum(self.mes_iterations[r+1].voters_budget[p] for p in p.project.supporter_indices))
                     ) for r in range(0, len(self.mes_iterations) - 1)
                 }
-                        
+                
                 rejected = {
                     "id": p.project.name,
                     "cost": p.project.cost,
@@ -122,11 +122,13 @@ class MESVisualiser(Visualiser):
                 dropped_projects.append(rejected)
         
         budgetSpent += self.mes_iterations[-1].selected_project.cost
+        data = {
+                p.name: float(1/p.affordability) for p in self.mes_iterations[-1].get_all_projects()
+            }
         self.rounds.append({
             "name": self.mes_iterations[-1].selected_project.name,
-            "effective_vote_count": {
-                p.name: float(1/p.affordability) for p in self.mes_iterations[-1].get_all_projects()
-            },
+            "effective_vote_count": dict(sorted(data.items(), key=lambda item: item[1], reverse=True))
+            ,
             "effective_vote_count_reduction": {p.name: 0 for p in self.mes_iterations[-1].get_all_projects()},
             "cost": self.mes_iterations[-1].selected_project.cost,
             "totalvotes": len(self.mes_iterations[-1].selected_project.supporter_indices),

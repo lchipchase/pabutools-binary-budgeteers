@@ -335,6 +335,9 @@
                 "mirrored": true,
                 "itemsOverlap": true, // allows items to overlap if necessary
                 "maxItems": 999, // set to a high number to ensure all labels show
+                "label": {
+                        "angle": 45 // rotates labels to fit better
+                    },
             },
 
             "scaleY": {
@@ -489,15 +492,75 @@
     </script>
     <script>
         function updateBarChart(x_labels, values) {
-            let args = {
-                "data":{
-                    "scale-x":{
-                    "labels": x_labels,
+           
+            zingchart.render({
+                id: 'BarChart',
+                data: {
+                "type": "hbar",
+                "title": {
+                    "text": "Effective Vote Count",
+                "fontSize": 16, // Smaller font size to ensure it fits
+                "adjustLayout": true // ZingChart will try to adjust the layout 
+                },
+                "plotarea": {
+                "marginLeft":'dynamic',
+                "marginRight":'dynamic'
+            },
+                "scaleX": {
+                    "labels": x_labels, // Label that identifies each project in the round
+                        "title": {
+                        "text": "Project"
+                        },
+                        "item": { // Explicitly control the appearance of the scale labels
+                        "font-size": 14, // Adjust font size as needed
+                        "offset-x": 0, // Adjust to move the label left or right if needed
+                        "offset-y": 0 // Adjust to move the label up or down if needed
+                        },"zooming": true,
+                    "zoomTo": [0, 10],
+                    "mirrored": true,
+                    "itemsOverlap": true, // allows items to overlap if necessary
+                    "maxItems": 999, // set to a high number to ensure all labels show
+                    "label": {
+                            "angle": 45 // rotates labels to fit better
+                        },
+                },
+
+                "scaleY": {
+                    "title": {
+                    "text": "Number of Votes"
                     },
-                    "series":[{"values": values}],
+                    "items-overlap": true,
+                },
+
+                "scrollX": {
+                    "bar": {
+                    "backgroundColor": '#2596be',
+                    "alpha": 0.5,
+                    },
+                    "handle": {
+                    "backgroundColor": '#2596be',
+                    },
+                },
+                "series": [{
+                    "values": values, // Current votes values
+                    'hover-state': { /* Hover object */
+                    'background-color': "orange",
                 }
-            }
-            zingchart.exec('BarChart', 'modify', args);
+                }, ],
+                "plot": {
+                "tooltip": {
+                    "text": "Project %scale-key-label has %v votes"
+                },
+                    "animation": {
+                    "effect": "ANIMATION_SLIDE_BOTTOM",
+                    "sequence": "ANIMATION_BY_PLOT_AND_NODE",
+                    "speed": 0
+                    }
+                }
+            },
+            height: '100%',
+            width: '100%'
+            });
         }
 
         function updateStackedBarChart(x_labels, initial_values, reduced_values) {
