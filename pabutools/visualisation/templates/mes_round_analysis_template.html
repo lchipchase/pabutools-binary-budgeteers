@@ -564,24 +564,115 @@
         }
 
         function updateStackedBarChart(x_labels, initial_values, reduced_values) {
-            let args = {
-                "data":{
-                "scale-x":{
-                    "labels": x_labels,
+            // let args = {
+            //     "data":{
+            //     "scale-x":{
+            //         "labels": x_labels,
+            //     },
+            //     "series":[
+            //         {
+            //             "text": "Current Votes",
+            //             "values": initial_values,
+            //         },
+            //         {
+            //             "text": "Previous Votes",
+            //             "values": reduced_values
+            //         }
+            //     ]
+            //     }
+            // };
+            // zingchart.exec('StackedBarChart', 'modify', args);   
+
+            zingchart.render({
+                id: 'StackedBarChart',
+                data: {
+                "type": "hbar",
+                "stacked": true,
+                "title": {
+                    "text": "Reduced Effective Vote Count",
+                    "fontSize": 15, // Smaller font size to ensure it fits
+                    "adjustLayout": true // ZingChart will try to adjust the layout 
                 },
-                "series":[
-                    {
-                        "text": "Current Votes",
-                        "values": initial_values,
+                "legend": {
+                    "layout": "x4",
+                    "background-color": "none",
+                    "shadow": 0,
+                    "align": "center",
+                    "adjust-layout": true,
+                    "item": {
+                        "font-color": "#333"
                     },
-                    {
-                        "text": "Previous Votes",
-                        "values": reduced_values
+                    "marker": {
+                        "type": "square",
+                        "border-width": 0,
+                        "size": 5
+                    },
+                    "toggle-action": "remove",
+                    "adjust-layout": true,
+                },
+                "plotarea": {
+                    "marginLeft":'dynamic',
+                    "marginRight":'dynamic'
+                },
+                "plot": {
+                    "tooltip": {
+                        "text": "Project %scale-key-label has %v votes"
+                    },
+                    "animation": {
+                        "effect": "ANIMATION_SLIDE_BOTTOM",
+                        "sequence": 1,
+                        "speed": 0
                     }
-                ]
-                }
-            };
-            zingchart.exec('StackedBarChart', 'modify', args);   
+                },
+                "scale-x": {
+                    "labels": x_labels, // Label that identifies each project in the round
+                    "title": {
+                        "text": "Projects"
+                    },
+                    "item": { // Explicitly control the appearance of the scale labels
+                            "font-size": 14, // Adjust font size as needed
+                            "offset-x": 0, // Adjust to move the label left or right if needed
+                            "offset-y": 0 // Adjust to move the label up or down if needed
+                        },"zooming": true,
+                    "zoomTo": [0, 6]
+                },
+                "scale-y": {
+                    "title": {
+                        "text": "Votes"
+                    },
+                    "min-value": 0, // Set the minimum value to 0
+                    "max-labels": 10, // Optional: Adjust the maximum number of labels displayed
+                    "decimals": 0, // Optional: Adjust the number of decimal places
+                },
+                "scrollX": {
+                        "bar": {
+                        "backgroundColor": '#2596be',
+                        "alpha": 0.5,
+                        },
+                        "handle": {
+                        "backgroundColor": '#2596be',
+                        }
+                    },
+
+                "series": [{
+                    "values":initial_values, // Effective votes for next round
+                    "background-color": "#0070C0",
+                    "text": "Current Votes",
+                    'hover-state': { /* Hover object */
+                            'background-color': "orange",
+                            // 'border-width':3,
+                            // 'border-color': "purple",
+                            // 'line-style': "dotted"
+                        }
+                }, {
+                    "values": reduced_values, // Effective votes lost this round
+                    "background-color": "#FF0000",
+                    "text": "Previous Votes"
+                }]
+            },
+            height: '100%',
+            width: '100%'
+        });
         }
 
         function renderChordChart(id) {
