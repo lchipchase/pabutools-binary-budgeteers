@@ -322,19 +322,20 @@
             "marginRight":'dynamic'
         },
             "scaleX": {
-            "labels": [], // Label that identifies each project in the round
-                "title": {
-                "text": "Project"
-                },
-                "item": { // Explicitly control the appearance of the scale labels
-                "font-size": 14, // Adjust font size as needed
-                "offset-x": 0, // Adjust to move the label left or right if needed
-                "offset-y": 0 // Adjust to move the label up or down if needed
-                },"zooming": true,
-            "zoomTo": [0, 10],
-            "mirrored": true,
+                "labels": [], // Label that identifies each project in the round
+                    "title": {
+                    "text": "Project"
+                    },
+                    "item": { // Explicitly control the appearance of the scale labels
+                    "font-size": 14, // Adjust font size as needed
+                    "offset-x": 0, // Adjust to move the label left or right if needed
+                    "offset-y": 0 // Adjust to move the label up or down if needed
+                    },"zooming": true,
+                "zoomTo": [0, 10],
+                "mirrored": true,
+                "itemsOverlap": true, // allows items to overlap if necessary
+                "maxItems": 999, // set to a high number to ensure all labels show
             },
-
 
             "scaleY": {
                 "title": {
