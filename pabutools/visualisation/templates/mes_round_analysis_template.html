@@ -31,10 +31,8 @@
         
         .carousel-control-prev-icon,
         .carousel-control-next-icon {
+            filter: invert(100%);
             font-size: 24px;
-            /* Adjust the size as needed */
-            color: black;
-            /* Adjust the color as needed */
         }
         
         .carousel-inner {
@@ -91,7 +89,6 @@
     </style>
     <script>
     window.addEventListener('load', (event) => {
-        console.log('The page has fully loaded');
         loadRound();
     });
     </script>
@@ -165,9 +162,9 @@
                 <p>
                     <b>Description:</b> <span class="description"></span>
                     <br>
-                    <b>Project Cost:</b> <span class="project_cost"></span>
+                    <b>Project Cost:</b> <span class="project_cost"></span> {{ currency }}
                     <br>
-                    <b>Election Budget Remaining:</b> <span class="budget_remaining"></span>
+                    <b>Election Budget Remaining:</b> <span class="budget_remaining"></span> {{ currency }}
                 </p>
                
                 
@@ -473,18 +470,17 @@
     </script>
     <!-- Rounds data -->
     <script>
-        var myJsArray = {{ rounds }};
         var numProjects = {{ rounds|length }};
         
         var rounds_data = {
             {% for round in rounds %}
                 "{{ round.id }}": {
-                    "effective_vote_count_bar_chart": {"x_labels": [{% for roundID in round.effective_vote_count.keys()%}'{{ projects[roundID]['name'][:15]|replace('\"', '\\\"') }}',{% endfor %}], "values": {{ round.effective_vote_count.values() | list }} },
-                    "effective_vote_count_stacked_bar_chart": {"x_labels": [{% for roundID in round.effective_vote_count_reduction.keys()%}'{{ projects[roundID]['name'][:15]|replace('\"', '\\\"') }}',{% endfor %}], "initial_values": [{% for key in round.effective_vote_count_reduction.keys() %} {{ round.effective_vote_count[key]}},{% endfor %}], "reduced_values": {{ round.effective_vote_count_reduction.values() | list }} },
-                    "pie_chart_triplets": [{% for pie_chart in round.pie_chart_triplet %}[{% for data in pie_chart%}{"project_name": "{{ projects[data.project]['name'] }}","round_name": "{{ projects[round.id]['name'] }}","title":  "'{{ projects[data.project]['name'][:15]|replace('\"', '\\\"')}}' Voters'","values_1": [{{ data.roundVoters }}],"text_1":  "'{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}' Voters","values_2": [{{ data.nonRoundVoters }}] ,"text_2": "Non '{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}' Voters"},{% endfor %}], {% endfor %}],
-                    "sankey_chart": {"rows": [{% set data_items = round.voter_flow[round.id].items() | sort(attribute='1', reverse=True) %}{% set top_items = data_items[:6] %}{% set other_items = data_items[6:] %}{% set other_total = other_items | map(attribute='1') | sum %}{% for key, value in top_items %}{% if key != round.id %}['{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}', '{{ projects[key]['name'][:15]|replace('\"', '\\\"') }}', {{ value }}],{% endif %}{% endfor %}{% if other_items %}['{{ projects[round.id]['name'][:15]|replace('\"', '\\\"') }}', 'Other', {{ other_total }}],{% endif %}]},
-                    "chord_chart": {"series": [{% set project_name = projects[round.id]['name'][:15] %}{% set selected_project = round.name %}{% set project_votes = round.voter_flow[selected_project] | dictsort(by='value', reverse=True) %}{% set top_projects = project_votes[:6] | map(attribute=0) | list %}{% if selected_project not in top_projects %}    {% set top_projects = [selected_project] + top_projects %}{% endif %}{% for projFrom in top_projects %}    {        "values":[{% for projTo in top_projects %}{{ round.voter_flow[projFrom].get(projTo, 0) }},{% endfor %}{% if projFrom == selected_project %}{{ round.voter_flow[projFrom].get(projFrom, 0) }},{% endif %}],        "text": "{{ projects[projFrom]['name'][:15]|replace('\"', '\\\"') }}"    },{% endfor %}{% if selected_project not in top_projects %}{"values": [{% for projTo in top_projects %}{{ round.voter_flow[selected_project].get(projTo, 0) }},{% endfor %}{{ round.voter_flow[selected_project].get(selected_project, 0) }},],        "text": '{{ project_name }}'    },{% endif %}]},
-                    "intro": {"project_name": "{{ projects[round.id]['name']}}", "round_number": "{{loop.index0 + 1}}", "description": "{{projects[round.id]['description']}}", "project_cost" : "{{projects[round.id]['cost']}}", "budget_remaining" : "{{ round['remaining_budget'] }}", "effective_vote_count" : "{{ round['effective_vote_count'][round.id]}}", "project_votes" : "{{projects[round.id]['votes']}}" },
+                    "effective_vote_count_bar_chart": {"x_labels": [{% for roundID in round.effective_vote_count.keys()%}'{{ projects[roundID]['name'].split()[:2] | join(" ") |replace('\"', '\\\"')|replace("\'", "\\\'") }}',{% endfor %}], "values": {{ round.effective_vote_count.values() | list }} },
+                    "effective_vote_count_stacked_bar_chart": {"x_labels": [{% for roundID in round.effective_vote_count_reduction.keys()%}'{{ projects[roundID]['name'].split()[:2] | join(" ") |replace('\"', '\\\"')|replace("\'", "\\\'") }}',{% endfor %}], "initial_values": [{% for key in round.effective_vote_count_reduction.keys() %} {{ round.effective_vote_count[key]}},{% endfor %}], "reduced_values": {{ round.effective_vote_count_reduction.values() | list }} },
+                    "pie_chart_triplets": [{% for pie_chart in round.pie_chart_triplet %}[{% for data in pie_chart%}{"project_name": "{{ projects[data.project]['name']|replace('\"', '\\\"')|replace("\'", "\\\'") }}","round_name": "{{ projects[round.id]['name']|replace('\"', '\\\"')|replace("\'", "\\\'") }}","title":  "'{{ projects[data.project]['name'].split()[:2] | join(" ") |replace('\"', '\\\"')|replace("\'", "\\\'")}}' Voters'","values_1": [{{ data.roundVoters }}],"text_1":  "'{{ projects[round.id]['name'].split()[:2] | join(" ") |replace('\"', '\\\"')|replace("\'", "\\\'") }}' Voters","values_2": [{{ data.nonRoundVoters }}] ,"text_2": "Non '{{ projects[round.id]['name'].split()[:2] | join(" ") |replace('\"', '\\\"')|replace("\'", "\\\'") }}' Voters", "reduction":{{data.reduction  | round(2) }} },{% endfor %}], {% endfor %}],
+                    "sankey_chart": {"rows": [{% set data_items = round.voter_flow[round.id].items() | sort(attribute='1', reverse=True) %}{% set top_items = data_items[:6] %}{% set other_items = data_items[6:] %}{% set other_total = other_items | map(attribute='1') | sum %}{% for key, value in top_items %}{% if key != round.id %}['{{ projects[round.id]['name'].split()[:2] | join(" ") |replace('\"', '\\\"')|replace("\'", "\\\'") }}', '{{ projects[key]['name'].split()[:2] | join(" ") |replace('\"', '\\\"')|replace("\'", "\\\'") }}', {{ value }}],{% endif %}{% endfor %}{% if other_items %}['{{ projects[round.id]['name'].split()[:2] | join(" ") |replace('\"', '\\\"')|replace("\'", "\\\'") }}', 'Other', {{ other_total }}],{% endif %}]},
+                    "chord_chart": {"series": [{% set project_name = projects[round.id]['name'].split()[:2] | join(" ")  %}{% set selected_project = round.name %}{% set project_votes = round.voter_flow[selected_project] | dictsort(by='value', reverse=True) %}{% set top_projects = project_votes[:6] | map(attribute=0) | list %}{% if selected_project not in top_projects %}    {% set top_projects = [selected_project] + top_projects %}{% endif %}{% for projFrom in top_projects %}    {        "values":[{% for projTo in top_projects %}{{ round.voter_flow[projFrom].get(projTo, 0) }},{% endfor %}{% if projFrom == selected_project %}{{ round.voter_flow[projFrom].get(projFrom, 0) }},{% endif %}],        "text": "{{ projects[projFrom]['name'].split()[:2] | join(" ") |replace('\"', '\\\"')|replace("\'", "\\\'") }}"    },{% endfor %}{% if selected_project not in top_projects %}{"values": [{% for projTo in top_projects %}{{ round.voter_flow[selected_project].get(projTo, 0) }},{% endfor %}{{ round.voter_flow[selected_project].get(selected_project, 0) }},],        "text": '{{ project_name }}'    },{% endif %}]},
+                    "intro": {"project_name": "{{ projects[round.id]['name']|replace('\"', '\\\"')|replace("\'", "\\\'") }}", "round_number": "{{loop.index0 + 1}}", "description": "{{projects[round.id]['description']|replace('\"', '\\\"')|replace("\'", "\\\'") }}", "project_cost" : "{{projects[round.id]['cost']}}", "budget_remaining" : "{{ round['remaining_budget'] }}", "effective_vote_count" : "{{ round['effective_vote_count'][round.id]}}", "project_votes" : "{{projects[round.id]['votes']}}" },
                     "roundNum": {{loop.index0}},
                 },
             {% endfor %}}
@@ -823,7 +819,7 @@
                     col.appendChild(div);
                     let pieChartText = document.createElement("div");
                     pieChartText.className = "pie-chart-text";
-                    pieChartText.innerHTML = "This resulted in an average reduction of $ per voter for the '" + data.project_name + "' voters who also voted for '" + data.round_name + "'.";
+                    pieChartText.innerHTML = "This resulted in an average reduction of " + data.reduction +"{{ currency }} per voter for the '" + data.project_name + "' voters who also voted for '" + data.round_name + "'.";
                     col.appendChild(pieChartText);
                     row.appendChild(col);
                 });
@@ -856,16 +852,16 @@
         }
 
         async function renderRoundNext() {
-            if (roundNum < numProjects - 1){
-                roundNum = roundNum + 1;
-                renderRound(myJsArray[roundNum].id);
+            const nextRound = document.querySelector('.dropdown-item.active').nextElementSibling;
+            if (nextRound) {
+                renderRound(nextRound.getAttribute('item'));
             }
         }
 
         async function renderRoundPrev() {
-            if (roundNum > 0) {
-                roundNum = roundNum - 1;
-                renderRound(myJsArray[roundNum].id);
+            const prevRound = document.querySelector('.dropdown-item.active').previousElementSibling;
+            if (prevRound) {
+                renderRound(prevRound.getAttribute('item'));
             }
         }
     </script>

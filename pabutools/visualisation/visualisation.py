@@ -26,7 +26,10 @@ class MESVisualiser(Visualiser):
         self.profile = profile
         self.instance = instance
         self.verbose = verbose
+        self.details = mes_details
         self.mes_iterations = mes_details.iterations
+        if not self.mes_iterations:
+            raise ValueError("No projects were selected in this election.")
         self.rounds = []
 
     def _calculate_rounds_dictinary(self):
@@ -36,6 +39,7 @@ class MESVisualiser(Visualiser):
             round = dict()
             current_iteration = self.mes_iterations[i]
             next_iteration = self.mes_iterations[i+1]
+            round["_current_iteration"] = current_iteration # will be deleted before passed into the template
             round["id"] = current_iteration.selected_project.name
             round["name"] = current_iteration.selected_project.name # TODO Remove this and keep round["id"]
             data = {
@@ -127,8 +131,8 @@ class MESVisualiser(Visualiser):
             }
         self.rounds.append({
             "name": self.mes_iterations[-1].selected_project.name,
-            "effective_vote_count": dict(sorted(data.items(), key=lambda item: item[1], reverse=True))
-            ,
+            "_current_iteration": self.mes_iterations[-1],
+            "effective_vote_count": dict(sorted(data.items(), key=lambda item: item[1], reverse=True)),
             "effective_vote_count_reduction": {p.name: 0 for p in self.mes_iterations[-1].get_all_projects()},
             "cost": self.mes_iterations[-1].selected_project.cost,
             "totalvotes": len(self.mes_iterations[-1].selected_project.supporter_indices),
@@ -146,13 +150,11 @@ class MESVisualiser(Visualiser):
             round["id"] = round["name"] # TODO: Remove either 'id' or 'name' from the data structure
             selected = round["name"]
             winners.append(selected)
-            for project in self.instance:
+            for project in projectVotes:
                 if project.name not in winners:
                     round_voters = round["voter_flow"][project.name][selected]
                     non_round_voters = projectVotes[project.name] - round_voters
-                    reduction = 0
-                    if  project.name in round["effective_vote_count_reduction"]:
-                        reduction = round["effective_vote_count_reduction"][project.name]
+                    reduction = self._calculate_avg_voter_budget(round["_current_iteration"].voters_budget, self._get_voters_for_project(project)) - self._calculate_avg_voter_budget(round["_current_iteration"].voters_budget_after_selection, self._get_voters_for_project(project))
                     pie_chart_item = {
                         "project": project.name,
                         "roundVoters": round_voters,
@@ -165,6 +167,14 @@ class MESVisualiser(Visualiser):
             round["pie_chart_items"] = [pie_chart_items]
             round["pie_chart_triplet"] = [pie_chart_items[i:i + 3] for i in range(0, len(pie_chart_items), 3)]
 
+    def _calculate_avg_voter_budget(self, voters_budget, supporters):
+        return sum(voters_budget[s] for s in supporters) / len(supporters)
+
+    def _get_voters_for_project(self, project):
+        for project_details in self.details.get_all_project_details():
+            if project_details.project == project:
+                return project_details.project.supporter_indices
+
     def _calculate(self):
         self._calculate_rounds_dictinary()
         projectVotes = votes_count_by_project(self.profile)
@@ -174,6 +184,8 @@ class MESVisualiser(Visualiser):
 
     def render(self, outcome, output_folder_path):
         self._calculate()
+        for round in self.rounds:
+            del round["_current_iteration"]
         if self.verbose:
             print(self.rounds)
 
@@ -186,6 +198,7 @@ class MESVisualiser(Visualiser):
             number_of_elected_projects=len(outcome),
             number_of_unelected_projects=len(self.instance) - len(outcome),
             spent=total_cost(p for p in self.instance if p.name in outcome),
+            currency=self.instance.meta["currency"] if "currency" in self.instance.meta else "CUR",
             budget=self.instance.meta["budget"],
             total_votes=self.instance.meta["num_votes"]
         )
