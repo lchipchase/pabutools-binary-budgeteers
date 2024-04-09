@@ -196,7 +196,7 @@
                             The bars show the budget at each stage of the election, and the projects which were selected or rejected in each round. Finally, the final bar chart shows an overview of the selected and rejected projects.
                         </p>
                         <p>
-                            To view the list of the projects selected, click this: <button type="button" id="electionOutcome">View Election Outcome</button>
+                            To view the list of the projects selected, click this: <button type="button" id="electionOutcome" class="btn btn-secondary">View Election Outcome</button>
                             <div style="display: none;" id="outcomeList" class="row">
                                 {% for round in rounds %}
                                     <p>Project: "{{ projects[round.selected_project.id]["name"] }}" with cost: {{ "{:,}".format( (round.selected_project.cost | int) ) }} {{ currency }} and had {{round.selected_project.votes}} votes.</p>
@@ -208,12 +208,10 @@
                 <div class="spacer-1"></div>
             </div>
         </div>
-        <center>
-            <div id="spinner" class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </center>
         <div class="container">
+
+            
+            
             <div class="spacer-1"></div>
             <hr>
             <div class="spacer-1"></div>
@@ -222,7 +220,7 @@
             <!-- Round specific visualisations -->
                 <section id="1">
 
-                    <!-- Effective Vote Count -->
+                    
                     <div class="row featurette">
                         <div class="col-1"></div>
                         <div class="col-10" style="min-height: 600px;">
@@ -232,27 +230,77 @@
                         </div>
                         <div class="col-1"></div>
                     </div>
+                    <!-- Vote Count -->
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                            <div class="row justify-content-center">
+                                <div class="col-auto">
+                                    <select id="sortingCriteria" class="form-control">
+                                        <option value="name-asc">Name Ascending</option>
+                                        <option value="name-desc">Name Descending</option>
+                                        <option value="cost-asc">Cost Ascending</option>
+                                        <option value="cost-desc">Cost Descending</option>
+                                        <option value="votes-asc">Votes Ascending</option>
+                                        <option value="votes-desc">Votes Descending</option>
+                                      </select>
+                                </div>
+                                <div class="col-auto">
+                                    <select class="form-control" id="filterBy">
+                                        <option value="all">All</option>
+                                        <option value="selected">Selected</option>
+                                        <option value="rejected">Rejected</option>
+                                      </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1"></div>
+
+                    </div>
+                    <div class="spacer-1"></div>
+                    
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                            <div class="spacer-1"></div>
+                            <div class="spacer-1"></div>
+                            <p> 
+                                The chart above shows the number of votes for each project. To investigate further, you can filter the bar chart by selected or rejected projects, and sort by name, cost or votes. Use the dropdowns above to filter and sort the data.
+                            </p>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
 
                     <!-- Just some space -->
                     <div class="spacer-1"></div>
                     <hr>
                     <div class="spacer-1"></div>
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <div class="col-8" style="justify-content: center;">
+                            <div class="spacer-1"></div>
 
+                            <h3>Round by Round Analysis</h3>
+                            <hr>
+                            <p>
+                                    The following section of the visualisations allows you to click through 'round by round' of this section of the election. It shows at each point the remaining budget, and the projects with the most votes up to the selected project. The selected project is shown in green, and any rejected projects are shown in red. A project will be shown in red if it is the next most popular project however there is not enough budget remaining to purchase the project. This means, the next most popular project will be considered - and so on until a project is found that can be purchased with the remaining budget. Use the previous and next round buttons to move through the different rounds of the election.
+                            </p>
+                        </div>
+                        <div class="col-2"></div>
+                    </div>
                     <div class="row">
                         <div class="col-1"></div>
-<div class="col-10">
-    <div class="row justify-content-center">
-        <div class="col-auto">
-            <button id="prevButton" class="btn btn-primary">Previous Round</button>
-        </div>
-        <div class="col-auto">
-            <button id="nextButton" class="btn btn-primary">Next Round</button>
-        </div>
-    </div>
-</div>
-<div class="col-1"></div>
-
-
+                        <div class="col-10">
+                            <div class="row justify-content-center">
+                                <div class="col-auto">
+                                    <button id="prevButton" class="btn btn-secondary">Previous Round</button>
+                                </div>
+                                <div class="col-auto">
+                                    <button id="nextButton" class="btn btn-secondary">Next Round</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1"></div>
                     </div>
 
                     {% for round in rounds %}
@@ -320,11 +368,11 @@
                                 <div class="row">
                                     {% if round.rejected_projects %}
                                         <p>
-                                            The chart above shows the current budget of {{ "{:,}".format( (round.remaining_budget | int) ) }} {{ currency }}. Projects {% for proj in round.rejected_projects %} {{ projects[proj.id]["name"] }}, {% endfor %} were rejected in this round, even though they had more votes than the selected project.  
+                                            The chart above shows the current budget of {{ "{:,}".format( (round.remaining_budget | int) ) }} {{ currency }}. Projects {% for proj in round.rejected_projects %} {{ projects[proj.id]["name"] }}, {% endfor %} were rejected in this round, even though they had more votes than the selected project which had {{projects[round.selected_project.id]["votes"]}} votes.  
                                         </p>
                                     {% else %}
                                         <p>
-                                            The chart above shows the current budget of {{ "{:,}".format( (round.remaining_budget | int) ) }} {{ currency }}, and the selected project "{{ projects[round.selected_project.id]["name"] }}" with cost {{ "{:,}".format( (round.selected_project.cost | int) ) }} {{ currency }}. The selected project was chosen because it had the most votes and was within budget.
+                                            The chart above shows the current budget of {{ "{:,}".format( (round.remaining_budget | int) ) }} {{ currency }}, and the selected project "{{ projects[round.selected_project.id]["name"] }}" with cost {{ "{:,}".format( (round.selected_project.cost | int) ) }} {{ currency }}. The selected project was chosen because it had the most votes ({{projects[round.selected_project.id]["votes"]}}) and was within budget.
                                         </p>
                                     {% endif %}
                                 </div>
@@ -340,10 +388,23 @@
 
                     <!-- Green and Red Painted Chart -->
                     <div class="row featurette">
+                        <!-- <div class="row"> -->
+                            <div class="col-1"></div>
+                            <div class="col-10" style="min-height: 600px;">
+                                <div id="RGBarChart" style="height: 100%; width: 100%;">
+                                    <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Project Vote Counts:</b><br> The following graphs shows the votes for each of the projects along with the corresponding budget.<br>The green bars correspond to selected projects, the red bars correspond to rejected projects.">i</button>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                        <!-- </div> -->
+                        
+                    </div>
+                    <div class="row">
                         <div class="col-1"></div>
-                        <div class="col-10" style="min-height: 600px;">
-                            <div id="RGBarChart" style="height: 100%; width: 100%;">
-                                <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Project Vote Counts:</b><br> The following graphs shows the votes for each of the projects along with the corresponding budget.<br>The green bars correspond to selected projects, the red bars correspond to rejected projects.">i</button>
+                        <div class="col-10">
+                            <p>
+                                The chart above shows a colour coded bar chart, which shows the selected projects in order. Red for selected, green for rejected. This is a quick over-view visualisation showing that it is not always the most popular project which is selected, but the most popular projects within budget.
+                            </p>
                         </div>
                         <div class="col-1"></div>
                     </div>
@@ -415,94 +476,150 @@
     </script>
 
     <script>
-       zingchart.render({
-          id: 'SortableBarChart',
-          data: {
-          "type": "hbar",
-          "title": {
-             "text": "Vote Count Bar Chart"
-          },
-          shapes: [
-            {
-                "type": "circle",
-                "background-color": "#5297b6",
-                "size": 20,
-                "x": 35,
-                "y": 25,
-                "tooltip": {
-                    "text": "This bar chart shows the number of votes for each project.",
-                    "background-color": "white",
-                    "font-color": "gray",
-                    "font-family": "Georgia",
-                    "background-color": "white",
-                    "border-color": "gray",
-                    "border-width": 1,
-                    "line-style": "dotted",
-                    "padding": "15%",
+        document.addEventListener('DOMContentLoaded', function() {
+            projects_selected_or_rejected = JSON.parse('{{projects_selected_or_rejected | safe}}')
+            // Project Names
+            var projects = {};
+            {% for project_id in project_votes.keys() %}
+            projects["{{ project_id }}"] = {
+                name: "{{ projects[project_id]['name'][:15]|replace('\"', '\\\"') }}",
+                votes: parseInt({{ project_votes[project_id] }}),
+                cost: parseFloat({{ projects[project_id]['cost'] }}),
+                selected: projects_selected_or_rejected["{{ project_id }}"]
+            };
+            {% endfor %}
+
+            
+            function sortAndRenderChart(criteria, filterBy) {
+                console.log(projects);
+                var filteredProjects = Object.values(projects).filter(function(project) {
+                    if (filterBy === 'all') {
+                        return true; 
+                    } else if (filterBy === 'selected') {
+                        return project.selected === true; 
+                    } else if (filterBy === 'rejected') {
+                        return project.selected === false; 
+                    }
+                });
+                    var sortOrder = criteria.split('-')[1];
+                    var sortBy = criteria.split('-')[0];
+                    var sortedProjects = Object.values(filteredProjects).sort(function(a, b) {
+                        if (sortBy === 'name') {
+                            return sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+                        } else {
+                            return sortOrder === 'asc' ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy];
+                        }
+                    });
+
+                    var labels = sortedProjects.map(function(p) { return p.name; });
+                    var values = sortedProjects.map(function(p) { return parseInt(p.votes, 10); });
+
+                    var data ={
+                        "type": "hbar",
+                        "title": {
+                            "text": "Vote Count Bar Chart"
+                        },
+                        shapes: [
+                            {
+                                "type": "circle",
+                                "background-color": "#5297b6",
+                                "size": 20,
+                                "x": 35,
+                                "y": 25,
+                                "tooltip": {
+                                    "text": "This bar chart shows the number of votes for each project.",
+                                    "background-color": "white",
+                                    "font-color": "gray",
+                                    "font-family": "Georgia",
+                                    "background-color": "white",
+                                    "border-color": "gray",
+                                    "border-width": 1,
+                                    "line-style": "dotted",
+                                    "padding": "15%",
+                                },
+                                label: {
+                                    text: 'i', 
+                                    fontSize: 28,
+                                    fontWeight: 'bold',
+                                    fontColor: '#fff'
+                                }
+                            }
+                        ],
+                        "scrollX": {
+                                        "bar": {
+                                        "backgroundColor": '#2596be',
+                                        "alpha": 0.5,
+                                        },
+                                        "handle": {
+                                        "backgroundColor": '#2596be',
+                                        },
+                                    },
+                        "plotarea": {
+                            "margin-left":"130px",
+                            "margin-right":"130px"
+                        },
+                        "scale-x": {
+                            "labels": labels,
+                            "title": {
+                            "text": "Project"
+                            },
+                            "item": { 
+                            "font-size": 14, 
+                            "offset-x": 0, 
+                            "offset-y": 0 
+                            },"zooming": true,
+                                "zoomTo": [0, 15]
+                        },
+                        "scale-y": {
+                            "title": {
+                            "text": "Number of Votes"
+                            }
+                        },
+                        "series": [{
+                            "values": values ,
+                            'hover-state': {
+                            'background-color': "orange",
+                        }
+                        }, ],
+                        "plot": {
+                        "tooltip": {
+                            "text": "Project %scale-key-label has %v votes"
+                        },
+                            "animation": {
+                            "effect": "ANIMATION_SLIDE_BOTTOM",
+                            "sequence": "ANIMATION_BY_PLOT_AND_NODE",
+                            "speed": 0
+                            }
+                        }
+                    }
+                    zingchart.render({
+                        id: 'SortableBarChart',
+                        data: data,
+                        height: '100%',
+                        width: '100%'
                 },
-                label: {
-                    text: 'i', 
-                    fontSize: 28,
-                    fontWeight: 'bold',
-                    fontColor: '#fff'
-                }
-              }
-        ],
-        "scrollX": {
-                        "bar": {
-                        "backgroundColor": '#2596be',
-                        "alpha": 0.5,
-                        },
-                        "handle": {
-                        "backgroundColor": '#2596be',
-                        },
-                    },
-        "plotarea": {
-            "margin-left":"130px",
-            "margin-right":"130px"
-        },
-        "scale-x": {
-            "labels": [{% for project_id in project_votes.keys()%}"{{ projects[project_id]['name'][:15]|replace('\"', '\\\"') }}",{% endfor %}],
-            "title": {
-            "text": "Project"
-            },
-            "item": { 
-            "font-size": 14, 
-            "offset-x": 0, 
-            "offset-y": 0 
-            },"zooming": true,
-                "zoomTo": [0, 15]
-        },
-        "scale-y": {
-            "title": {
-            "text": "Number of Votes"
+                );
             }
-        },
-        "series": [{
-            "values": {{ project_votes.values() | list }},
-            'hover-state': {
-            'background-color': "orange",
-        }
-        }, ],
-        "plot": {
-        "tooltip": {
-            "text": "Project %scale-key-label has %v votes"
-        },
-            "animation": {
-            "effect": "ANIMATION_SLIDE_BOTTOM",
-            "sequence": "ANIMATION_BY_PLOT_AND_NODE",
-            "speed": 0
-            }
-        }
-    },
-          height: '100%',
-          width: '100%'
-    });
+
+            // Initial render
+            sortAndRenderChart('votes-desc', 'all');
+
+            // Function to update hidden input value and re-render chart
+            document.getElementById('sortingCriteria').addEventListener('change', function() {
+                filter = document.getElementById('filterBy').value;
+                sortAndRenderChart(this.value, filter);
+            });
+
+            // Listen for changes in the filter dropdown to re-render the chart
+            document.getElementById('filterBy').addEventListener('change', function() {
+                sort = document.getElementById('sortingCriteria').value;
+                sortAndRenderChart(sort, this.value);
+            });
+        });
 </script>
 <script>
     projects_selected_or_rejected = JSON.parse('{{projects_selected_or_rejected | safe}}')
     var projectNames = {{ project_votes.keys() | list }};
-    console.log(projectNames);
     var projectValues = {{ project_votes.values() | list }};
     var seriesData = [];
     var pNames = projectNames;
