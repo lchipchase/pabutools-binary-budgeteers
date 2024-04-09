@@ -25,7 +25,7 @@ We provide a way to visualise the results using the class :py:class:`~pabutools.
     outcome = greedy_utilitarian_welfare(instance, profile, sat_class=Cost_Sat, analytics=True)
 
     visualiser = GreedyWelfareVisualiser(profile, instance, outcome.details)
-    visualiser.render(outcome, "./{path_to_output_file}/")
+    visualiser.render("./{path_to_output_file}/")
 
 The visualisation will be saved in the specified path. 
 
