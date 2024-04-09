@@ -131,6 +131,7 @@
         } */
         
         h1,
+        h3,
         p {
             text-align: center;
         }
@@ -188,12 +189,12 @@
                         </h1>
                         <div class="spacer-1"><hr></div>
                         <p>
-                            This is the explanation for the outcome of the participatory budgeting election decided using the Greedy Utalitarian Welfare algorithm.<br>
+                            This is the explanation for the outcome of the participatory budgeting election decided using the Greedy Utilitarian Welfare algorithm.<br>
                             Some of the key features of the election are: The election has a total budget of {{ "{:,}".format((budget | int)) }} {{ currency }} of which {{ "{:,}".format((spent | int)) }} {{ currency }} was spent. The election had a 
-                            total of {{total_votes}} votes cast. Note that each vote can be for multiple projects, therefore, the total votes for all projects will be 
+                            total of {{total_votes}} voters. Note that each participant can vote for multiple projects. Therefore, the total votes for all projects may be 
                             higher than {{total_votes}}<br>
                             This page shows and explains the outcome of the election. The first graph shows the number of votes for each project.
-                            The bars show the budget at each stage of the election, and the projects which were selected or rejected in each round. Finally, the final bar chart shows an overview of the selected and rejected projects.
+                            The bars show the budget at each stage of the election and the projects selected or rejected in each round. Finally, the final bar chart shows an overview of the selected and rejected projects.
                         </p>
                         <p>
                             To view the list of the projects selected, click this: <button type="button" id="electionOutcome" class="btn btn-secondary">View Election Outcome</button>
@@ -305,7 +306,7 @@
 
                     {% for round in rounds %}
                     <div class="container" id="{{round.id}}Bars" style="display: none;">
-
+                        
                         <!-- Budget Breakdown -->
                         <div class="row">
                             <div class="col-2"></div>
@@ -314,6 +315,7 @@
                                     <div class="budget-container">
                                         <!-- Remaining Budget Bar -->
                                         <div class="bar-container">
+                                            <h4>Round {{loop.index0 + 1}}</h4>
                                             {% if (round.remaining_budget / round.max_cost) * 90 > 30 %}
                                                 <div class="bar budget" style="width: {{ (round.remaining_budget / round.max_cost) * 90 }}%;">
                                                     <div class="bar-inner">&nbsp; Remaining Budget: {{ "{:,}".format( (round.remaining_budget | int) ) }} {{ currency }}</div>
@@ -449,7 +451,7 @@
 
         document.getElementById('prevButton').addEventListener('click', function() {
 
-            if (currentRoundIndex > 0) {
+            if (currentRoundIndex > 1) {
                 hideRound(currentRoundIndex);
                 currentRoundIndex--;
                 displayRound(currentRoundIndex);
@@ -457,7 +459,7 @@
         });
 
         document.getElementById('nextButton').addEventListener('click', function() {
-            if (currentRoundIndex < roundsIds - 1) {
+            if (currentRoundIndex < roundsIds - 3) {
                 hideRound(currentRoundIndex);
                 currentRoundIndex++; 
                 displayRound(currentRoundIndex);
@@ -510,10 +512,9 @@
                             return sortOrder === 'asc' ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy];
                         }
                     });
-
+                  
                     var labels = sortedProjects.map(function(p) { return p.name; });
                     var values = sortedProjects.map(function(p) { return parseInt(p.votes, 10); });
-
                     var data ={
                         "type": "hbar",
                         "title": {
@@ -582,7 +583,7 @@
                         }
                         }, ],
                         "plot": {
-                        "tooltip": {
+                            "tooltip": {
                             "text": "Project %scale-key-label has %v votes"
                         },
                             "animation": {
