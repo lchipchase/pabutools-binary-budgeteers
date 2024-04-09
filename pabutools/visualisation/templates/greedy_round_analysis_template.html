@@ -161,10 +161,7 @@
                 <a class="nav-link" href="./round_analysis.html">Round By Round <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="">Pabutools</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="">MES</a>
+                <a class="nav-link" href="https://pypi.org/project/pabutools/">Pabutools</a>
               </li>
             </ul>
             <form class="form-inline mt-2 mt-md-0" data-dashlane-rid="586d21bb200ad9fc" data-form-type="">
@@ -211,11 +208,11 @@
                 <div class="spacer-1"></div>
             </div>
         </div>
-        <!-- <center>
+        <center>
             <div id="spinner" class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
-        </center> -->
+        </center>
         <div class="container">
             <div class="spacer-1"></div>
             <hr>
@@ -373,32 +370,27 @@
         // Set the display of the first round to block
         document.getElementById("1Bars").style.display = "block";
 
-        let currentRoundIndex = 1; // Starting with the first round
-        const roundsIds = document.querySelectorAll('.container').length; // Get the total number of rounds based on containers
+        let currentRoundIndex = 1;
+        const roundsIds = document.querySelectorAll('.container').length;
 
-        // Function to toggle display of rounds
         function displayRound(index) {
-            // Show the current round
-            const currentRoundId = index + 'Bars'; // Construct ID string based on the current index
+            const currentRoundId = index + 'Bars'; 
             const currentRound = document.getElementById(currentRoundId);
             if (currentRound) currentRound.style.display = 'block';
         }
         function hideRound(index) {
-            // Hide the current round
-            const currentRoundId = index + 'Bars'; // Construct ID string based on the current index
+            const currentRoundId = index + 'Bars'; 
             const currentRound = document.getElementById(currentRoundId);
             if (currentRound) currentRound.style.display = 'none';
         }
 
-        // Initial display setup
         displayRound(currentRoundIndex);
 
-        // Event listeners for navigation buttons
         document.getElementById('prevButton').addEventListener('click', function() {
 
             if (currentRoundIndex > 0) {
                 hideRound(currentRoundIndex);
-                currentRoundIndex--; // Decrement index to show previous round
+                currentRoundIndex--;
                 displayRound(currentRoundIndex);
             }
         });
@@ -406,7 +398,7 @@
         document.getElementById('nextButton').addEventListener('click', function() {
             if (currentRoundIndex < roundsIds - 1) {
                 hideRound(currentRoundIndex);
-                currentRoundIndex++; // Increment index to show next round
+                currentRoundIndex++; 
                 displayRound(currentRoundIndex);
             }
         });
@@ -449,7 +441,7 @@
                     "padding": "15%",
                 },
                 label: {
-                    text: 'i', // Text inside the shape
+                    text: 'i', 
                     fontSize: 28,
                     fontWeight: 'bold',
                     fontColor: '#fff'
@@ -470,14 +462,14 @@
             "margin-right":"130px"
         },
         "scale-x": {
-            "labels": [{% for project_id in project_votes.keys()%}"{{ projects[project_id]['name'][:15]|replace('\"', '\\\"') }}",{% endfor %}], // Label that identifies each project in the round
+            "labels": [{% for project_id in project_votes.keys()%}"{{ projects[project_id]['name'][:15]|replace('\"', '\\\"') }}",{% endfor %}],
             "title": {
             "text": "Project"
             },
-            "item": { // Explicitly control the appearance of the scale labels
-            "font-size": 14, // Adjust font size as needed
-            "offset-x": 0, // Adjust to move the label left or right if needed
-            "offset-y": 0 // Adjust to move the label up or down if needed
+            "item": { 
+            "font-size": 14, 
+            "offset-x": 0, 
+            "offset-y": 0 
             },"zooming": true,
                 "zoomTo": [0, 15]
         },
@@ -487,8 +479,8 @@
             }
         },
         "series": [{
-            "values": {{ project_votes.values() | list }}, // Current votes values
-            'hover-state': { /* Hover object */
+            "values": {{ project_votes.values() | list }},
+            'hover-state': {
             'background-color': "orange",
         }
         }, ],
@@ -514,31 +506,17 @@
     var projectValues = {{ project_votes.values() | list }};
     var seriesData = [];
     var pNames = projectNames;
-    colorsList = [] // List to store the colour of bars depending on if it was selected or rejected
+    colorsList = [] 
 
     for (var i = 0; i < projectNames.length; i++) {
         var projectName = projectNames[i];
         var projectValue = projectValues[i];
         var selectedOrRejected = projects_selected_or_rejected[projectName];
-        
-        // Assign color based on the project's selection status and append to list
         var color = selectedOrRejected ? 'green' : 'red';
         colorsList.push(color);
 
-        /*
-        seriesData.push({
-            "values": [projectValue],
-            "background-color": color,
-            'hover-state': {
-                'background-color': "orange",
-            },
-            "text": projectName
-        });
-        */
     }
 
-    // Sort seriesData by the number of votes in descending order
-    //seriesData.sort((a, b) => b.values[0] - a.values[0]);
 
     var config = {
         "type": "hbar",
@@ -562,7 +540,7 @@
                 "padding": "15%",
             },
             label: {
-                text: 'i', // Text inside the shape
+                text: 'i',
                 fontSize: 28,
                 fontWeight: 'bold',
                 fontColor: '#fff'
@@ -599,10 +577,9 @@
                 "text": "Number of Votes"
             }
         },
-        //"series": seriesData,
         "series": [{
-            "values": {{ project_votes.values() | list }}, // Current votes values
-            'hover-state': { /* Hover object */
+            "values": {{ project_votes.values() | list }},
+            'hover-state': { 
                 'background-color': "orange",
             }
         }, ],
