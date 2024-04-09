@@ -9,6 +9,7 @@ from collections.abc import Collection, Iterable
 from math import inf
 
 from pabutools.rules.budgetallocation import BudgetAllocation
+from pabutools.rules.greedywelfare.greedywelfare_details import GreedyWelfareAllocationDetails, GreedyWelfareProjectDetails
 from pabutools.utils import Numeric
 
 from pabutools.election import AbstractBallot
@@ -28,10 +29,11 @@ def greedy_utilitarian_scheme(
     instance: Instance,
     profile: AbstractProfile,
     sat_profile: GroupSatisfactionMeasure,
-    budget_allocation: Iterable[Project],
+    budget_allocation: BudgetAllocation,
     tie_breaking: TieBreakingRule,
     resoluteness: bool = True,
     sat_bounds: dict[AbstractBallot, Numeric] | None = None,
+    analytics: bool = False,
 ) -> BudgetAllocation | list[BudgetAllocation]:
     """
     The inner algorithm for the greedy rule. It selects projects in rounds, each time selecting a project that
@@ -53,13 +55,14 @@ def greedy_utilitarian_scheme(
         resoluteness : bool, optional
             Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
             Defaults to True.
+        analytics: bool, optional
+            (De)Activate the calculation of analytics. Defaults to False.
     Returns
     -------
         :py:class:`~pabutools.rules.budgetallocation.BudgetAllocation` | list[:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`]
             The selected projects if resolute (:code:`resoluteness == True`), or the set of selected projects if irresolute
             (:code:`resoluteness == False`).
     """
-
     def aux(inst, prof, feasible, sats, allocs, alloc, tie, resolute):
         if len(feasible) == 0:
             if resolute:
@@ -138,9 +141,10 @@ def greedy_utilitarian_scheme_additive(
     instance: Instance,
     profile: AbstractProfile,
     sat_profile: GroupSatisfactionMeasure,
-    budget_allocation: Collection[Project],
+    budget_allocation: BudgetAllocation,
     tie_breaking: TieBreakingRule,
     resoluteness: bool = True,
+    analytics: bool = False,
 ) -> BudgetAllocation | list[BudgetAllocation]:
     """
     Faster version of the inner algorithm for the greedy rule if the scores are additive.
@@ -160,6 +164,8 @@ def greedy_utilitarian_scheme_additive(
         resoluteness : bool, optional
             Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
             Defaults to True.
+        analytics: bool, optional
+            (De)Activate the calculation of analytics. Defaults to False.
     Returns
     -------
         :py:class:`~pabutools.rules.budgetallocation.BudgetAllocation` | list[:py:class:`~pabutools.rules.budgetallocation.BudgetAllocation`]
@@ -174,6 +180,7 @@ def greedy_utilitarian_scheme_additive(
             budget_allocation,
             tie_breaking,
             resoluteness,
+            analytics,
         )
 
     projects = sorted(instance)
@@ -188,18 +195,21 @@ def greedy_utilitarian_scheme_additive(
                 return frac(total_sat, proj.cost)
             return inf
         return 0
-
+    selection = BudgetAllocation(budget_allocation, details=GreedyWelfareAllocationDetails())
+    if analytics:
+        selection.details.projects.extend([GreedyWelfareProjectDetails(project, score=satisfaction_density(project)) for project in projects])
     # We sort based on a tuple to ensure ties are broken as intended
     ordered_projects = sorted(
         projects, key=lambda p: (-satisfaction_density(p), projects.index(p))
     )
 
-    selection = BudgetAllocation(budget_allocation)
     remaining_budget = instance.budget_limit - total_cost(budget_allocation)
     for project in ordered_projects:
         if project.cost <= remaining_budget:
             selection.append(project)
             remaining_budget -= project.cost
+            if analytics:
+                selection.details.mark_as_selected(project, remaining_budget)
     return selection
 
 
@@ -212,6 +222,7 @@ def greedy_utilitarian_welfare(
     tie_breaking: TieBreakingRule | None = None,
     resoluteness: bool = True,
     initial_budget_allocation: Collection[Project] | None = None,
+    analytics: bool = False,
 ) -> BudgetAllocation | list[BudgetAllocation]:
     """
     General greedy scheme for approximating the utilitarian welfare. It selects projects in rounds, each time selecting
@@ -243,6 +254,8 @@ def greedy_utilitarian_welfare(
         resoluteness : bool, optional
             Set to `False` to obtain an irresolute outcome, where all tied budget allocations are returned.
             Defaults to True.
+        analytics: bool, optional
+            (De)Activate the calculation of analytics. Defaults to False.
 
     Returns
     -------
@@ -256,6 +269,7 @@ def greedy_utilitarian_welfare(
         budget_allocation = BudgetAllocation(initial_budget_allocation)
     else:
         budget_allocation = BudgetAllocation()
+
     if sat_class is None:
         if sat_profile is None:
             raise ValueError("sat_class and sat_profile cannot both be None.")
@@ -273,6 +287,7 @@ def greedy_utilitarian_welfare(
             budget_allocation,
             tie_breaking,
             resoluteness=resoluteness,
+            analytics=analytics,
         )
     return greedy_utilitarian_scheme(
         instance,
@@ -281,4 +296,5 @@ def greedy_utilitarian_welfare(
         budget_allocation,
         tie_breaking,
         resoluteness=resoluteness,
+        analytics=analytics,
     )

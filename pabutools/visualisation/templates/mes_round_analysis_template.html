@@ -54,7 +54,7 @@
             height: 100%;
         }
         
-        #myChordChart {
+        /* #myChordChart {
             height: 100%;
             width: 100%;
         }
@@ -63,7 +63,7 @@
         #myStackedBarChart1 {
             height: 100%;
             width: 100%;
-        }
+        } */
         /* zing-grid[loading] {
             height: 800px;
             width: 100%;
@@ -95,6 +95,7 @@
 </head>
 
 <body>
+<body>
     <header>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
           <a class="navbar-brand" href="./summary.html">Summary</a>
@@ -120,7 +121,9 @@
           </div>
         </nav>
     </header>
+    </header>
 
+    <main role="main">
     <main role="main">
     
         <div class="container-fluid upper-page">
@@ -204,6 +207,7 @@
             <div class="spacer-1"></div>
             <!-- Round specific visualisations -->
                 <section>
+                <section>
 
                     <!-- Effective Vote Count -->
                     <div class="row featurette">
@@ -214,6 +218,7 @@
                             <span class="project_votes"></span> people voted for this project, at the time the project was elected it had an effective vote count of <span class="effective_vote_count"></span>.     </p>
                         </div>
                         <div class="col-7" style="min-height: 400px;">
+                            <div id="BarChart" style="height: 100%; width: 100%;">
                             <div id="BarChart" style="height: 100%; width: 100%;">
                                 <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Effective Vote Count:</b><br> For a vote to count towards a project, the person who made the vote must have some of their budget remaining so they can contribute towards the project. Say Project A has 20 voters, but 5 of those 20 have already spent their entire budget on previous projects, the effective vote count will be 15. This graph shows the effective vote counts for all projects.">i</button>
                             </div>
@@ -234,6 +239,7 @@
                             <div class="d-flex align-items-center justify-content-center">
                                 <button class = "info-button" style = "position: absolute; z-index: 2000; left: 10px; top: 30px" data-tippy-content="<b>Sankey Diagram</b><br>The provided Sankey diagram offers a visual representation of voting patterns among a set of participants with the option to vote for multiple projects. The individual bands flowing from this singular left bar to various bars on the right-hand side illustrate the distribution of voters who have also voted for other projects. Each band's thickness corresponds to the number of voters who voted for both the project on the left and the project on the right. The graph is designed to show the overlap in voting behaviour, making it clear which projects share a common voter base with the project displayed on the right-hand side.">i</button>
                                 <div id="SankeyChart">
+                                <div id="SankeyChart">
 
                                 </div>
                             </div>
@@ -241,6 +247,8 @@
 
                         <div class="col-2"></div>
                         <div class="col-5 chord-wrapper">
+                            <button class = "info-button" style = "position: absolute; z-index: 2000; right: 10px; top: 30px" data-tippy-content="<b>Chord Diagram:</b><br> The chord diagram shows the voter flows between the project selected this round. Due to the nature of MES, if a project is selected, the voters who voted for it will have a reduction in their budget. Therefore, showing how voters’ voted shows which other projects will have had their support cut.">i</button>
+                            <div id='ChordChart'></div>
                             <button class = "info-button" style = "position: absolute; z-index: 2000; right: 10px; top: 30px" data-tippy-content="<b>Chord Diagram:</b><br> The chord diagram shows the voter flows between the project selected this round. Due to the nature of MES, if a project is selected, the voters who voted for it will have a reduction in their budget. Therefore, showing how voters’ voted shows which other projects will have had their support cut.">i</button>
                             <div id='ChordChart'></div>
 
@@ -252,15 +260,19 @@
 
                     <!-- Pie Charts Carousels -->
                     <div id="secondCarousel" style="height: 500px; width: 100%;" class="carousel slide" data-ride="carousel" data-interval="false">
+                    <div id="secondCarousel" style="height: 500px; width: 100%;" class="carousel slide" data-ride="carousel" data-interval="false">
                         <button class = "info-button" style = "position: absolute; z-index: 2000; right: 30px; top: 30px" data-tippy-content="<b>Pie Chart:</b><br> TODO">i</button>
                             
+                        <div id="pieChartsCarousel" class="carousel-inner" style="height: 500px; width: calc(100% - 40px);" >
                         <div id="pieChartsCarousel" class="carousel-inner" style="height: 500px; width: calc(100% - 40px);" >
                         </div>
 
                         <a class="carousel-control-prev" href="#secondCarousel" role="button" data-slide="prev">
+                        <a class="carousel-control-prev" href="#secondCarousel" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
                           </a>
+                          <a class="carousel-control-next" href="#secondCarousel" role="button" data-slide="next">
                           <a class="carousel-control-next" href="#secondCarousel" role="button" data-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="sr-only">Next</span>
@@ -280,6 +292,7 @@
                           <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
                         </div>
                         <div class="col-7" style="min-height: 400px;">
+                            <div id="StackedBarChart" style="height: 100%; width: 100%;" >
                             <div id="StackedBarChart" style="height: 100%; width: 100%;" >
                                 <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Reduced Effective Vote Count</b><br>Voters who still have money left but not enough money to pay for the project when its cost is equally divided will count as a fraction. We do not count voters if they have already spent their entire budget share. This graph visualises the current vote count after some of the voters' budgets have already been allocated against original vote count for the project.">i</button>
                             </div>
@@ -303,6 +316,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
+    <!-- Effective vote count bar chart -->
     <!-- Effective vote count bar chart -->
     <script>
         zingchart.render({

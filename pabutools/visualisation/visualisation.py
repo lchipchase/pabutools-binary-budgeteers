@@ -1,7 +1,6 @@
 from __future__ import annotations
 import os
-
-from pabutools.rules.mes.mes_details import MESAllocationDetails
+import json
 
 try:
     import jinja2
@@ -10,6 +9,8 @@ except ImportError:
 
 from pabutools.analysis.profileproperties import votes_count_by_project, voter_flow_matrix
 from pabutools.election.instance import total_cost
+from pabutools.rules.greedywelfare.greedywelfare_details import GreedyWelfareAllocationDetails
+from pabutools.rules.mes.mes_details import MESAllocationDetails
 
 ENV = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(os.path.abspath(__file__))))
 
@@ -193,6 +194,7 @@ class MESVisualiser(Visualiser):
         round_analysis_page_output = MESVisualiser.template.render( # TODO: Some redudant data is being passed to the template that can be calculated within template directly
             election_name=self.instance.meta["description"] if "description" in self.instance.meta else "No description provided.", 
             # total_votes=sum(votes_count_by_project(self.profile).values()),
+            currency=self.instance.meta["currency"] if "currency" in self.instance.meta else "CUR",
             rounds=self.rounds, 
             projects=self.instance.project_meta,
             number_of_elected_projects=len(outcome),
@@ -205,7 +207,8 @@ class MESVisualiser(Visualiser):
 
         # Page Summary
         summary_page_output = MESVisualiser.page_summary_template.render( # TODO: Some redudant data is being passed to the template that can be calculated within template directly
-            election_name=self.instance.meta["description"] if "description" in self.instance.meta else "No description provided.", 
+            election_name=self.instance.meta["description"] if "description" in self.instance.meta else "No description provided.",
+            currency=self.instance.meta["currency"] if "currency" in self.instance.meta else "CUR", 
             rounds=self.rounds, 
             projects=self.instance.project_meta,
             number_of_elected_projects=len(outcome),
@@ -220,3 +223,79 @@ class MESVisualiser(Visualiser):
             o.write(round_analysis_page_output)
         with open(f"{output_folder_path}/summary.html", "w", encoding="utf-8") as o:
             o.write(summary_page_output)
+
+class GreedyWelfareVisualiser(Visualiser):
+    template = ENV.get_template('./templates/greedy_round_analysis_template.html') 
+
+    def __init__(self, profile, instance, greedy_details: GreedyWelfareAllocationDetails, verbose=False):
+        self.profile = profile
+        self.instance = instance
+        self.verbose = verbose
+        self.details = greedy_details
+        self.rounds = []
+        project_votes = votes_count_by_project(self.profile)
+
+        # Order the projects by votes
+        self.project_votes = {str(k): project_votes[k] for k in sorted(project_votes, key=project_votes.get, reverse=False)}
+        
+    
+    def _calculate(self):
+        self.rounds = []
+        current_round = {}
+        rejected_projects = []
+        projects = sorted(self.details.projects, key=lambda x: self.project_votes[x.project.name], reverse=True)
+        for project in projects:
+            if project.discarded:
+                rejected_projects.append({
+                    #TODO: Should only have to store ID (name, cost and votes can be retrieved using 'projects' like it is done for MES)
+                    "id": project.project.name,
+                    "name": project.project.name,
+                    "cost": int(project.project.cost),
+                    "votes": self.project_votes[project.project.name]
+                })
+            else:
+                current_round["selected_project"] = {
+                    "id": project.project.name,
+                    "name": project.project.name,
+                    "cost": int(project.project.cost),
+                    "votes":  self.project_votes[project.project.name]
+                }
+                current_round["rejected_projects"] = rejected_projects[:]
+                current_round["remaining_budget"] = int(project.remaining_budget) + int(project.project.cost)
+                rejected_cost=[int(p["cost"]) for p in rejected_projects]
+                current_round["max_cost"] = max(max(rejected_cost), current_round["remaining_budget"]) if rejected_cost else current_round["remaining_budget"] # TODO: Used 1 as default because unsure how to handle case where rejected projects is empty (0 throws divisionbyzero error)
+                self.rounds.append(current_round)
+                current_round = {}
+                rejected_projects = []
+
+        # Order the rounds by the remaining_budget at each staage
+        self.rounds = sorted(self.rounds, key=lambda x: x["remaining_budget"], reverse=True)
+
+        # Go through each round then add an id for each round based on the order of the rounds
+        for i, round in enumerate(self.rounds):
+            round["id"] = i + 1
+
+    def render(self, outcome, output_folder_path):
+        self._calculate()
+        if self.verbose:
+            print(self.rounds)
+
+        # Round by Round
+        round_analysis_page_output = GreedyWelfareVisualiser.template.render( # TODO: Some redudant data is being passed to the template that can be calculated within template directly
+            election_name=self.instance.meta["description"] if "description" in self.instance.meta else "No description provided.",
+            currency=self.instance.meta["currency"] if "currency" in self.instance.meta else "CUR", 
+            projects_selected_or_rejected = json.dumps({int(str(p)): (p in outcome) for p in self.project_votes.keys()}),
+            project_votes=self.project_votes,
+            rounds=self.rounds, 
+            projects=self.instance.project_meta,
+            number_of_elected_projects=len(outcome),
+            number_of_unelected_projects=len(self.instance) - len(outcome),
+            spent=total_cost(p for p in self.instance if p.name in outcome),
+            budget=self.instance.meta["budget"],
+            total_votes=self.instance.meta["num_votes"]
+        )
+        if not os.path.exists(output_folder_path):
+            os.makedirs(output_folder_path)
+        with open(f"{output_folder_path}/round_analysis.html", "w", encoding="utf-8") as o:
+            o.write(round_analysis_page_output)
+    
