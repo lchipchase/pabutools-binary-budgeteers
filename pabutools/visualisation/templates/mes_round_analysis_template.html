@@ -256,12 +256,15 @@
                     <div class="spacer-1"></div>
                     <hr>
                     <div class="spacer-1"></div>
-
+                    <div class="row" style="display: grid;">
+                        <h5 style="text-align: center; font-weight: bold;">Proportion of voters from other projects</h5>
+                        <p>The pie charts represent how voters of other projects voted for '<span class="project_name"></span>', highlighting how the average in voters budget is affected for each project. </p>
+                    </div> 
                     <!-- Pie Charts Carousels -->
                     <div id="secondCarousel" style="height: 500px; width: 100%;" class="carousel slide" data-ride="carousel" data-interval="false">
                         <button class = "info-button" style = "position: absolute; z-index: 5; right: 30px; top: 30px" data-tippy-content="<b>Pie Chart:</b><br> TODO">i</button>
-                            
-                        <div id="pieChartsCarousel" class="carousel-inner" style="height: 500px; width: calc(100% - 40px);" >
+                        
+                        <div id="pieChartsCarousel" class="carousel-inner" style="height: 500px; width: 100%; padding: 0px" >
                         </div>
 
                         <a class="carousel-control-prev" href="#secondCarousel" role="button" data-slide="prev">
@@ -284,14 +287,20 @@
                     <div class="row featurette">
                         <div class="col-5">
                           <h2 class="featurette-heading">Reduced Effective Vote Count</h2>
-                          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+                          <p class="lead">This graph visualises the current effective vote count after some of the voters' budgets have already been allocated against original vote count for the project.</p>
                         </div>
                         <div class="col-7" style="min-height: 400px;">
                             <div id="StackedBarChart" style="height: 100%; width: 100%;" >
-                                <button class = "info-button" style = "position: absolute; z-index: 5; right: 50px;" data-tippy-content= "<b>Reduced Effective Vote Count</b><br>Voters who still have money left but not enough money to pay for the project when its cost is equally divided will count as a fraction. We do not count voters if they have already spent their entire budget share. This graph visualises the current vote count after some of the voters' budgets have already been allocated against original vote count for the project.">i</button>
+                                <button class = "info-button" style = "position: absolute; z-index: 5; right: 50px;" data-tippy-content= "<b>Reduced Effective Vote Count</b><br>Voters who still have money left but not enough money to pay for the project when its cost is equally divided will count as a fraction. We do not count voters if they have already spent their entire budget share.">i</button>
                             </div>
                         </div>
                     </div>
+                    <p>
+              
+                        <a href="#" class="btn btn-secondary my-2" onclick="renderRoundPrev()">Previous Round</a>
+                        <a href="#" class="btn btn-primary my-2" onclick="renderRoundNext()">Next Round</a>
+    
+                    </p>
                 </section>
         </div>
 
@@ -758,7 +767,7 @@
                 "legend":{
                     "toggle-action":"remove",
                     "toggle-action":"remove",
-                    "layout":"x2",
+                    // "layout":"x2",
                     "align":"center",
                     "vertical-align":"bottom"
                 },
@@ -795,7 +804,7 @@
             });
         }
 
-        async function addPieChartsToCarousel(pie_chart_triplets) {
+        async function addPieChartsToCarousel(pie_chart_triplets, project_name) {
             pie_chart_data_for_render = [];
             let carouselElement = document.getElementById("pieChartsCarousel");
             carouselElement.innerHTML = "";
@@ -827,7 +836,7 @@
                     col.appendChild(div);
                     let pieChartText = document.createElement("div");
                     pieChartText.className = "pie-chart-text";
-                    pieChartText.innerHTML = "This resulted in an average reduction of $ per voter for the '" + data.project_name + "' voters who also voted for '" + data.round_name + "'.";
+                    pieChartText.innerHTML = data.values_1 + " out of the " + (+data.values_1 + +data.values_2) + " voters who voted for '" + data.project_name + "' also voted for " + project_name + ". Resulting in an average reduction of $ per voter for the '" + data.project_name + "' voters who also voted for '" + data.round_name + "'.";
                     col.appendChild(pieChartText);
                     row.appendChild(col);
                 });
@@ -847,8 +856,9 @@
             element.classList.add('active');
             document.getElementById('projectDropdown').innerText = element.innerText;
             let round_data = rounds_data[roundId];
+        
             roundNum = round_data.roundNum
-            pie_chart_data_for_render = await addPieChartsToCarousel(round_data.pie_chart_triplets);
+            pie_chart_data_for_render = await addPieChartsToCarousel(round_data.pie_chart_triplets, round_data.intro.project_name);
             updateBarChart(round_data.effective_vote_count_bar_chart.x_labels, round_data.effective_vote_count_bar_chart.values);
             updateStackedBarChart(round_data.effective_vote_count_stacked_bar_chart.x_labels, round_data.effective_vote_count_stacked_bar_chart.initial_values, round_data.effective_vote_count_stacked_bar_chart.reduced_values);
             updateSankeyChart(round_data.sankey_chart.rows);
