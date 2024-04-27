@@ -39,7 +39,7 @@ class MESAllocationDetails(AllocationDetails):
 
     def get_final_budget(self) -> Numeric:
         """
-        Returns the budget limt used in the final feasible MES run.
+        Returns the budget limit used in the final feasible MES run.
         """
         budget_per_voter = self.iterations[0].voters_budget
         return sum(

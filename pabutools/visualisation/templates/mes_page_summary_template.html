@@ -313,7 +313,7 @@
                             This is the summary for the results of this participatory budgeting election decided by the Method of Equal Shares (MES). <br>
                             With this method, the total budget is virtually divided equally among the voters. <br>
                             The following web-page outlines the process of the election and the step by step process of how each project was chosen - <a href="https://equalshares.net/explanation/">Explanation</a>. <br><br>
-                            {{ election_name}} had a total of {{ total_votes }} voters participating.<br>
+                            {{ election_name}} had a total of {{ "{:,}".format((total_votes | int)) }} voters participating.<br>
                             Between these voters there was a total of {{ "{:,}".format((budget | int)) }} {{ currency }} available, of which {{ "{:,}".format((spent | int)) }} {{ currency }} was spent.<br>
                             In total, there were {{ number_of_elected_projects }} projects elected, and {{ number_of_unelected_projects }} projects not elected.<br>
                             {% set voter_budget = (budget | int) / (total_votes | int) %}
@@ -522,14 +522,14 @@
                                                 <h4>Why was this project not selected?</h4>
                                                 {% if rejected.initial_voter_funding >= rejected.cost %}
                                                     This project was rejected because its supporters were not able to pay for the project's cost - <b>{{ "{:,}".format((rejected.cost | int)) }}</b> {{ currency }} -
-                                                    using the total funding available to them at the start of round {{ loop.index}} (<b>{{ "{:,.2f}".format((rejected.final_voter_funding | float)) }}</b> {{ currency }}).<br><br>
+                                                    using the total funding available to them at the start of round {{ loop.index }} (<b>{{ "{:,.2f}".format((rejected.final_voter_funding | float)) }}</b> {{ currency }}).<br><br>
                                                     Note that the supporters of this project initially had more funding available to them (<b>{{ "{:,.2f}".format((rejected.initial_voter_funding | float)) }}</b> {{ currency }}), enough to cover the cost of project.<br><br>
                                                     However, this funding was lost as these supporters had also funded projects in the previous rounds, decreasing the total funding available to them to the point where the project cost exceeds
                                                     the combined funds of the supporters.<br> The top projects that can be seen in the list below were the main cause for the decrease in funding, these were
                                                     regarded as more important as they had a higher effective vote count, implying they were selected earlier than this project.
                                                 {% else %}
                                                     This project was rejected because its supporters were not able to pay for the project's cost - <b>{{ "{:,}".format((rejected.cost | int)) }}</b> {{ currency }} -
-                                                    using the total funding available to them at the start of round {{ loop.index}} (<b>{{ "{:,.2f}".format((rejected.final_voter_funding | float)) }}</b> {{ currency }}).<br><br>
+                                                    using the total funding available to them at the start of round {{ loop.index }} (<b>{{ "{:,.2f}".format((rejected.final_voter_funding | float)) }}</b> {{ currency }}).<br><br>
                                                     Note that this project would have been rejected, even before taking any funding lost into account.
                                                     This is because the project's cost exceeded the total funds initially allocated to the supporters of this project
                                                     (<b>{{ "{:,.2f}".format((rejected.initial_voter_funding | float)) }}</b> {{ currency }}).
