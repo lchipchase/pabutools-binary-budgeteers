@@ -378,7 +378,7 @@
                                                     <div class="bar red text-outside-bar" style="width: {{ (proj.cost / round.max_cost) * 90 }}%;">
                                                     </div>
                                                     <div class="rejected-mark">✘</div>
-                                                    <div><p style="position:absolute; top: 12px;">&nbsp; {{ proj.id }}: {{ projects[proj.id]["name"][:45] }} - {{ "{:,}".format( (round.selected_project.cost | int) ) }} {{ currency }}</p></div>
+                                                    <div><p style="position:absolute; top: 12px;">&nbsp; {{ proj.id }}: {{ projects[proj.id]["name"][:45] }} - {{ "{:,}".format( (proj.cost | int) ) }} {{ currency }}</p></div>
                                                 </div>
                                         </div>
                                         {% endfor %}
