@@ -7,7 +7,6 @@
     <title>{{ election_name }}</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src='sorttable.js'></script>
     <script type="text/javascript"> 
         function showHiddenRow(projectId) { 
             var hiddenRow = document.querySelector("#hidden-" + projectId);
@@ -372,8 +371,9 @@
                 </thead>
                 <tbody>
                     {% for round in rounds %}
+                        {% set round_num = loop.index %}
                         <tr class='clickable-row winner' id='project-{{ round.id }}' onclick="showHiddenRow('{{ round.id }}');">
-                        <td class='num' sorttable_customkey='{{ loop.index }}'><div class="split-cell"><span id="expand-symbol-{{ round.id }}">&#8250;</span><span>{{ loop.index }}</span></div></td>
+                        <td class='num' sorttable_customkey='{{ round_num }}'><div class="split-cell"><span id="expand-symbol-{{ round.id }}">&#8250;</span><span>{{ round_num }}</span></div></td>
                         <td class='num' style='text-align:right' sorttable_customkey='{{ round.id }}'>{{ round.id }}</td>
                         <td>{{ projects[round.id]["name"] }}</td>
                         <td class='num' style='text-align:right' sorttable_customkey='{{ "{:,}".format( (round.cost | int) ) }}'>{{ "{:,}".format( (round.cost | int) ) }}</td>
@@ -434,14 +434,14 @@
                                         <h4>Why was this project selected?</h4>
                                         {% if round.initial_voter_funding != round.final_voter_funding %}
                                             This project was accepted because its supporters were able to pay for the project's cost - <b>{{ "{:,}".format( (round.cost | int) ) }}</b> {{ currency }} -
-                                            using the total funding available to them at the start of round {{ loop.index }} (<b>{{ "{:,.2f}".format((round.final_voter_funding | float)) }}</b> {{ currency }}). <br><br>
+                                            using the total funding available to them at the start of round {{ round_num }} (<b>{{ "{:,.2f}".format((round.final_voter_funding | float)) }}</b> {{ currency }}). <br><br>
                                             Note that the supporters of this project initially had more funding available to them (<b>{{ "{:,.2f}".format((round.initial_voter_funding | float)) }} </b> {{ currency }}). However, this funding
                                             was lost as these supporters had also funded projects in the previous rounds, decreasing the total funding available to them, but not to the point where the project cost exceedes the combined funds of the supporters.
                                             As a result, this project could still be afforded.<br><br>
                                             These projects and the specific funding lost can be seen below.
                                         {% else %}
                                             This project was accepted because its supporters were able to pay for the project's cost - <b>{{ "{:,}".format( (round.cost | int) ) }}</b> {{ currency}} -
-                                            using the total funding available to them at the start of round {{ loop.index }} (<b>{{ "{:,.2f}".format((round.final_voter_funding | float)) }}</b> {{ currency }}).<br><br>
+                                            using the total funding available to them at the start of round {{ round_num }} (<b>{{ "{:,.2f}".format((round.final_voter_funding | float)) }}</b> {{ currency }}).<br><br>
                                             Note that no funding was lost for this project in any of the previous rounds.
                                         {% endif %}
                                     </div>
@@ -522,14 +522,14 @@
                                                 <h4>Why was this project not selected?</h4>
                                                 {% if rejected.initial_voter_funding >= rejected.cost %}
                                                     This project was rejected because its supporters were not able to pay for the project's cost - <b>{{ "{:,}".format((rejected.cost | int)) }}</b> {{ currency }} -
-                                                    using the total funding available to them at the start of round {{ loop.index }} (<b>{{ "{:,.2f}".format((rejected.final_voter_funding | float)) }}</b> {{ currency }}).<br><br>
+                                                    using the total funding available to them at the start of round {{ round_num }} (<b>{{ "{:,.2f}".format((rejected.final_voter_funding | float)) }}</b> {{ currency }}).<br><br>
                                                     Note that the supporters of this project initially had more funding available to them (<b>{{ "{:,.2f}".format((rejected.initial_voter_funding | float)) }}</b> {{ currency }}), enough to cover the cost of project.<br><br>
                                                     However, this funding was lost as these supporters had also funded projects in the previous rounds, decreasing the total funding available to them to the point where the project cost exceeds
                                                     the combined funds of the supporters.<br> The top projects that can be seen in the list below were the main cause for the decrease in funding, these were
                                                     regarded as more important as they had a higher effective vote count, implying they were selected earlier than this project.
                                                 {% else %}
                                                     This project was rejected because its supporters were not able to pay for the project's cost - <b>{{ "{:,}".format((rejected.cost | int)) }}</b> {{ currency }} -
-                                                    using the total funding available to them at the start of round {{ loop.index }} (<b>{{ "{:,.2f}".format((rejected.final_voter_funding | float)) }}</b> {{ currency }}).<br><br>
+                                                    using the total funding available to them at the start of round {{ round_num }} (<b>{{ "{:,.2f}".format((rejected.final_voter_funding | float)) }}</b> {{ currency }}).<br><br>
                                                     Note that this project would have been rejected, even before taking any funding lost into account.
                                                     This is because the project's cost exceeded the total funds initially allocated to the supporters of this project
                                                     (<b>{{ "{:,.2f}".format((rejected.initial_voter_funding | float)) }}</b> {{ currency }}).
@@ -556,7 +556,7 @@
 
         <!-- FOOTER -->
         <footer class="container">
-            <p>© Pabutools. · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Privacy</a> · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Terms</a></p>
+            <p>© Pabutools.</p>
         </footer>
     </main>
 

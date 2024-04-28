@@ -326,7 +326,7 @@
                             <h3>Round by Round Analysis</h3>
                             <hr>
                             <p>
-                                    The following section of the visualisations allows you to click through 'round by round' of this section of the election. It shows at each point the remaining budget, and the projects with the highest satisfaction up to the selected project. The selected project is shown in green, and any rejected projects are shown in red. A project will be shown in red if it is the next most popular project however there is not enough budget remaining to purchase the project. This means, the next most popular project will be considered - and so on until a project is found that can be purchased with the remaining budget. Use the previous and next round buttons to move through the different rounds of the election.
+                                    The following section of the visualisations allows you to click through 'round by round' of this section of the election. It shows at each point the remaining budget, and the projects with the highest satisfaction down to the selected project. The selected project is shown in green, and any rejected projects are shown in red. A project will be shown in red if it is the next most popular project however there is not enough budget remaining to purchase the project. This means, the next most popular project will be considered - and so on until a project is found that can be purchased with the remaining budget. Use the previous and next round buttons to move through the different rounds of the election.
                             </p>
                         </div>
                         <div class="col-2"></div>
@@ -409,7 +409,7 @@
                                         </p>
                                     {% else %}
                                         <p>
-                                            The chart above shows the current budget of {{ "{:,}".format( (round.remaining_budget | int) ) }} {{ currency }}. {{ round.rejected_projects[0].id }}: {{ projects[round.rejected_projects[0].id]["name"] }} was rejected in this round, even though it had a higher or equal satisfaction score than the selected project which had a score of {{projects[round.selected_project.id]["votes"]}}.
+                                            The chart above shows the current budget of {{ "{:,}".format( (round.remaining_budget | int) ) }} {{ currency }}. Project "{{ projects[round.rejected_projects[0].id]["name"] }}" was rejected in this round, even though it had a higher or equal satisfaction score than the selected project which had a score of {{projects[round.selected_project.id]["votes"]}}.
                                         </p>
                                     {% endif %}
 
@@ -435,7 +435,7 @@
                             <div class="col-1"></div>
                             <div class="col-10" style="min-height: 600px;">
                                 <div id="RGBarChart" style="height: 100%; width: 100%;">
-                                    <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Project Satisfaction Measures:</b><br> The following graphs shows the votes for each of the projects along with the corresponding budget.<br>The green bars correspond to selected projects, the red bars correspond to rejected projects.">i</button>
+                                    <!-- <button class = "info-button" style = "position: absolute; z-index: 2000; right: 50px;" data-tippy-content= "<b>Project Satisfaction Measures:</b><br> The following graphs shows the votes for each of the projects along with the corresponding budget.<br>The green bars correspond to selected projects, the red bars correspond to rejected projects.">i</button> -->
                                 </div>
                             </div>
                             <div class="col-1"></div>
@@ -445,7 +445,7 @@
                         <div class="col-1"></div>
                         <div class="col-10">
                             <p>
-                                The chart above shows a colour coded bar chart, which shows the selected projects in order. Red for selected, green for rejected. This is a quick over-view visualisation showing that it is not always the most popular project which is selected, but the most popular projects within budget.
+                                The chart above shows a colour coded bar chart, which shows the selected projects in order. Green for selected, red for rejected. This is a quick over-view visualisation showing that it is not always the most popular project which is selected, but the most popular projects within budget.
                             </p>
                         </div>
                         <div class="col-1"></div>
@@ -461,7 +461,7 @@
 
         <!-- FOOTER -->
         <footer class="container">
-            <p>© Pabutools. · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Privacy</a> · <a href="https://getbootstrap.com/docs/4.0/examples/carousel/#">Terms</a></p>
+            <p>© Pabutools.</p>
         </footer>
 
     </main>
@@ -522,7 +522,7 @@
             var projects = {};
             {% for project_id in project_votes.keys() %}
             projects["{{ project_id }}"] = {
-                name: "{{ projects[project_id]['name'][:15]|replace('\"', '\\\"') }}",
+                name: "{{ projects[project_id]['name'].split()[:2] | join(" ") |replace('\"', '\\\"')|replace("\'", "\\\'") }}",
                 votes: parseInt({{ project_votes[project_id] }}),
                 cost: parseFloat({{ projects[project_id]['cost'] }}),
                 selected: projects_selected_or_rejected["{{ project_id }}"]
@@ -594,8 +594,8 @@
                                         },
                                     },
                         "plotarea": {
-                            "margin-left":"130px",
-                            "margin-right":"130px"
+                            "margin-left":"dynamic",
+                            "margin-right":"dynamic"
                         },
                         "scale-x": {
                             "labels": labels,
@@ -709,11 +709,11 @@
             },
         },
         "plotarea": {
-            "margin-left":"130px",
-            "margin-right":"130px"
+            "margin-left":"dynamic",
+            "margin-right":"dynamic"
         },
         "scale-x": {
-            "labels": [{% for project_id in project_votes.keys() %}"{{ projects[project_id]['name'][:15]|replace('\"', '\\\"') }}",{% endfor %}],
+            "labels": [{% for project_id in project_votes.keys() %}"{{ projects[project_id]['name'].split()[:2] | join(" ") |replace('\"', '\\\"')|replace("\'", "\\\'") }}",{% endfor %}],
             "title": {
                 "text": "Project"
             },
