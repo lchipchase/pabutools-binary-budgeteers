@@ -5,11 +5,11 @@ Module with tools for analysis of the priceability / stable-priceability propert
 from __future__ import annotations
 
 import collections
-import time
 from collections.abc import Collection
 
 from mip import Model, xsum, BINARY, OptimizationStatus
 
+from pabutools.analysis.priceability_relaxation import Relaxation
 from pabutools.election import (
     Instance,
     AbstractApprovalProfile,
@@ -30,6 +30,7 @@ def validate_price_system(
     payment_functions: list[dict[Project, Numeric]],
     stable: bool = False,
     exhaustive: bool = True,
+    relaxation: Relaxation | None = None,
     *,
     verbose: bool = False,
 ) -> bool:
@@ -60,6 +61,9 @@ def validate_price_system(
         exhaustive : bool, optional
             Verify for exhaustiveness of the allocation.
             Defaults to `True`.
+        relaxation : :py:class:`~pabutools.analysis.priceability_relaxation.Relaxation`, optional
+            Relaxation method to the stable-priceability condition.
+            Defaults to `None`.
         **verbose : bool, optional
             Display additional information.
             Defaults to `False`.
@@ -136,9 +140,11 @@ def validate_price_system(
                 for idx, i in enumerate(N)
                 if c in i
             )
-            if round_cmp(s, c.cost, CHECK_ROUND_PRECISION) > 0:
+
+            cost = c.cost if relaxation is None else relaxation.get_relaxed_cost(c)
+            if round_cmp(s, cost, CHECK_ROUND_PRECISION) > 0:
                 errors["S5"].append(
-                    f"voters' leftover money (or the most they've spent for a project) for not selected project {c} are equal {s} > {c.cost}"
+                    f"voters' leftover money (or the most they've spent for a project) for not selected project {c} are equal {s} > {cost}"
                 )
 
     if verbose:
@@ -160,8 +166,6 @@ class PriceableResult:
     ----------
         status : OptimizationStatus
             Optimization status of the ILP outcome.
-        time_elapsed : float
-            Time taken to prepare and run the model.
         allocation : Collection[:py:class:`~pabutools.election.instance.Project`], optional
             The selected collection of projects.
             Defaults to `None`.
@@ -177,8 +181,6 @@ class PriceableResult:
     ----------
         status : OptimizationStatus
             Optimization status of the ILP outcome.
-        time_elapsed : float
-            Time taken to prepare and run the model.
         allocation : Collection[:py:class:`~pabutools.election.instance.Project`] or None
             The selected collection of projects.
             `None` if the optimization status is not `OPTIMAL` / `FEASIBLE`.
@@ -195,18 +197,18 @@ class PriceableResult:
     def __init__(
         self,
         status: OptimizationStatus,
-        time_elapsed: float,
         allocation: list[Project] | None = None,
+        relaxation_beta: float | dict = None,
         voter_budget: float | None = None,
         payment_functions: list[dict[Project, float]] | None = None,
     ) -> None:
         self.status = status
-        self.time_elapsed = time_elapsed
         self.allocation = allocation
+        self.relaxation_beta = relaxation_beta
         self.voter_budget = voter_budget
         self.payment_functions = payment_functions
 
-    def validate(self) -> bool:
+    def validate(self) -> bool | None:
         """
         Checks if the optimization status is `OPTIMAL` / `FEASIBLE`.
         Returns
@@ -215,6 +217,8 @@ class PriceableResult:
                 Validity of optimization status.
 
         """
+        if self.status == OptimizationStatus.NO_SOLUTION_FOUND:
+            return None
         return self.status in [OptimizationStatus.OPTIMAL, OptimizationStatus.FEASIBLE]
 
 
@@ -226,6 +230,7 @@ def priceable(
     payment_functions: list[dict[Project, Numeric]] | None = None,
     stable: bool = False,
     exhaustive: bool = True,
+    relaxation: Relaxation | None = None,
     *,
     max_seconds: int = 600,
     verbose: bool = False,
@@ -260,6 +265,9 @@ def priceable(
         exhaustive : bool, optional
             Search exhaustive allocation.
             Defaults to `True`.
+        relaxation : :py:class:`~pabutools.analysis.priceability_relaxation.Relaxation`, optional
+            Relaxation method to the stable-priceability condition.
+            Defaults to `None`.
         **max_seconds : int, optional
             Model's maximum runtime in seconds.
             Defaults to 600.
@@ -273,7 +281,6 @@ def priceable(
             Dataclass containing priceable result details.
 
     """
-    _start_time = time.time()
     C = instance
     N = profile
     INF = instance.budget_limit * 10
@@ -288,7 +295,10 @@ def priceable(
         mip_model += b == voter_budget
 
     # payment functions
-    p_vars = [{c: mip_model.add_var(name=f"p_{i.name}_{c.name}") for c in C} for i in N]
+    p_vars = [
+        {c: mip_model.add_var(name=f"p_{idx}_{c.name}") for c in C}
+        for idx, i in enumerate(N)
+    ]
     if payment_functions is not None:
         for idx, _ in enumerate(N):
             for c in C:
@@ -341,8 +351,11 @@ def priceable(
             mip_model += 0 <= p_vars[idx][c]
             mip_model += p_vars[idx][c] <= x_vars[c] * INF
 
+    if relaxation is not None:
+        relaxation.add_beta(mip_model)
+
     if not stable:
-        r_vars = [mip_model.add_var(name=f"r_{i.name}") for i in N]
+        r_vars = [mip_model.add_var(name=f"r_{idx}") for idx, i in enumerate(N)]
         for idx, _ in enumerate(N):
             mip_model += r_vars[idx] == b - xsum(p_vars[idx][c] for c in C)
 
@@ -353,20 +366,29 @@ def priceable(
                 <= c.cost + x_vars[c] * INF
             )
     else:
-        m_vars = [mip_model.add_var(name=f"m_{i.name}") for i in N]
+        m_vars = [mip_model.add_var(name=f"m_{idx}") for idx, i in enumerate(N)]
         for idx, _ in enumerate(N):
             for c in C:
                 mip_model += m_vars[idx] >= p_vars[idx][c]
             mip_model += m_vars[idx] >= b - xsum(p_vars[idx][c] for c in C)
 
         # (S5) stability constraint
-        for c in C:
-            mip_model += (
-                xsum(m_vars[idx] for idx, i in enumerate(N) if c in i)
-                <= c.cost + x_vars[c] * INF
-            )
+        if relaxation is None:
+            for c in C:
+                mip_model += (
+                    xsum(m_vars[idx] for idx, i in enumerate(N) if c in i)
+                    <= c.cost + x_vars[c] * INF
+                )
+        else:
+            relaxation.add_stability_constraint(mip_model)
 
-    status = mip_model.optimize(max_seconds=max_seconds)
+    if relaxation is not None:
+        relaxation.add_objective(mip_model)
+
+    if relaxation is None:
+        status = mip_model.optimize(max_seconds=max_seconds, max_solutions=1)
+    else:
+        status = mip_model.optimize(max_seconds=max_seconds)
 
     if status == OptimizationStatus.INF_OR_UNBD:
         # https://support.gurobi.com/hc/en-us/articles/4402704428177-How-do-I-resolve-the-error-Model-is-infeasible-or-unbounded
@@ -375,17 +397,18 @@ def priceable(
         #
         mip_model.solver.set_int_param("DualReductions", 0)
         mip_model.reset()
-        mip_model.optimize(max_seconds=max_seconds)
+        if relaxation is None:
+            mip_model.optimize(max_seconds=max_seconds, max_solutions=1)
+        else:
+            mip_model.optimize(max_seconds=max_seconds)
         status = (
             OptimizationStatus.INFEASIBLE
             if mip_model.solver.get_int_attr("status") == 3
             else OptimizationStatus.UNBOUNDED
         )
 
-    _elapsed_time = time.time() - _start_time
-
-    if status in [OptimizationStatus.INFEASIBLE, OptimizationStatus.UNBOUNDED]:
-        return PriceableResult(status=status, time_elapsed=_elapsed_time)
+    if status not in [OptimizationStatus.OPTIMAL, OptimizationStatus.FEASIBLE]:
+        return PriceableResult(status=status)
 
     payment_functions = [collections.defaultdict(float) for _ in N]
     for idx, _ in enumerate(N):
@@ -395,8 +418,10 @@ def priceable(
 
     return PriceableResult(
         status=status,
-        time_elapsed=_elapsed_time,
         allocation=list(sorted([c for c in C if x_vars[c].x >= 0.99])),
         voter_budget=b.x,
+        relaxation_beta=relaxation.get_beta(mip_model)
+        if relaxation is not None
+        else None,
         payment_functions=payment_functions,
     )
